@@ -174,6 +174,17 @@ const TRAINER_URL = 'https://mendeltem.github.io/mrt-atlas-trainer/';
   #startBtn{margin-top:14px}
   .doneMeta{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-top:4px}
   .doneBtns{display:flex;gap:8px;margin-top:12px}
+  a.more{display:block;text-decoration:none;color:var(--ink);border-color:var(--accent2);transition:.16s;
+    background:linear-gradient(135deg,rgba(51,198,182,.16),rgba(51,198,182,.04))}
+  a.more:hover,a.more:focus-visible{border-color:var(--accent);transform:translateY(-1px)}
+  a.more .kicker{color:var(--accent2)}
+  .moreTitle{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px;line-height:1.2}
+  .moreTitle .arrow{color:var(--accent)}
+  .moreText{margin-top:6px;line-height:1.4;color:var(--ink)}
+  .moreText b{color:var(--accent)}
+  .moreSteps{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .moreSteps span{font-family:'JetBrains Mono',monospace;font-size:11px;border:1px solid var(--line);border-radius:999px;padding:4px 9px;color:var(--muted)}
+  .moreUrl{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent2);margin-top:10px;word-break:break-all}
   .review{display:flex;flex-direction:column;gap:6px}
   .rrow{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--line);border-left:3px solid var(--ok);
     border-radius:10px;background:var(--panel);padding:8px 10px;line-height:1.35}
@@ -299,9 +310,16 @@ const TRAINER_URL = 'https://mendeltem.github.io/mrt-atlas-trainer/';
         <div class="doneMeta" id="qTime"></div>
         <div class="doneBtns">
           <button class="btn primary" id="qAgain" type="button">Try again</button>
-          <a class="btn" id="moreLink" target="_blank" rel="noopener">Practise more</a>
         </div>
       </div>
+      <!-- keep training: the full trainer (opens in a new tab; the address is written out for laptops) -->
+      <a class="card more" id="moreLink" target="_blank" rel="noopener">
+        <div class="kicker">Keep training</div>
+        <div class="moreTitle">The full MRI atlas trainer <span class="arrow">→</span></div>
+        <div class="moreText" id="moreText"></div>
+        <div class="moreSteps"><span>1 Explore</span><span>2 Study</span><span>3 Quiz, as long as you like</span></div>
+        <div class="moreUrl" id="moreUrl"></div>
+      </a>
       <div>
         <div class="kicker">Review · correct structure, your answer below</div>
         <div class="review" id="review"></div>
@@ -551,6 +569,14 @@ function showResult(){
   $('doneKicker').textContent = T[LANG].q_done;
   $('qScore').textContent = nCorrect() + ' / ' + N;
   $('qTime').textContent = 'Time: ' + clock(S.t1 - S.t0);
+  /* the "keep training" card names what was missed (at most 4 names), so the next step is concrete */
+  const missed = [...new Set(QUIZ.filter((q, i) => S.answers[i] !== correctPos(q)).map(q => q.answer))];
+  const mt = $('moreText'); mt.textContent = '';
+  if(missed.length){
+    mt.appendChild(document.createTextNode('You missed: '));
+    const b = document.createElement('b'); b.textContent = missed.slice(0, 4).join(', ') + (missed.length > 4 ? ' and ' + (missed.length - 4) + ' more' : '');
+    mt.appendChild(b); mt.appendChild(document.createTextNode('. Find them in the full trainer, then test yourself again.'));
+  } else mt.textContent = 'All correct. The full trainer has many more structures to learn.';
   const box = $('review'); box.innerHTML = '';
   QUIZ.forEach((q, i) => {
     const ok = S.answers[i] === correctPos(q);
@@ -582,6 +608,7 @@ $('slice').addEventListener('input', updateBack);
 document.querySelector('.canvas-wrap').addEventListener('wheel', updateBack, {passive:true});
 document.querySelector('.canvas-wrap').addEventListener('touchmove', updateBack, {passive:true});
 $('moreLink').href = TRAINER_URL;
+$('moreUrl').textContent = TRAINER_URL.replace('https://', '').replace(/\/$/, '');
 $('startCount').textContent = N + ' questions.';
 if(LIMIT){ $('startTime').textContent = SECONDS_PER_QUESTION + ' seconds per question.'; $('startTime').classList.remove('hidden'); }
 

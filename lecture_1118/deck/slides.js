@@ -264,7 +264,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/09_qc_score.mp4",
   "poster": "poster/09_qc_score.jpg",
-  "text": "Synth Seg scores its own result. Below zero point six five, a region fails. This scan passes. This one fails. Look at it.",
+  "text": "Synth Seg scores its own result. A second small network looks only at the label map, not at the scan. It has learned how good label maps look, and how broken ones look. So for each region, it guesses the quality: a score between zero and one. Below zero point six five, a region fails. This scan passes. This one fails. Look at it.",
   "check": {
    "q": "A region gets a QC score of 0.60. What now?",
    "options": [
@@ -290,8 +290,8 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": true,
-  "notes": "Synth Seg scores its own result. Below zero point six five, a region fails. This scan passes. This one fails. Look at it.",
-  "background": "This slide is about the second check in our pipeline: the Synth Seg Q C score. Synth Seg is a deep learning tool. It segments M R I scans without needing a scan from the same scanner. For each group of structures, it also gives a Q C score. That score is a predicted Dice. In simple words: the network guesses how good its own segmentation is. The rule we use is simple. Below zero point six five, the region fails. Then we look at the scan. Here are two examples. The first scan is from a person aged fifty four. Grey matter passes, with a score of zero point seven two two. The second scan is from a person aged eighty one. Grey matter fails, with zero point six three six. In our own run on nine hundred sixty seven public scans, sixteen scans had at least one failed score. That is a small number, but it matters. Question to the room: if a region fails, would you delete the whole scan, or only that region? Think about your own data. The score is a warning, not a final answer.",
+  "notes": "Synth Seg scores its own result. A second small network looks only at the label map, not at the scan. It has learned how good label maps look, and how broken ones look. So for each region, it guesses the quality: a score between zero and one. Below zero point six five, a region fails. This scan passes. This one fails. Look at it.",
+  "background": "The QC score comes from a second, small network (a regressor) that sees only SynthSeg's label map, never the scan. It was trained on good and deliberately degraded label maps, so it has learned what a plausible segmentation looks like, and it predicts a quality score between 0 and 1 for groups of structures (it stands for the Dice an expert comparison would give; Dice itself comes in part 2). Below 0.65 a region counts as failed (Billot 2023, PNAS). The bars are real: a scan aged 54 passes (grey matter 0.722), a scan aged 81 fails (grey matter 0.636). In our run on 967 scans, 16 had at least one failed score. The score needs no expert labels; it cannot see the scan, so a passing score is necessary, not sufficient (next slide: the stroke scan).",
   "qr": null
  },
  {
@@ -302,8 +302,8 @@ window.SLIDES = [
   "widget": "qc",
   "clip": null,
   "poster": null,
-  "text": "Scroll through a public stroke scan with SynthSeg's labels. All QC values pass, yet the labels around the lesion are not right. A passing QC score is necessary, not sufficient. SynthSeg took 52 seconds on a normal processor.",
-  "notes": "Scroll through a public stroke scan with SynthSeg's labels. All QC values pass, yet the labels around the lesion are not right. A passing QC score is necessary, not sufficient. SynthSeg took 52 seconds on a normal processor.",
+  "text": "Scroll through a stroke scan with SynthSeg's labels. All QC values pass, yet the labels around the lesion are not right. A passing QC score is necessary, not sufficient. SynthSeg took 52 seconds on a normal processor.",
+  "notes": "Scroll through a stroke scan with SynthSeg's labels. All QC values pass, yet the labels around the lesion are not right. A passing QC score is necessary, not sufficient. SynthSeg took 52 seconds on a normal processor.",
   "background": "",
   "check": null,
   "exercise": null,
@@ -443,7 +443,13 @@ window.SLIDES = [
    "name": "Atlas quiz",
    "what": "10 questions: a region lights up, you pick its name."
   },
-  "sources": [],
+  "sources": [
+   {
+    "label": "MRT atlas trainer: more practice after the atlas quiz",
+    "url": "https://mendeltem.github.io/mrt-atlas-trainer/",
+    "about": "The full atlas trainer for home: explore, quiz and study modes with many more brain regions (interface in German)."
+   }
+  ],
   "optional": false,
   "key_q": false,
   "notes": "Now it is your turn. Open the atlas quiz on your phone or laptop. Ten questions: a region lights up, and you pick its name. You have eight minutes.",
@@ -501,7 +507,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/15_wmh_manual.mp4",
   "poster": "poster/15_wmh_manual.jpg",
-  "text": "The reference is a mask painted by an expert, by hand. That is slow, and experts disagree. We use the public challenge data: sixty scans with expert masks.",
+  "text": "The reference is a mask painted by an expert, by hand. That is slow, and experts disagree. So we want a program to do it.",
   "check": {
    "q": "Why do we want an automatic method?",
    "options": [
@@ -527,7 +533,7 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "The reference is a mask painted by an expert, by hand. That is slow, and experts disagree. We use the public challenge data: sixty scans with expert masks.",
+  "notes": "The reference is a mask painted by an expert, by hand. That is slow, and experts disagree. So we want a program to do it.",
   "background": "This slide sets up why we need automatic segmentation at all. The reference standard in white matter hyperintensity research is still a mask drawn by a human expert, usually a trained rater or a neurologist, who goes slice by slice and paints every lesion. That is the gold standard we compare our algorithms against. But it has two problems. First, it is slow. Second, it is subjective: give the same scan to two experts and you get two different masks, especially at the edges of faint lesions. That disagreement is not a failure of the experts; it is the nature of the task. So for teaching and for fair testing we need a common dataset. The W M H Segmentation Challenge gives us exactly that: sixty training scans from three different scanners, each with an expert mask. Ask the room: if two experts disagree on a lesion, which mask is the truth? There is no single truth. That is why we report agreement scores like Dice, not just accuracy.",
   "qr": null
  },
@@ -539,7 +545,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/16_bianca_knn.mp4",
   "poster": "poster/16_bianca_knn.jpg",
-  "text": "Bianka turns each voxel into a point: its brightness and its position. Its forty nearest training voxels vote. Thirty five say lesion: probability zero point eight eight.",
+  "text": "Bianka learns from examples. In training scans, an expert has marked the lesions. Bianka takes sample voxels, lesion and healthy, and stores each one as a point: its brightness and its position. Now a new scan, without a mask. For one voxel, the forty nearest stored points vote. Thirty five say lesion: probability zero point eight eight. Bianka does this for every voxel.",
   "check": {
    "q": "30 of the 40 neighbours are lesion voxels. Lesion probability?",
    "options": [
@@ -560,8 +566,8 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "Bianka turns each voxel into a point: its brightness and its position. Its forty nearest training voxels vote. Thirty five say lesion: probability zero point eight eight.",
-  "background": "Bianka stands for Brain Intensity AbNormality Classification Algorithm. It lives inside F S L. The idea is simple. We do not model the lesion. We model the neighbourhood. Each voxel is a point in a feature space. The features here are FLAIR brightness, T one brightness, and spatial position. We give Bianka training voxels. Some are lesion. Some are normal. For a new voxel, Bianka looks at the forty nearest training points. Then the neighbours vote. If thirty five of forty are lesion voxels, the probability is zero point eight eight. That is a soft label, not a hard one. A threshold turns it into a mask. Ask the room: why include position as a feature? Because lesions cluster near the ventricles. Position helps. But position can also bias the result. If your training set has no lesions in the frontal pole, Bianka will struggle there. So training data must match the scan. This is a supervised method. It needs labels. It is fast and transparent. It is also sensitive to the training set. That is the trade-off.",
+  "notes": "Bianka learns from examples. In training scans, an expert has marked the lesions. Bianka takes sample voxels, lesion and healthy, and stores each one as a point: its brightness and its position. Now a new scan, without a mask. For one voxel, the forty nearest stored points vote. Thirty five say lesion: probability zero point eight eight. Bianka does this for every voxel.",
+  "background": "The points are real: 640 training voxels of our BIANCA run (160 lesion, 480 healthy), plotted by FLAIR and T1 brightness. BIANCA also uses the position in the brain, which the plot cannot show. For the voxel in the ring, 35 of its 40 nearest training points are lesion: 35 / 40 = 0.88. Training means storing labelled example voxels; testing means asking the neighbours for every voxel of a new scan.",
   "qr": null
  },
  {
@@ -725,12 +731,41 @@ window.SLIDES = [
  },
  {
   "n": 23,
+  "key": "bianca_vs_unet",
+  "title": "BIANCA or U-Net?",
+  "part": "2  White matter lesions",
+  "kind": "clip",
+  "clip": "clips/21_bianca_vs_unet.mp4",
+  "poster": "poster/21_bianca_vs_unet.jpg",
+  "text": "So, Bianka or U net? Bianka needs no graphics card. It is simple: you can follow every step. And sometimes, it is good enough. A U net is usually more accurate. But training it needs a graphics card, and it is harder to see why it decides.",
+  "check": null,
+  "exercise": null,
+  "sources": [
+   {
+    "label": "Griffanti et al. 2016, NeuroImage (BIANCA)",
+    "url": "https://doi.org/10.1016/j.neuroimage.2016.07.018",
+    "about": "BIANCA: k-nearest-neighbour WMH segmentation in FSL; Dice 0.76 in one cohort, 0.52 in another."
+   },
+   {
+    "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
+    "url": "https://doi.org/10.1109/TMI.2019.2905770",
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80, second experts 0.77-0.79."
+   }
+  ],
+  "optional": false,
+  "key_q": false,
+  "notes": "So, Bianka or U net? Bianka needs no graphics card. It is simple: you can follow every step. And sometimes, it is good enough. A U net is usually more accurate. But training it needs a graphics card, and it is harder to see why it decides.",
+  "background": "A fair close of the method part. BIANCA: runs on a normal processor, no graphics card; every step can be followed (stored examples, neighbours vote, cut-off); and with a good setup it is sometimes good enough (0.70 on the test scans). U-Net: usually more accurate (0.80), but training needs a graphics card and more labelled scans, and its decision is harder to trace. Which one to use depends on the study, not on fashion.",
+  "qr": null
+ },
+ {
+  "n": 24,
   "key": "dice",
   "title": "The Dice score",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/21_dice.mp4",
-  "poster": "poster/21_dice.jpg",
+  "clip": "clips/22_dice.mp4",
+  "poster": "poster/22_dice.jpg",
   "text": "Put the mask on the reference: hits in both, extra marks, and misses. Dice is two times the hits, divided by both mask sizes together. One is perfect. This slice: zero point eight two. Bianka on average: zero point seven.",
   "check": {
    "q": "TP = 50, FP = 25, FN = 25. Dice?",
@@ -762,13 +797,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 24,
+  "n": 25,
   "key": "raters",
   "title": "Even experts do not agree",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/22_raters.mp4",
-  "poster": "poster/22_raters.jpg",
+  "clip": "clips/23_raters.mp4",
+  "poster": "poster/23_raters.jpg",
   "text": "Even experts do not agree. A second expert, on the same scans, reached only zero point seven seven to zero point seven nine against the reference. So about zero point eight is the ceiling. The best program, a U net, reached it.",
   "check": null,
   "exercise": null,
@@ -786,13 +821,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 25,
+  "n": 26,
   "key": "dice_small",
   "title": "Dice is hard on small lesions",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/23_dice_small.mp4",
-  "poster": "poster/23_dice_small.jpg",
+  "clip": "clips/24_dice_small.mp4",
+  "poster": "poster/24_dice_small.jpg",
   "text": "Shift a big lesion by one voxel: Dice is still zero point nine. The same shift on a tiny lesion: zero point five. Small lesions are hard on Dice.",
   "check": {
    "q": "Same method, two patients. Who tends to get the lower Dice?",
@@ -829,16 +864,16 @@ window.SLIDES = [
   "key_q": false,
   "sources": [],
   "qr": null,
-  "n": 26
+  "n": 27
  },
  {
-  "n": 27,
+  "n": 28,
   "key": "ex2",
   "title": "Your turn: segment the lesions",
   "part": "2  White matter lesions",
   "kind": "exercise",
   "clip": null,
-  "poster": "poster/24_ex2.jpg",
+  "poster": "poster/25_ex2.jpg",
   "text": "Your turn. Open the lesion exercise. A short tutorial first, then paint the lesions on three slices of one patient, and get your Dice. You have six minutes.",
   "check": null,
   "exercise": {
@@ -861,13 +896,13 @@ window.SLIDES = [
   "qr": "qr/wmh-dice.png"
  },
  {
-  "n": 28,
+  "n": 29,
   "key": "beat2",
   "title": "Can you beat the algorithm?",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/25_beat2.mp4",
-  "poster": "poster/25_beat2.jpg",
+  "clip": "clips/26_beat2.mp4",
+  "poster": "poster/26_beat2.jpg",
   "text": "How did you do? Bianka got zero point seven, a second expert about zero point seven eight, the best program, a U net, zero point eight. Hands up, who beat Bianka? The small spots are hard for everyone.",
   "check": null,
   "exercise": null,
@@ -890,13 +925,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 29,
+  "n": 30,
   "key": "cmb_what",
   "title": "Microbleeds: small dark dots",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/26_cmb_what.mp4",
-  "poster": "poster/26_cmb_what.jpg",
+  "clip": "clips/27_cmb_what.mp4",
+  "poster": "poster/27_cmb_what.jpg",
   "text": "Part three. A micro-bleed is a tiny old bleed. On T two star it is a small dark dot. Watch for lookalikes, like vessels cut across. This slice has three.",
   "check": {
    "q": "On which images do you look for microbleeds?",
@@ -928,13 +963,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 30,
+  "n": 31,
   "key": "cmb_unet",
   "title": "The network marks voxels. We need a count.",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/27_cmb_unet.mp4",
-  "poster": "poster/27_cmb_unet.jpg",
+  "clip": "clips/28_cmb_unet.mp4",
+  "poster": "poster/28_cmb_unet.jpg",
   "text": "A three D U net marks every voxel that looks like a bleed. But we need a number of bleeds, so we group voxels into objects.",
   "check": {
    "q": "The network marks 17 voxels. How many microbleeds is that?",
@@ -961,13 +996,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 31,
+  "n": 32,
   "key": "cmb_26",
   "title": "Clusters: 26 neighbours",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/28_cmb_26.mp4",
-  "poster": "poster/28_cmb_26.jpg",
+  "clip": "clips/29_cmb_26.mp4",
+  "poster": "poster/29_cmb_26.jpg",
   "text": "Voxels that touch belong together: by a face, an edge, or a corner. Twenty six neighbours. One cluster is one micro-bleed.",
   "check": {
    "q": "Two marked voxels touch only at a corner. With 26 neighbours they are ...",
@@ -1016,16 +1051,16 @@ window.SLIDES = [
    }
   ],
   "qr": null,
-  "n": 32
+  "n": 33
  },
  {
-  "n": 33,
+  "n": 34,
   "key": "f1",
   "title": "F1: counting hits and misses",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/29_f1.mp4",
-  "poster": "poster/29_f1.jpg",
+  "clip": "clips/30_f1.mp4",
+  "poster": "poster/30_f1.jpg",
   "text": "Now we count objects: found, false alarms, missed. Precision: how many marks are real. Recall: how many bleeds we found. F one combines both. Four found, one false, one missed: F one is zero point eight.",
   "check": {
    "q": "TP = 3, FP = 3, FN = 0. Precision?",
@@ -1074,16 +1109,16 @@ window.SLIDES = [
    }
   ],
   "qr": null,
-  "n": 34
+  "n": 35
  },
  {
-  "n": 35,
+  "n": 36,
   "key": "count4",
   "title": "Why the count matters: four",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/30_count4.mp4",
-  "poster": "poster/30_count4.jpg",
+  "clip": "clips/31_count4.mp4",
+  "poster": "poster/31_count4.jpg",
   "text": "Why count so carefully? New Alzheimer drugs remove amyloid, but they can cause swelling and new bleeds in the brain. The risk is higher in people who already have micro-bleeds. So with more than four, the drug is not given. Four or five: one dot decides.",
   "check": {
    "q": "A patient has 5 microbleeds. By the appropriate use recommendations ...",
@@ -1115,20 +1150,58 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 36,
+  "n": 37,
+  "key": "cmb_vessel",
+  "title": "Microbleed or vessel? Scroll.",
+  "part": "3  Microbleeds",
+  "kind": "clip",
+  "clip": "clips/32_cmb_vessel.mp4",
+  "poster": "poster/32_cmb_vessel.jpg",
+  "text": "Is every dark dot a micro-bleed? No. On a single slice, a micro-bleed and a vessel cut across look the same. So scroll through the slices. The micro-bleed is gone after a few slices. The vessel goes on, slice after slice, and it moves. From the side, the micro-bleed is a ball, and the vessel is a line. Mark the vessel, and you have a false positive. Calcium, and the edges near bone and air, can fool us the same way.",
+  "check": {
+   "q": "A dark dot stays visible over 15 slices and moves sideways. It is most likely ...",
+   "options": [
+    "a microbleed",
+    "a vessel",
+    "calcium"
+   ],
+   "answer": 1,
+   "why": "A microbleed is a small ball: it is gone after a few slices."
+  },
+  "exercise": null,
+  "sources": [
+   {
+    "label": "Greenberg et al. 2009, Lancet Neurol (microbleeds)",
+    "url": "https://doi.org/10.1016/S1474-4422(09)70013-4",
+    "about": "Review of cerebral microbleeds: definition, detection on T2*/SWI, mimics and clinical meaning."
+   },
+   {
+    "label": "Sudre et al. 2024, Med Image Anal (VALDO challenge)",
+    "url": "https://doi.org/10.1016/j.media.2023.103029",
+    "about": "VALDO challenge (MICCAI 2021): automatic detection of small vessel lesions, including microbleeds."
+   }
+  ],
+  "optional": false,
+  "key_q": false,
+  "notes": "Is every dark dot a micro-bleed? No. On a single slice, a micro-bleed and a vessel cut across look the same. So scroll through the slices. The micro-bleed is gone after a few slices. The vessel goes on, slice after slice, and it moves. From the side, the micro-bleed is a ball, and the vessel is a line. Mark the vessel, and you have a false positive. Calcium, and the edges near bone and air, can fool us the same way.",
+  "background": "Real data: one public scan (sub-207), one microbleed from the expert mask and one vessel that crosses the slices, each in a cut-out of about 20 mm. The microbleed (59 voxels) is seen on 5 of 19 slices (4 mm). The vessel is seen on all 19 slices (15 mm) and moves 8.3 mm sideways on the way. On one slice both are a dark dot; only scrolling tells them apart. Marking the vessel would count as a false positive in the exercise that follows. Other lookalikes: calcium (for example in the pallidum), and signal loss near bone and air.",
+  "qr": null
+ },
+ {
+  "n": 38,
   "key": "ex3",
   "title": "Your turn: find the microbleeds",
   "part": "3  Microbleeds",
   "kind": "exercise",
   "clip": null,
-  "poster": "poster/31_ex3.jpg",
-  "text": "Last exercise. Three public scans. Scroll through the slices and click on every micro-bleed you find. Then you get your precision, your recall and your F one. You have nine minutes.",
+  "poster": "poster/33_ex3.jpg",
+  "text": "Last exercise. Three scans. Scroll through the slices and click on every micro-bleed you find. Then you get your precision, your recall and your F one. You have nine minutes.",
   "check": null,
   "exercise": {
    "url": "../exercises/cmb-f1/index.html",
    "minutes": 9,
    "name": "Microbleed exercise",
-   "what": "3 public scans. Click every microbleed, then get your F1."
+   "what": "3 scans. Click every microbleed, then get your F1."
   },
   "sources": [
    {
@@ -1139,19 +1212,19 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "Last exercise. Three public scans. Scroll through the slices and click on every micro-bleed you find. Then you get your precision, your recall and your F one. You have nine minutes.",
+  "notes": "Last exercise. Three scans. Scroll through the slices and click on every micro-bleed you find. Then you get your precision, your recall and your F one. You have nine minutes.",
   "background": "This is the final hands-on task. The scans come from the VALDO challenge, a public benchmark for microbleed detection. The data are shared for non-commercial use under a CC BY-NC-SA licence; the credit is on the exercise page. In the exercise you see three scans. You scroll through the slices. You click on every micro-bleed you find. The tool then compares your clicks with the reference marks. It gives you precision, recall and F one. Precision asks: of the spots you clicked, how many were real? Recall asks: of the real micro-bleeds, how many did you find? F one combines both into one number. A question for the room: which is worse in a clinical report, a false click or a missed micro-bleed? Think about that while you work. You have nine minutes. If you finish early, compare your F one with your neighbour and discuss where you disagree.",
   "qr": "qr/cmb-f1.png"
  },
  {
-  "n": 37,
+  "n": 39,
   "key": "beat3",
   "title": "Can you beat the algorithm?",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/32_beat3.mp4",
-  "poster": "poster/32_beat3.jpg",
-  "text": "The best Valdo program reached an F one of about zero point seven. Hands up: who did better? Who found the big one, and who missed small ones?",
+  "clip": "clips/34_beat3.mp4",
+  "poster": "poster/34_beat3.jpg",
+  "text": "The best program reached an F one of about zero point seven. Hands up: who did better? Who found the big one, and who missed small ones?",
   "check": null,
   "exercise": null,
   "sources": [
@@ -1163,18 +1236,18 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "The best Valdo program reached an F one of about zero point seven. Hands up: who did better? Who found the big one, and who missed small ones?",
+  "notes": "The best program reached an F one of about zero point seven. Hands up: who did better? Who found the big one, and who missed small ones?",
   "background": "Ask for hands: F1 above 0.8, above 0.68. In the VALDO challenge the best method for microbleeds reached a median F1 of 68.42 per scan (Sudre 2024). Ask who found the single large microbleed in the easy scan, and who missed small ones in the hard scan. Misses are usually the small, low-contrast ones; false alarms are usually vessels cut across. Your own catch question can go here.",
   "qr": null
  },
  {
-  "n": 38,
+  "n": 40,
   "key": "wrap",
   "title": "Three tasks, one rule",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/33_wrap.mp4",
-  "poster": "poster/33_wrap.jpg",
+  "clip": "clips/35_wrap.mp4",
+  "poster": "poster/35_wrap.jpg",
   "text": "Grey matter: check the quality score. Lesions: Dice, and small ones are hard. Micro-bleeds: F one, and beware lookalikes. One rule for all: never trust a segmentation you have not checked.",
   "check": null,
   "exercise": null,
@@ -1186,13 +1259,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 39,
+  "n": 41,
   "key": "exam",
   "title": "For the exam",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/34_exam.mp4",
-  "poster": "poster/34_exam.jpg",
+  "clip": "clips/36_exam.mp4",
+  "poster": "poster/36_exam.jpg",
   "text": "For the exam: read a quality score, compute a Dice, and count clusters for an F one. You just did all three.",
   "check": {
    "q": "TP = 8, FP = 2, FN = 2. Dice?",
@@ -1213,14 +1286,14 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 40,
+  "n": 42,
   "key": "more",
   "title": "Films, slides and exercises stay online",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/35_more.mp4",
-  "poster": "poster/35_more.jpg",
-  "text": "Everything stays online. Thank you.",
+  "clip": "clips/37_more.mp4",
+  "poster": "poster/37_more.jpg",
+  "text": "Everything stays online. For more practice, there is the full atlas trainer. Thank you.",
   "check": null,
   "exercise": null,
   "sources": [
@@ -1228,11 +1301,16 @@ window.SLIDES = [
     "label": "github.com/mendeltem/mri-segmentation-lectures",
     "url": "https://github.com/mendeltem/mri-segmentation-lectures",
     "about": "The lecture's GitHub repository with slides, films and exercises."
+   },
+   {
+    "label": "MRT atlas trainer: more practice after the atlas quiz",
+    "url": "https://mendeltem.github.io/mrt-atlas-trainer/",
+    "about": "The full atlas trainer for home: explore, quiz and study modes with many more brain regions (interface in German)."
    }
   ],
   "optional": false,
   "key_q": false,
-  "notes": "Everything stays online. Thank you.",
+  "notes": "Everything stays online. For more practice, there is the full atlas trainer. Thank you.",
   "background": "This is the closing slide. Keep it short and warm. Tell the room that the animated clips, the full slide deck and the three exercises are all online. They can go back to any part at their own pace. The exercises are the best way to make the material stick. For example, ask them to redo the hard lesion case at home and try to beat their Dice. Then ask the room one question: which of the three tasks, grey matter, W M H or micro-bleeds, felt hardest today? That question often shows which topic needs more time next year. Remind them that the films have sound, so they can switch the voice back on if they want. Point them to the source link on the slide: the lecture materials live on the Git Hub page github.com/mendeltem/mri-segmentation-lectures. Thank them for their attention and for the questions. Invite them to write to you with any follow-up. End on time.",
   "qr": null
  }
