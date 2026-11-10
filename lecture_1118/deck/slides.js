@@ -646,7 +646,41 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/18_bianca_settings.mp4",
   "poster": "poster/18_bianca_settings.jpg",
-  "text": "What did our own runs show? Position in the brain helps most. More healthy training points and adding T one help a little. Patches did not help. After training, a high cut off and a white matter mask help a lot. New scanners and thick slices cost the most.",
+  "text": "Bianka has settings. We tried them, and each time measured how well the result matches the expert. First: which images? With FLAIR only, each voxel is one number. Adding the T one gives it a second number. That helped a little. Second: how many healthy examples? Healthy tissue looks different from place to place. With ten thousand examples per scan instead of two thousand, the result got a little better. Third: position. Lesions have typical places. This map adds up the lesions of all training scans. Most lie around the ventricles. When Bianka also knows where a voxel lies, the score rises the most. Last: patches. Bianka can also look at the three by three neighbourhood of a voxel, and use its average. That smooths noise, but small lesions fade. In our runs it made the result slightly worse.",
+  "check": null,
+  "exercise": null,
+  "sources": [
+   {
+    "label": "Griffanti et al. 2016, NeuroImage (BIANCA)",
+    "url": "https://doi.org/10.1016/j.neuroimage.2016.07.018",
+    "about": "BIANCA: k-nearest-neighbour WMH segmentation in FSL; Dice 0.76 in one cohort, 0.52 in another."
+   },
+   {
+    "label": "Grabner et al. 2006, MICCAI (MNI152 standard brain)",
+    "url": "https://doi.org/10.1007/11866763_8",
+    "about": "The MNI152 standard brain (average of 152 healthy brains): scans are aligned to it, so every voxel gets a position that means the same place in every person."
+   },
+   {
+    "label": "Data: WMH Segmentation Challenge, CC BY-NC 4.0",
+    "url": "https://doi.org/10.34894/AECRSD",
+    "about": "The public WMH Challenge data (DataverseNL), licence CC BY-NC 4.0; used in the lesion exercise."
+   }
+  ],
+  "optional": false,
+  "key_q": false,
+  "notes": "Bianka has settings. We tried them, and each time measured how well the result matches the expert. First: which images? With FLAIR only, each voxel is one number. Adding the T one gives it a second number. That helped a little. Second: how many healthy examples? Healthy tissue looks different from place to place. With ten thousand examples per scan instead of two thousand, the result got a little better. Third: position. Lesions have typical places. This map adds up the lesions of all training scans. Most lie around the ventricles. When Bianka also knows where a voxel lies, the score rises the most. Last: patches. Bianka can also look at the three by three neighbourhood of a voxel, and use its average. That smooths noise, but small lesions fade. In our runs it made the result slightly worse.",
+  "background": "For students who do not know BIANCA: every setting is first shown, then its effect. All numbers are from our own BIANCA runs on the public WMH Challenge data (bianca-film); the bars show the change of the Dice score (match with the expert mask, 0 to 1; Dice is explained in detail three slides later). 1 Images: with FLAIR only every voxel is one number, with T1 it is two, so lesion and healthy points separate a little better: +0.03. 2 Healthy examples: 10,000 instead of 2,000 non-lesion points per scan (lesion points: 2,000 per scan): +0.04. 3 Position: the scans are aligned to the MNI152 standard brain; the map adds up the expert masks of the 60 training scans. Lesions cluster around the ventricles, so position is a strong hint: +0.14, the biggest effect. 4 Patches: besides the voxel itself BIANCA can use the average of its 3 x 3 neighbourhood. That smooths noise but also small lesions: -0.03 in our runs.",
+  "qr": null
+ },
+ {
+  "n": 21,
+  "key": "bianca_after",
+  "title": "What matters when you use BIANCA",
+  "part": "2  White matter lesions",
+  "kind": "clip",
+  "clip": "clips/19_bianca_after.mp4",
+  "poster": "poster/19_bianca_after.jpg",
+  "text": "After training, Bianka gives a probability for every voxel. The cut off decides what counts as lesion. At zero point five, too much is marked. A high cut off, zero point nine five, was much better. Some marks are still wrong: they lie outside the white matter, for example in the cortex. A white matter mask removes them. The true lesions stay. Now your data. Bianka learned on scans from certain scanners. A new scanner gives another brightness and another contrast. The stored examples fit less well, and the score drops. And slice thickness. A thick slice averages more tissue in every voxel. Big lesions stay. Small lesions fade away. That cost the most. So train Bianka on scans like the ones in your study.",
   "check": null,
   "exercise": null,
   "sources": [
@@ -663,18 +697,18 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "What did our own runs show? Position in the brain helps most. More healthy training points and adding T one help a little. Patches did not help. After training, a high cut off and a white matter mask help a lot. New scanners and thick slices cost the most.",
-  "background": "From our own BIANCA runs on the public WMH Challenge data (bianca-film). Training choices, Dice change: MNI position +0.14 (the biggest), 10,000 instead of 2,000 non-lesion points +0.04, T1 in addition to FLAIR +0.03, patches -0.03 (worse). After training: cut-off 0.95 instead of 0.5 +0.13 (internal split), white-matter mask +0.08 on the 110 test scans (0.586 -> 0.665), new scanners -0.05 (0.675 seen vs 0.621 unseen), 5 mm instead of 3 mm slices about -0.11 (simulation). Training tips: masks of the same scanner and protocol, enough lesion and non-lesion points, choose the cut-off on scans not used for training, never on the test set.",
+  "notes": "After training, Bianka gives a probability for every voxel. The cut off decides what counts as lesion. At zero point five, too much is marked. A high cut off, zero point nine five, was much better. Some marks are still wrong: they lie outside the white matter, for example in the cortex. A white matter mask removes them. The true lesions stay. Now your data. Bianka learned on scans from certain scanners. A new scanner gives another brightness and another contrast. The stored examples fit less well, and the score drops. And slice thickness. A thick slice averages more tissue in every voxel. Big lesions stay. Small lesions fade away. That cost the most. So train Bianka on scans like the ones in your study.",
+  "background": "Settings after training, and the data. 1 Cut-off: BIANCA gives a probability per voxel; at 0.5 too much is marked, 0.95 was better by +0.13 (internal split; choose the cut-off on scans not used for training, never on the test set). 2 White matter mask: marks outside the white matter (cortex, ventricle edge) are removed: +0.08 on the 110 test scans (0.586 -> 0.665). 3 New scanner: scans from scanners that were not in the training scored 0.621, scans from known scanners 0.675: -0.05. 4 Slice thickness: 5 mm instead of 3 mm slices cost about -0.11 (simulation); a thick slice averages a small lesion with its surroundings (partial volume). Take-home: the training scans should come from the same scanner and protocol as the study.",
   "qr": null
  },
  {
-  "n": 21,
+  "n": 22,
   "key": "bianca_small",
   "title": "What BIANCA misses: small lesions",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/19_bianca_small.mp4",
-  "poster": "poster/19_bianca_small.jpg",
+  "clip": "clips/20_bianca_small.mp4",
+  "poster": "poster/20_bianca_small.jpg",
   "text": "Which lesions does Bianka find? The big ones, almost always. But of the smallest lesions, under ten voxels, only one in four. That is why small lesions pull Dice down.",
   "check": null,
   "exercise": null,
@@ -692,13 +726,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 22,
+  "n": 23,
   "key": "unet",
   "title": "The U-Net in one picture",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/20_unet.mp4",
-  "poster": "poster/20_unet.jpg",
+  "clip": "clips/21_unet.mp4",
+  "poster": "poster/21_unet.jpg",
   "text": "A U net goes down, shrinking the image to see context. Then it goes up again, and skip connections bring back the detail. It learns its own features. Today, the best lesion tools work like this.",
   "check": {
    "q": "What do the skip connections bring back?",
@@ -730,13 +764,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 23,
+  "n": 24,
   "key": "bianca_vs_unet",
   "title": "BIANCA or U-Net?",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/21_bianca_vs_unet.mp4",
-  "poster": "poster/21_bianca_vs_unet.jpg",
+  "clip": "clips/22_bianca_vs_unet.mp4",
+  "poster": "poster/22_bianca_vs_unet.jpg",
   "text": "So, Bianka or U net? Bianka needs no graphics card. It is simple: you can follow every step. And sometimes, it is good enough. A U net is usually more accurate. But training it needs a graphics card, and it is harder to see why it decides.",
   "check": null,
   "exercise": null,
@@ -759,13 +793,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 24,
+  "n": 25,
   "key": "dice",
   "title": "The Dice score",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/22_dice.mp4",
-  "poster": "poster/22_dice.jpg",
+  "clip": "clips/23_dice.mp4",
+  "poster": "poster/23_dice.jpg",
   "text": "Put the mask on the reference: hits in both, extra marks, and misses. Dice is two times the hits, divided by both mask sizes together. One is perfect. This slice: zero point eight two. Bianka on average: zero point seven.",
   "check": {
    "q": "TP = 50, FP = 25, FN = 25. Dice?",
@@ -797,13 +831,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 25,
+  "n": 26,
   "key": "raters",
   "title": "Even experts do not agree",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/23_raters.mp4",
-  "poster": "poster/23_raters.jpg",
+  "clip": "clips/24_raters.mp4",
+  "poster": "poster/24_raters.jpg",
   "text": "Even experts do not agree. A second expert, on the same scans, reached only zero point seven seven to zero point seven nine against the reference. So about zero point eight is the ceiling. The best program, a U net, reached it.",
   "check": null,
   "exercise": null,
@@ -821,13 +855,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 26,
+  "n": 27,
   "key": "dice_small",
   "title": "Dice is hard on small lesions",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/24_dice_small.mp4",
-  "poster": "poster/24_dice_small.jpg",
+  "clip": "clips/25_dice_small.mp4",
+  "poster": "poster/25_dice_small.jpg",
   "text": "Shift a big lesion by one voxel: Dice is still zero point nine. The same shift on a tiny lesion: zero point five. Small lesions are hard on Dice.",
   "check": {
    "q": "Same method, two patients. Who tends to get the lower Dice?",
@@ -864,16 +898,16 @@ window.SLIDES = [
   "key_q": false,
   "sources": [],
   "qr": null,
-  "n": 27
+  "n": 28
  },
  {
-  "n": 28,
+  "n": 29,
   "key": "ex2",
   "title": "Your turn: segment the lesions",
   "part": "2  White matter lesions",
   "kind": "exercise",
   "clip": null,
-  "poster": "poster/25_ex2.jpg",
+  "poster": "poster/26_ex2.jpg",
   "text": "Your turn. Open the lesion exercise. A short tutorial first, then paint the lesions on three slices of one patient, and get your Dice. You have six minutes.",
   "check": null,
   "exercise": {
@@ -896,13 +930,13 @@ window.SLIDES = [
   "qr": "qr/wmh-dice.png"
  },
  {
-  "n": 29,
+  "n": 30,
   "key": "beat2",
   "title": "Can you beat the algorithm?",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/26_beat2.mp4",
-  "poster": "poster/26_beat2.jpg",
+  "clip": "clips/27_beat2.mp4",
+  "poster": "poster/27_beat2.jpg",
   "text": "How did you do? Bianka got zero point seven, a second expert about zero point seven eight, the best program, a U net, zero point eight. Hands up, who beat Bianka? The small spots are hard for everyone.",
   "check": null,
   "exercise": null,
@@ -925,13 +959,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 30,
+  "n": 31,
   "key": "cmb_what",
   "title": "Microbleeds: small dark dots",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/27_cmb_what.mp4",
-  "poster": "poster/27_cmb_what.jpg",
+  "clip": "clips/28_cmb_what.mp4",
+  "poster": "poster/28_cmb_what.jpg",
   "text": "Part three. A micro-bleed is a tiny old bleed. On T two star it is a small dark dot. Watch for lookalikes, like vessels cut across. This slice has three.",
   "check": {
    "q": "On which images do you look for microbleeds?",
@@ -963,13 +997,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 31,
+  "n": 32,
   "key": "cmb_unet",
   "title": "The network marks voxels. We need a count.",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/28_cmb_unet.mp4",
-  "poster": "poster/28_cmb_unet.jpg",
+  "clip": "clips/29_cmb_unet.mp4",
+  "poster": "poster/29_cmb_unet.jpg",
   "text": "A three D U net marks every voxel that looks like a bleed. But we need a number of bleeds, so we group voxels into objects.",
   "check": {
    "q": "The network marks 17 voxels. How many microbleeds is that?",
@@ -996,13 +1030,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 32,
+  "n": 33,
   "key": "cmb_26",
   "title": "Clusters: 26 neighbours",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/29_cmb_26.mp4",
-  "poster": "poster/29_cmb_26.jpg",
+  "clip": "clips/30_cmb_26.mp4",
+  "poster": "poster/30_cmb_26.jpg",
   "text": "Voxels that touch belong together: by a face, an edge, or a corner. Twenty six neighbours. One cluster is one micro-bleed.",
   "check": {
    "q": "Two marked voxels touch only at a corner. With 26 neighbours they are ...",
@@ -1051,16 +1085,16 @@ window.SLIDES = [
    }
   ],
   "qr": null,
-  "n": 33
+  "n": 34
  },
  {
-  "n": 34,
+  "n": 35,
   "key": "f1",
   "title": "F1: counting hits and misses",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/30_f1.mp4",
-  "poster": "poster/30_f1.jpg",
+  "clip": "clips/31_f1.mp4",
+  "poster": "poster/31_f1.jpg",
   "text": "Now we count objects: found, false alarms, missed. Precision: how many marks are real. Recall: how many bleeds we found. F one combines both. Four found, one false, one missed: F one is zero point eight.",
   "check": {
    "q": "TP = 3, FP = 3, FN = 0. Precision?",
@@ -1109,16 +1143,16 @@ window.SLIDES = [
    }
   ],
   "qr": null,
-  "n": 35
+  "n": 36
  },
  {
-  "n": 36,
+  "n": 37,
   "key": "count4",
   "title": "Why the count matters: four",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/31_count4.mp4",
-  "poster": "poster/31_count4.jpg",
+  "clip": "clips/32_count4.mp4",
+  "poster": "poster/32_count4.jpg",
   "text": "Why count so carefully? New Alzheimer drugs remove amyloid, but they can cause swelling and new bleeds in the brain. The risk is higher in people who already have micro-bleeds. So with more than four, the drug is not given. Four or five: one dot decides.",
   "check": {
    "q": "A patient has 5 microbleeds. By the appropriate use recommendations ...",
@@ -1150,13 +1184,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 37,
+  "n": 38,
   "key": "cmb_vessel",
   "title": "Microbleed or vessel? Scroll.",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/32_cmb_vessel.mp4",
-  "poster": "poster/32_cmb_vessel.jpg",
+  "clip": "clips/33_cmb_vessel.mp4",
+  "poster": "poster/33_cmb_vessel.jpg",
   "text": "Is every dark dot a micro-bleed? No. On a single slice, a micro-bleed and a vessel cut across look the same. So scroll through the slices. The micro-bleed is gone after a few slices. The vessel goes on, slice after slice, and it moves. From the side, the micro-bleed is a ball, and the vessel is a line. Mark the vessel, and you have a false positive. Calcium, and the edges near bone and air, can fool us the same way.",
   "check": {
    "q": "A dark dot stays visible over 15 slices and moves sideways. It is most likely ...",
@@ -1188,13 +1222,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 38,
+  "n": 39,
   "key": "ex3",
   "title": "Your turn: find the microbleeds",
   "part": "3  Microbleeds",
   "kind": "exercise",
   "clip": null,
-  "poster": "poster/33_ex3.jpg",
+  "poster": "poster/34_ex3.jpg",
   "text": "Last exercise. Three scans. Scroll through the slices and click on every micro-bleed you find. Then you get your precision, your recall and your F one. You have nine minutes.",
   "check": null,
   "exercise": {
@@ -1217,13 +1251,13 @@ window.SLIDES = [
   "qr": "qr/cmb-f1.png"
  },
  {
-  "n": 39,
+  "n": 40,
   "key": "beat3",
   "title": "Can you beat the algorithm?",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/34_beat3.mp4",
-  "poster": "poster/34_beat3.jpg",
+  "clip": "clips/35_beat3.mp4",
+  "poster": "poster/35_beat3.jpg",
   "text": "The best program reached an F one of about zero point seven. Hands up: who did better? Who found the big one, and who missed small ones?",
   "check": null,
   "exercise": null,
@@ -1241,13 +1275,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 40,
+  "n": 41,
   "key": "wrap",
   "title": "Three tasks, one rule",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/35_wrap.mp4",
-  "poster": "poster/35_wrap.jpg",
+  "clip": "clips/36_wrap.mp4",
+  "poster": "poster/36_wrap.jpg",
   "text": "Grey matter: check the quality score. Lesions: Dice, and small ones are hard. Micro-bleeds: F one, and beware lookalikes. One rule for all: never trust a segmentation you have not checked.",
   "check": null,
   "exercise": null,
@@ -1259,13 +1293,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 41,
+  "n": 42,
   "key": "exam",
   "title": "For the exam",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/36_exam.mp4",
-  "poster": "poster/36_exam.jpg",
+  "clip": "clips/37_exam.mp4",
+  "poster": "poster/37_exam.jpg",
   "text": "For the exam: read a quality score, compute a Dice, and count clusters for an F one. You just did all three.",
   "check": {
    "q": "TP = 8, FP = 2, FN = 2. Dice?",
@@ -1286,13 +1320,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 42,
+  "n": 43,
   "key": "more",
   "title": "Films, slides and exercises stay online",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/37_more.mp4",
-  "poster": "poster/37_more.jpg",
+  "clip": "clips/38_more.mp4",
+  "poster": "poster/38_more.jpg",
   "text": "Everything stays online. For more practice, there is the full atlas trainer. Thank you.",
   "check": null,
   "exercise": null,
