@@ -1,32 +1,29 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Brain Segmentation Lectures</title>
-<meta name="description" content="Narrated lecture films on segmenting the brain on MRI: MRI basics, FreeSurfer, SynthSeg, grey matter volumes, white matter hyperintensities with BIANCA, cerebral microbleed detection.">
+<title>Brain Segmentation Lecture</title>
+<meta name="description" content="Lecture of 18.11.2026 on brain region segmentation on MRI: grey matter, white matter lesions and microbleeds, with three exercises.">
 <style>
-:root{--bg:#f6f7f8;--ink:#16191c;--muted:#5d6670;--line:#d9dee3;--accent:#1f7a8c}
-@media (prefers-color-scheme:dark){:root{--bg:#0b0e11;--ink:#e6ecef;--muted:#8b98a3;--line:#232a31;--accent:#4cc3d6;color-scheme:dark}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,sans-serif}
-main{max-width:1040px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right)) 48px max(16px,env(safe-area-inset-left))}
-h1{font-size:26px;margin:0 0 6px;text-wrap:balance}header p{color:var(--muted);max-width:68ch;margin:0 0 8px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:22px;margin-top:26px}
-article.wide{grid-column:1/-1}
-ul.ch{list-style:none;columns:2 260px;font-size:13px;margin:12px 0 0;padding:0}ul.ch li{break-inside:avoid;padding:2px 0}ul.ch b{color:var(--accent);font-weight:400;display:inline-block;min-width:3.2em}ul.ch a{color:var(--muted);text-decoration:none}ul.ch a:hover{color:var(--ink)}
-article{border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
-h2{font-size:17px;margin:0 0 4px}h2 span{color:var(--accent);font-family:ui-monospace,monospace;margin-right:6px}
-article p{color:var(--muted);font-size:13.5px;margin:0 0 10px}article i{font-style:normal;font-family:ui-monospace,monospace;color:var(--accent)}
-video{width:100%;display:block;border-radius:8px;background:#000}a{color:var(--accent)}footer{color:var(--muted);font-size:12.5px;margin-top:34px;max-width:80ch}
+:root{--bg:#f6f7f8;--ink:#16191c;--muted:#5d6670;--line:#d9dee3;--accent:#1f7a8c;--on:#ffffff}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0e11;--ink:#e6ecef;--muted:#8b98a3;--line:#232a31;--accent:#4cc3d6;--on:#0b0e11;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:40px max(16px,env(safe-area-inset-right)) 48px max(16px,env(safe-area-inset-left))}
+h1{font-size:28px;margin:0 0 6px;text-wrap:balance}header p{color:var(--muted);max-width:62ch;margin:0}
+a{color:var(--accent)}
+a.open{display:block;margin:28px 0 30px;padding:18px 20px;border-radius:12px;background:var(--accent);color:var(--on);font-size:20px;font-weight:600;text-decoration:none;text-align:center}
+h2{font-size:17px;margin:0 0 10px}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+li a{display:block;border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-decoration:none;color:var(--ink)}
+li b{color:var(--accent);margin-right:8px}li span{color:var(--muted);font-size:14px;display:block}
+footer{color:var(--muted);font-size:13px;margin-top:34px;max-width:80ch}
 </style></head><body><main>
-<header><h1>Segmentation of the brain on MRI</h1>
-<p>A lecture series of short narrated films, one idea per step. English, 720p. Films 6 (U-Net and nnU-Net) and 8 (QC across all tools) follow.</p></header>
-<div class="grid">
-<article><h2><span>01</span> MRI basics for segmentation</h2><p>T1, T2, FLAIR and T2*, voxels and partial volume, bias field and N4, brain extraction, registration to MNI. <i>7:29</i></p><video controls playsinline preload="metadata" src="films/lecture-01-mri-basics.mp4"></video></article>
-<article><h2><span>02</span> FreeSurfer recon-all</h2><p>From the scan to aseg and the surfaces, the files and the log, and quality control: Euler number, slices, what to fix or exclude. <i>9:04</i></p><video controls playsinline preload="metadata" src="films/lecture-02-freesurfer.mp4"></video></article>
-<article><h2><span>03</span> SynthSeg</h2><p>Why contrast-specific models break, domain randomisation, robust mode, the quality scores, and where it fails. <i>7:53</i></p><video controls playsinline preload="metadata" src="films/lecture-03-synthseg.mp4"></video></article>
-<article><h2><span>04</span> Grey matter volumes in practice</h2><p>A segmentation is a list, head size and three ways to adjust for it, lesions that pretend to be grey matter, QC. <i>8:39</i></p><video controls playsinline preload="metadata" src="films/lecture-04-gm-volumes.mp4"></video></article>
-<article><h2><span>05</span> White matter hyperintensities and BIANCA</h2><p>A classifier, not a filter: data preparation, training labels, probability and threshold, validation and failure modes. <i>8:28</i></p><video controls playsinline preload="metadata" src="films/lecture-05-wmh-bianca.mp4"></video></article>
-<article class="wide"><h2><span>05+</span> BIANCA deep dive</h2><p>The long version of film 5: from FLAIR and T1 to a lesion volume with FSL BIANCA, every step with real runs on the public MICCAI WMH Segmentation Challenge data (60 training, 110 test scans, mean Dice 0.665). Lesion filling and the commands included. <i>16:07, 1080p</i></p><video id="deep" controls playsinline preload="metadata" src="films/bianca-deep-dive.mp4"></video><ul class="ch"><li><a href="#" data-t="0"><b>0:00</b> What are white matter hyperintensities?</a></li><li><a href="#" data-t="56"><b>0:56</b> Why we need segmentation</a></li><li><a href="#" data-t="109"><b>1:49</b> Which images BIANCA needs</a></li><li><a href="#" data-t="163"><b>2:43</b> Preparing the images</a></li><li><a href="#" data-t="236"><b>3:56</b> Every voxel becomes a point</a></li><li><a href="#" data-t="315"><b>5:15</b> Training: collect example points</a></li><li><a href="#" data-t="387"><b>6:27</b> The neighbours vote</a></li><li><a href="#" data-t="449"><b>7:29</b> Choosing the threshold</a></li><li><a href="#" data-t="537"><b>8:57</b> Removing false positives</a></li><li><a href="#" data-t="598"><b>9:58</b> How good is it?</a></li><li><a href="#" data-t="666"><b>11:06</b> Why fill WMH before other analyses</a></li><li><a href="#" data-t="735"><b>12:15</b> Run it yourself</a></li><li><a href="#" data-t="809"><b>13:29</b> Tips: what matters</a></li></ul></article>
-<article><h2><span>07</span> Detecting cerebral microbleeds</h2><p>Blooming on T2*, look-alikes, three size classes (&lt;2, 2-5, &gt;5 mm), two-stage detection, MicrobleedNet, F1 vs Dice, QC. <i>8:42</i></p><video controls playsinline preload="metadata" src="films/lecture-07-cmb-detection.mp4"></video></article>
-</div>
-<footer>Brain images: public VALDO 2021 challenge data (Sudre et al., "Where is VALDO? VAscular Lesions Detection and segmentatiOn challenge at MICCAI 2021", Medical Image Analysis 2024), used for teaching, non-commercial. BIANCA deep dive: MICCAI WMH Segmentation Challenge data (Kuijf et al., IEEE TMI 2019; DataverseNL doi:10.34894/AECRSD, CC BY-NC 4.0). Facts are taken from the method papers and official documentation named in each film. <a href="https://github.com/mendeltem/mri-segmentation-lectures">Source on GitHub</a></footer>
-<script>const v=document.getElementById("deep");document.querySelectorAll("ul.ch a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();v.currentTime=+a.dataset.t;v.play();}));</script>
+<header><h1>Brain region segmentation on MRI</h1>
+<p>Lecture of 18.11.2026, MRI in Neuroscience and Neurology: grey matter, white matter lesions and microbleeds.</p></header>
+<a class="open" href="lecture_1118/deck/">Open the lecture</a>
+<h2>The three exercises</h2>
+<ul>
+<li><a href="lecture_1118/exercises/atlas-quiz/"><b>1</b> Atlas quiz<span>Which structure is coloured? 10 questions.</span></a></li>
+<li><a href="lecture_1118/exercises/wmh-dice/"><b>2</b> White matter lesions<span>Paint the lesions on three slices and get your Dice score.</span></a></li>
+<li><a href="lecture_1118/exercises/cmb-f1/"><b>3</b> Microbleeds<span>Click the microbleeds on three scans and get your F1 score.</span></a></li>
+</ul>
+<footer>Public data only: WMH Segmentation Challenge (Kuijf et al., IEEE TMI 2019; DataverseNL doi:10.34894/AECRSD, CC BY-NC 4.0); VALDO 2021 (Sudre et al., Medical Image Analysis 2024, CC BY-NC-SA); Dallas Lifespan Brain Study (OpenNeuro ds004856) and Aphasia Recovery Cohort (OpenNeuro ds004884), CC0; atlases AAL, Harvard-Oxford (FSL), MNI152. Teaching use only, non-commercial.</footer>
 </main></body></html>

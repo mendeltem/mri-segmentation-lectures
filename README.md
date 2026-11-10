@@ -1,22 +1,24 @@
-# Segmentation of the brain on MRI -- lecture films
+# Brain region segmentation on MRI -- lecture of 18.11.2026
 
-Short narrated lecture films (English, 720p, animated in the style of 3Blue1Brown) on segmenting the brain on MRI.
+The lecture "Brain region segmentation" (MRI in Neuroscience and Neurology) as one HTML page: slides with animated
+clips and voice, interactive slides, a presenter view (key N) and the sources per slide.
 
-**Watch:** https://mendeltem.github.io/mri-segmentation-lectures/
+**Open the lecture:** https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/deck/
 
-| # | Film | Length | File |
-|---|---|---|---|
-| 01 | MRI basics for segmentation | 7:29 | [films/lecture-01-mri-basics.mp4](films/lecture-01-mri-basics.mp4) |
-| 02 | FreeSurfer recon-all | 9:04 | [films/lecture-02-freesurfer.mp4](films/lecture-02-freesurfer.mp4) |
-| 03 | SynthSeg | 7:53 | [films/lecture-03-synthseg.mp4](films/lecture-03-synthseg.mp4) |
-| 04 | Grey matter volumes in practice | 8:39 | [films/lecture-04-gm-volumes.mp4](films/lecture-04-gm-volumes.mp4) |
-| 05 | White matter hyperintensities and BIANCA | 8:28 | [films/lecture-05-wmh-bianca.mp4](films/lecture-05-wmh-bianca.mp4) |
-| 05+ | BIANCA deep dive (long version of film 5, 1080p) | 16:07 | [films/bianca-deep-dive.mp4](films/bianca-deep-dive.mp4) |
-| 07 | Detecting cerebral microbleeds | 8:42 | [films/lecture-07-cmb-detection.mp4](films/lecture-07-cmb-detection.mp4) |
-
-Films 6 (U-Net and nnU-Net) and 8 (QC across all tools) follow.
+| Part | What | Link |
+|---|---|---|
+| Lecture | The slide deck (arrow keys = slides, Space = pause or play) | [lecture_1118/deck](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/deck/) |
+| Exercise 1 | Atlas quiz: which structure is coloured? | [atlas-quiz](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/exercises/atlas-quiz/) |
+| Exercise 2 | Paint white matter lesions and get your Dice score | [wmh-dice](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/exercises/wmh-dice/) |
+| Exercise 3 | Click the microbleeds and get your F1 score | [cmb-f1](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/exercises/cmb-f1/) |
 
 ## Data and licence
 
-Brain images come from the public VALDO 2021 challenge data (Sudre et al., Medical Image Analysis 2024), used for
-teaching only and non-commercially. The BIANCA deep dive uses the MICCAI WMH Segmentation Challenge data (Kuijf et al., IEEE TMI 2019; DataverseNL doi:10.34894/AECRSD, CC BY-NC 4.0). No other imaging data is shown. The films are licensed CC BY-NC 4.0.
+Public data only:
+
+- WMH Segmentation Challenge (Kuijf et al., IEEE TMI 2019), DataverseNL doi:10.34894/AECRSD, CC BY-NC 4.0.
+- VALDO 2021 (Sudre et al., Medical Image Analysis 2024), CC BY-NC-SA.
+- Dallas Lifespan Brain Study (OpenNeuro ds004856) and Aphasia Recovery Cohort (OpenNeuro ds004884), CC0.
+- Atlases: AAL, Harvard-Oxford (FSL), MNI152 -- non-commercial teaching use.
+
+Teaching use only, non-commercial.
