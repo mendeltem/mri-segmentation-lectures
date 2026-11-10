@@ -82,11 +82,12 @@ kbd{background:#000;border:1px solid var(--line);border-radius:4px;padding:0 6px
 <div id="viewport"><div id="stage"><div class="track" id="track"></div>
 <div id="soundhint" hidden style="position:absolute;right:28px;bottom:70px;z-index:6;background:var(--y);color:#111;font-size:24px;padding:12px 20px;border-radius:10px;font-weight:600">🔇 Click or press any key for sound</div>
 <div id="srcpanel" hidden style="position:absolute;right:40px;bottom:70px;width:760px;max-height:620px;overflow:auto;z-index:5;background:rgba(20,24,33,.97);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:19px;line-height:1.45"></div>
+<div id="qapanel" hidden style="position:absolute;right:40px;bottom:70px;width:900px;max-height:800px;overflow:auto;z-index:5;background:rgba(20,24,33,.97);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:21px;line-height:1.45"></div>
 <div id="quiz" hidden></div><div id="text" hidden></div>
 <div id="help" hidden><b>Keys</b><br>
 <kbd>→</kbd> next slide · <kbd>←</kbd> back (clicker: PageDown / PageUp)<br>
 <kbd>Space</kbd> or <kbd>P</kbd> pause / play the voice and the clip · <kbd>R</kbd> replay slide (interactive page: fresh picture) · <kbd>V</kbd> voice on / off · <kbd>A</kbd> autoplay on / off<br>
-<kbd>N</kbd> presenter view (second window: notes, next slide, clock)<br><kbd>T</kbd> spoken text · <kbd>F</kbd> fullscreen · <kbd>H</kbd> this help<br>
+<kbd>N</kbd> presenter view (second window: notes, next slide, clock)<br><kbd>Q</kbd> questions and answers for this slide (click a question to open the answer) · <kbd>T</kbd> spoken text · <kbd>F</kbd> fullscreen · <kbd>H</kbd> this help<br>
 Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops the countdown, "reset" sets it back.</div>
 </div></div>
 <div id="bar">
@@ -94,11 +95,12 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label><input type="checkbox" id="voice" checked> Voice</label>
 <label><input type="checkbox" id="adv"> Auto-advance</label>
 <input type="checkbox" id="skip" hidden>
-<input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bn">N presenter view</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v12 (10.11.) · 38 slides</span><span id="num"></span>
+<input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button>
+<span class="grow"></span><span style="color:var(--dim)">deck v13 (11.11.) · 40 slides</span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
+<script src="qa.js"></script>
 <script src="data/try_cutoff.js"></script><script src="data/try_qc.js"></script><script src="data/try_f1.js"></script>
 <script src="interactive.js"></script>
 <script>
@@ -185,7 +187,7 @@ function rebuildTry(i,from){if(PRESENTER||!window.BUILD_WIDGET)return;const s=S[
  if(s&&s.kind==="try"&&WIDGETS[s.widget])BUILD_WIDGET(s.widget,document.querySelector("#s"+i+" .widget"),true);
  setTimeout(()=>window.REDRAW_WIDGETS&&REDRAW_WIDGETS(),800);
  if(from!==i&&S[from]&&S[from].kind==="try"&&WIDGETS[S[from].widget])setTimeout(()=>{if(cur!==from)BUILD_WIDGET(S[from].widget,document.querySelector("#s"+from+" .widget"),false)},900)}
-function go(i){i=Math.max(0,Math.min(S.length-1,i));setTimeout(()=>{if(!$("#srcpanel").hidden)showSources()},0);preloadNext(i);if(exRun){clearInterval(et);exRun=false}closeQuiz();$("#text").hidden=true;const leaving=cur;cur=i;rebuildTry(i,leaving);
+function go(i){i=Math.max(0,Math.min(S.length-1,i));setTimeout(()=>{if(!$("#srcpanel").hidden)showSources();if(!$("#qapanel").hidden)showQA()},0);preloadNext(i);if(exRun){clearInterval(et);exRun=false}closeQuiz();$("#text").hidden=true;const leaving=cur;cur=i;rebuildTry(i,leaving);
  showSlide(prevCur,i);prevCur=i;$("#num").textContent=`${i+1} / ${S.length}`;
  try{history.replaceState(null,"","#"+S[i].key)}catch(e){}start();send();if(S[i].kind!=="try")hud(auto.checked?"▶ playing":"⏸ Space to play")}
 // check question with countdown
@@ -212,7 +214,11 @@ document.addEventListener("click",e=>{if(e.target.classList.contains("exgo"))exS
 function showSources(){const p=$("#srcpanel"),src=S[cur].sources||[];
  p.innerHTML=`<div style="color:var(--dim);font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Sources · slide ${cur+1}</div>`+
   (src.length?src.map(x=>`<div style="margin:0 0 12px"><a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--b)">${esc(x.label)}</a><div style="color:var(--dim);font-size:17px">${esc(x.about||"")}</div></div>`).join(""):"<div style='color:var(--dim)'>No sources on this slide.</div>")}
-function toggleSources(){const p=$("#srcpanel");if(p.hidden){showSources();p.hidden=false}else p.hidden=true}
+function toggleSources(){const p=$("#srcpanel");if(p.hidden){showSources();p.hidden=false;$("#qapanel").hidden=true}else p.hidden=true}
+// "Q&A" button: the ten most likely questions on the current slide, each with a short answer (film/qa/*.json -> qa.js)
+function qaHtml(key,open){const q=(window.QA||{})[key]||[];return q.length?q.map((x,i)=>`<details${open?" open":""} style="margin:0 0 10px"><summary style="cursor:pointer;color:var(--y)">${i+1}. ${esc(x.q)}</summary><div style="margin:6px 0 6px 26px">${esc(x.a)}</div></details>`).join(""):"<div style='color:var(--dim)'>No questions stored for this slide.</div>"}
+function showQA(){$("#qapanel").innerHTML=`<div style="color:var(--dim);font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Questions and answers · slide ${cur+1} · ${esc(S[cur].title)}</div>`+qaHtml(S[cur].key,false)}
+function toggleQA(){const p=$("#qapanel");if(p.hidden){showQA();p.hidden=false;$("#srcpanel").hidden=true}else p.hidden=true}
 function toggleText(){const t=$("#text");if(t.hidden){t.textContent=S[cur].text;t.hidden=false}else t.hidden=true}
 function fs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
 // Space on a focused tick box must pause the slide, not flip the box (the box flips on keyup)
@@ -230,7 +236,8 @@ addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox
  else if(k==="a"||k==="A"){auto.checked=!auto.checked;auto.onchange()}
  
  else if(k==="Enter"&&!$("#quiz").hidden)reveal();
- else if(k==="Escape"){closeQuiz();$("#srcpanel").hidden=true;$("#help").hidden=true;$("#text").hidden=true}
+ else if(k==="q"||k==="Q")toggleQA();
+ else if(k==="Escape"){closeQuiz();$("#srcpanel").hidden=true;$("#qapanel").hidden=true;$("#help").hidden=true;$("#text").hidden=true}
  else if(k==="t"||k==="T")toggleText();else if(k==="f"||k==="F")fs();
  else if(k==="h"||k==="H"||k==="?")$("#help").hidden=!$("#help").hidden;
  else if(k==="s"||k==="S")exStart()});
@@ -238,7 +245,7 @@ voice.onchange=()=>{store.set("voice",voice.checked);if(hasClip[cur]){el().query
 auto.onchange=()=>{store.set("auto",auto.checked);if(auto.checked)start();else stopAll()};
 adv.onchange=()=>store.set("adv",adv.checked);skip.onchange=()=>{store.set("skip",skip.checked);send()};$("#bn").onclick=openPresenter;qsec.onchange=()=>store.set("qsec",+qsec.value);
 document.querySelectorAll("#bar input,#bar button").forEach(x=>x.addEventListener("click",()=>setTimeout(()=>x.blur(),0)));
-$("#bq").onclick=openQuiz;$("#bsrc").onclick=toggleSources;$("#bt").onclick=toggleText;$("#bf").onclick=fs;$("#bh").onclick=()=>$("#help").hidden=!$("#help").hidden;
+$("#bq").onclick=openQuiz;$("#bsrc").onclick=toggleSources;$("#bqa").onclick=toggleQA;$("#bt").onclick=toggleText;$("#bf").onclick=fs;$("#bh").onclick=()=>$("#help").hidden=!$("#help").hidden;
 // swipe for tablets
 let sx=null;addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});
 addEventListener("touchend",e=>{if(sx===null||PRESENTER)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60)step(dx<0?1:-1);sx=null});
@@ -304,7 +311,7 @@ function presenterView(){
  let st={cur:0,t0:null};
  function fmt(x){x=Math.round(x);const a=Math.abs(x);return (x<0?"-":"")+Math.floor(a/60)+":"+String(a%60).padStart(2,"0")}
  function draw(){const s=S[st.cur],m=M[s.key];$("#pnum").textContent=`${st.cur+1} / ${S.length} · ${s.part}${s.optional?" · optional":""}`;
-  $("#ptitle").textContent=s.title;$("#pnotes").innerHTML=esc(s.notes||s.text)+(s.background?`<details style="margin-top:14px;font-size:17px;color:var(--dim)"><summary>background</summary>${esc(s.background)}</details>`:"");
+  $("#ptitle").textContent=s.title;$("#pnotes").innerHTML=esc(s.notes||s.text)+(s.background?`<details style="margin-top:14px;font-size:17px;color:var(--dim)"><summary>background</summary>${esc(s.background)}</details>`:"")+(((window.QA||{})[s.key]||[]).length?`<details style="margin-top:14px;font-size:18px"><summary style="color:var(--dim)">questions and answers (${window.QA[s.key].length})</summary>${qaHtml(s.key,false)}</details>`:"");
   P=plan(st.skip);starts=P.map((_,i)=>P.slice(0,i).reduce((a,b)=>a+b,0));
   $("#pcheck").textContent=s.check?`${s.key_q?"★ KEY QUESTION (press Q) · ":"(spare question) "}${s.check.q}  →  ${s.check.options[s.check.answer]}`:(s.exercise?`Exercise: ${s.exercise.minutes} min · S starts the countdown`:"");
   let j=st.cur+1;while(st.skip&&j<S.length-1&&S[j].optional)j++;const n=S[j];
