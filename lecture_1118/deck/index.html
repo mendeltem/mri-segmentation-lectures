@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brain Segmentation Lecture</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{--bg:#0b0d12;--panel:#141821;--ink:#ece9e1;--dim:#8d929a;--line:#262b36;
+--y:#FFE14D;--o:#FC8B3C;--b:#58C4DD;--t:#5CD0B3;--g:#83C167;--r:#FC6255;--p:#9A72AC;--d:#8d929a;color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Source Sans 3",system-ui,sans-serif;overflow:hidden}
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{flex:0 0 auto;width:1600px;height:900px;position:relative;overflow:hidden;transform-origin:center center;background:var(--bg)}
+.track{position:absolute;inset:0}
+/* slide change (10.11.2026): soft crossfade inside a part, a right-to-left move only when a new part begins */
+.slide{position:absolute;left:0;top:0;width:1600px;height:900px;padding:44px 56px 0;opacity:0;visibility:hidden;
+ transition:opacity .45s ease,transform .6s cubic-bezier(.65,0,.35,1)}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:24px}
+.head h1{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:46px;margin:0;line-height:1.1;text-wrap:balance}
+.head .part{font-size:24px;color:var(--dim);white-space:nowrap}
+.body{position:absolute;left:56px;right:56px;top:140px;bottom:96px;display:flex;gap:44px;align-items:center}
+.media{flex:0 0 640px;height:640px;position:relative;border-radius:10px;overflow:hidden;background:#000}
+.media img,.media video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .5s}
+.slide.clip{padding:0}.slide.clip .head{display:none}
+.slide.clip .body{left:0;right:0;top:0;bottom:0}
+.slide.clip .src{bottom:8px;z-index:1}
+.slide.clip .media{flex:1 1 auto;height:100%;background:var(--bg)}
+.slide.clip .pts{display:none}
+.slide.nomedia .media{display:none}
+.slide.clip.nomedia .media{display:block}.slide.clip.nomedia .pts{display:none}
+#hud{position:fixed;left:14px;bottom:58px;z-index:7;background:rgba(20,24,33,.92);border:1px solid var(--line);border-radius:10px;
+ padding:8px 14px;font-size:16px;color:var(--ink);display:flex;gap:12px;align-items:center;transition:opacity .4s;pointer-events:none}
+#hud.hide{opacity:0}#hud b{color:var(--y);font-variant-numeric:tabular-nums}#hud .st{color:var(--dim)}
+.slide.nomedia .pts{margin:0 auto;max-width:1100px}
+.pts{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:18px}
+.pt{font-size:31px;line-height:1.25;padding:16px 22px;border-radius:12px;border:3px solid color-mix(in srgb,var(--c) 45%,transparent);
+background:color-mix(in srgb,var(--c) 6%,transparent);color:var(--ink);opacity:.38;transition:all .45s}
+.pt.on{opacity:1;border-color:var(--c);background:color-mix(in srgb,var(--c) 22%,transparent);box-shadow:0 0 26px color-mix(in srgb,var(--c) 40%,transparent)}
+.pt.seen{opacity:.85}
+.ex{margin-top:10px;display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ex a{font-size:30px;color:var(--bg);background:var(--g);padding:14px 26px;border-radius:12px;text-decoration:none;font-weight:600}
+.ex .clock{font-size:64px;font-variant-numeric:tabular-nums;font-family:"Source Serif 4",Georgia,serif}
+.ex .clock.over{color:var(--r)}
+.ex button{font-size:24px}
+.ladder{display:flex;gap:8px;margin-top:8px;justify-content:flex-end}
+.ladder span{font-size:17px;padding:3px 10px;border-radius:999px;border:2px solid var(--line);color:var(--dim)}
+.ladder span.on{border-color:var(--p);color:var(--ink);background:color-mix(in srgb,var(--p) 25%,transparent)}
+.hr{display:flex;flex-direction:column;align-items:flex-end}
+.opt-tag{font-size:16px;color:var(--y);border:1px solid var(--y);border-radius:6px;padding:1px 8px;margin-left:14px;vertical-align:middle}
+.qr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg)}
+.qr img{position:static;width:430px;height:430px;border-radius:10px}
+.laptop{display:flex;flex-direction:column;gap:6px;padding:16px 22px;border-radius:12px;border:3px solid var(--b);background:color-mix(in srgb,var(--b) 10%,transparent)}
+.laptop span{font-size:20px;color:var(--dim)}.laptop a{font-size:27px;color:var(--ink);word-break:break-all;text-decoration:none;font-family:ui-monospace,Consolas,monospace}
+.qr div{font-size:24px;color:var(--dim);text-align:center;word-break:break-all;max-width:600px}
+.src{position:absolute;left:56px;right:56px;bottom:22px;font-size:17px;color:var(--dim);display:flex;gap:18px;flex-wrap:wrap}
+.src a{color:var(--dim)}
+#bar{position:fixed;left:0;right:0;bottom:0;display:flex;gap:14px;align-items:center;padding:6px 14px;background:rgba(11,13,18,.92);
+border-top:1px solid var(--line);font-size:15px;flex-wrap:wrap;color:var(--dim);transition:opacity .4s;z-index:5}
+#bar.hide{opacity:0}#bar:hover{opacity:1}
+#bar label{display:flex;gap:5px;align-items:center;cursor:pointer;color:var(--ink)}
+#bar button,.ex button,#quiz button{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 10px;cursor:pointer;font:inherit}
+#bar .grow{flex:1}
+#prog{position:fixed;left:0;top:0;height:4px;background:var(--b);transition:width .4s;z-index:6}
+#quiz{position:absolute;inset:0;background:rgba(11,13,18,.985);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:60px;z-index:4}
+#quiz h2{font-family:"Source Serif 4",Georgia,serif;font-size:44px;margin:0;text-align:center;max-width:1300px;text-wrap:balance}
+#quiz .opts{display:flex;gap:22px;flex-wrap:wrap;justify-content:center}
+#quiz .opt{font-size:30px;padding:20px 30px;border-radius:12px;border:3px solid var(--b);background:color-mix(in srgb,var(--b) 8%,transparent);min-width:240px;text-align:center}
+#quiz .opt.right{border-color:var(--g);background:color-mix(in srgb,var(--g) 30%,transparent)}
+#quiz .opt.wrong{opacity:.3}
+#quiz .timer{font-size:56px;font-variant-numeric:tabular-nums;color:var(--y)}
+#quiz .why{font-size:28px;color:var(--g);min-height:36px}
+#quiz .hint{font-size:20px;color:var(--dim)}
+#text{position:absolute;left:56px;right:56px;bottom:70px;font-size:24px;line-height:1.35;background:rgba(20,24,33,.96);border:1px solid var(--line);padding:18px 22px;border-radius:10px;z-index:3}
+#help{position:absolute;inset:120px 300px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:30px 40px;font-size:24px;line-height:1.6;z-index:4}
+kbd{background:#000;border:1px solid var(--line);border-radius:4px;padding:0 6px}
+</style>
+</head>
+<body>
+<div id="prog"></div><div id="hud" class="hide"><b id="hnum"></b><span id="htitle"></span><span class="st" id="hst"></span></div>
+<div id="viewport"><div id="stage"><div class="track" id="track"></div>
+<div id="soundhint" hidden style="position:absolute;right:28px;bottom:70px;z-index:6;background:var(--y);color:#111;font-size:24px;padding:12px 20px;border-radius:10px;font-weight:600">🔇 Click or press any key for sound</div>
+<div id="srcpanel" hidden style="position:absolute;right:40px;bottom:70px;width:760px;max-height:620px;overflow:auto;z-index:5;background:rgba(20,24,33,.97);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:19px;line-height:1.45"></div>
+<div id="quiz" hidden></div><div id="text" hidden></div>
+<div id="help" hidden><b>Keys</b><br>
+<kbd>→</kbd> next slide · <kbd>←</kbd> back (clicker: PageDown / PageUp)<br>
+<kbd>Space</kbd> or <kbd>P</kbd> pause / play the voice and the clip · <kbd>R</kbd> replay slide · <kbd>V</kbd> voice on / off · <kbd>A</kbd> autoplay on / off<br>
+<kbd>N</kbd> presenter view (second window: notes, next slide, clock)<br><kbd>T</kbd> spoken text · <kbd>F</kbd> fullscreen · <kbd>H</kbd> this help<br>
+Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops the countdown, "reset" sets it back.</div>
+</div></div>
+<div id="bar">
+<label><input type="checkbox" id="auto" checked> Autoplay</label>
+<label><input type="checkbox" id="voice" checked> Voice</label>
+<label><input type="checkbox" id="adv"> Auto-advance</label>
+<input type="checkbox" id="skip" hidden>
+<input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bn">N presenter view</button>
+<span class="grow"></span><span style="color:var(--dim)">deck version 10.11. 19:00</span><span id="num"></span>
+</div>
+<script src="slides.js"></script>
+<script src="media.js"></script>
+<script src="data/try_cutoff.js"></script><script src="data/try_qc.js"></script><script src="data/try_f1.js"></script>
+<script src="interactive.js"></script>
+<script>
+const $=s=>document.querySelector(s), S=window.SLIDES, M=window.MEDIA, PAGES="https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/";
+const PRESENTER=location.hash==="#presenter";
+S.forEach(s=>{s.check=null;s.key_q=false});   // 10.11.2026, lecturer: no check questions on the slides (kept in slides_data.py)
+const store={get(k,d){try{const v=localStorage.getItem("deck1118."+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("deck1118."+k,JSON.stringify(v))}catch(e){}}};
+const auto=$("#auto"),voice=$("#voice"),adv=$("#adv"),qsec=$("#qsec"),skip=$("#skip");skip.checked=false;
+auto.checked=store.get("auto",true);voice.checked=store.get("voice",true);adv.checked=store.get("adv",false);qsec.value=store.get("qsec",30);
+const audio=new Audio();audio.preload="auto";
+let cur=0,playing=false,clock=0,last=0,raf=0,hasClip={};
+const track=$("#track");
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+const NOM={seconds:0,beats:[]};   // interactive slides have no voice and no timeline
+S.forEach((s,i)=>{if(s.kind==="try")M[s.key]=NOM;const m=M[s.key];const el=document.createElement("section");el.className="slide";el.id="s"+i;
+ if(s.kind==="try"){el.classList.add("try");
+  el.innerHTML=`<div class="head"><h1>${esc(s.title)}</h1><div class="hr"><span class="part">${esc(s.part)}</span></div></div><div class="body"><div class="widget" style="width:100%;height:100%"></div></div>
+  <div class="src">${(s.sources||[]).map(x=>`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join("")}</div>`;
+  track.appendChild(el);if(!PRESENTER&&window.WIDGETS&&WIDGETS[s.widget])try{WIDGETS[s.widget](el.querySelector(".widget"))}catch(e){el.querySelector(".widget").textContent="widget error: "+e.message}
+  return}
+ const firstImg=m.beats.map(b=>b.img).find(b=>b&&b!=="-");
+ if(!firstImg&&!s.qr)el.classList.add("nomedia");
+ const pts=m.beats.map((b,bi)=>b.pts.map((p,pi)=>`<div class="pt" data-t="${p.t}" style="--c:var(--${p.c})">${esc(p.text)}</div>`).join("")).join("");
+ const ex=s.exercise?`<div class="ex"><a href="${esc(s.exercise.url)}" target="_blank" rel="noopener">Open: ${esc(s.exercise.name)}</a>
+   <span class="clock" data-min="${s.exercise.minutes}">${s.exercise.minutes}:00</span><button class="exgo">S start / stop</button><button class="exreset">reset</button></div>
+   <div class="laptop"><span>laptop: open</span><a href="${esc(PAGES+s.exercise.url.replace("../","").replace("index.html",""))}" target="_blank" rel="noopener">${esc((PAGES+s.exercise.url.replace("../","").replace("index.html","")).replace("https://",""))}</a></div>`:"";
+ const step={"1  Grey matter":0,"2  White matter lesions":1,"3  Microbleeds":2}[s.part];
+ const lad=["QC score · volume","Dice · overlap","F1 · count"].map((t,j)=>`<span class="${step===j||(step===undefined&&s.part==="Wrap-up")?"on":""}">${t}</span>`).join("");
+ el.innerHTML=`<div class="head"><h1>${esc(s.title)}${s.optional?'<span class="opt-tag">optional</span>':""}${s.key_q?'<span class="opt-tag" style="color:var(--b);border-color:var(--b)">? question</span>':""}</h1><div class="hr"><span class="part">${esc(s.part)}</span>${s.part==="Opening"?"":`<div class="ladder">${lad}</div>`}</div></div>
+ <div class="body"><div class="media">${firstImg?`<img alt="" src="img/${firstImg}.jpg">`:""}${s.qr?`<div class="qr"><img alt="QR code" src="${s.qr}"><div>phones: scan with the camera</div></div>`:""}<video playsinline preload="none" hidden></video></div>
+ <div class="pts">${pts}${ex}</div></div>
+ <div class="src">${(s.sources||[]).map(x=>`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join("")}</div>`;
+ track.appendChild(el);
+ // a rendered clip replaces the still picture once it exists
+ // a slide with a clip shows the clip area at once (dark first frame), so a slide change never flashes the still version;
+ // only if the clip cannot be loaded does the still version come back. The presenter window loads no clips.
+ const v=el.querySelector("video");
+ if(!PRESENTER&&s.clip){v.src=s.clip;v.preload=i<3?"auto":"metadata";el.classList.add("clip");v.hidden=false}
+ v.addEventListener("loadedmetadata",()=>{hasClip[i]=true;const im=el.querySelector(".media img");if(im)im.remove();if(i===cur)start()});
+ v.addEventListener("error",()=>{if(!s.clip)return;hasClip[i]=false;el.classList.remove("clip");v.hidden=true;if(i===cur)start()});v.addEventListener("waiting",()=>{if(i===cur)hud("… loading clip",true)});v.addEventListener("playing",()=>{if(i===cur)hud("▶ playing")});
+ v.addEventListener("ended",()=>{if(i===cur)ended()});
+});
+function fit(){if(PRESENTER)return;const k=Math.min(innerWidth/1600,innerHeight/900);$("#stage").style.transform=`scale(${k})`}
+addEventListener("resize",fit);fit();
+function el(){return $("#s"+cur)}
+function render(t){const e=el(),m=M[S[cur].key];
+ let img=null;for(const b of m.beats){if(b.t<=t+.01&&b.img)img=b.img}
+ const im=e.querySelector(".media img");if(im&&img&&img!=="-"&&!im.src.endsWith("img/"+img+".jpg"))im.src="img/"+img+".jpg";
+ const all=[...e.querySelectorAll(".pt[data-t]")];let lastOn=-1;all.forEach((p,i)=>{if(+p.dataset.t<=t)lastOn=i});
+ if(S[cur].exercise){all.forEach(p=>{p.classList.add("on");p.classList.remove("seen")});$("#prog").style.width=((cur+1)/S.length*100)+"%";return}   // exercise slides: everything at once
+ all.forEach((p,i)=>{p.classList.toggle("on",i===lastOn);p.classList.toggle("seen",i<lastOn)});
+ $("#prog").style.width=((cur+Math.min(t/m.seconds,1))/S.length*100)+"%";}
+function tickF(now){if(!playing)return;
+ if(hasClip[cur]){}else if(voice.checked&&!audio.paused){clock=audio.currentTime}else{clock+=(now-last)/1000}
+ last=now;render(clock);if(!hasClip[cur]&&clock>=M[S[cur].key].seconds){ended();return}raf=requestAnimationFrame(tickF)}
+// helper overlay: where am I, and is the slide playing? shows on mouse move, when paused, at the end of a slide and after a slide change
+let hudT;
+function hud(state,stay){if(PRESENTER)return;const s=S[cur];$("#hnum").textContent=`${cur+1} / ${S.length}`;$("#htitle").textContent=s.title;
+ $("#hst").textContent=state||"";$("#hud").classList.remove("hide");clearTimeout(hudT);if(!stay)hudT=setTimeout(()=>$("#hud").classList.add("hide"),2500)}
+function stopAll(){playing=false;cancelAnimationFrame(raf);audio.pause();document.querySelectorAll("video").forEach(v=>v.pause())}
+function start(){stopAll();const s=S[cur],m=M[s.key];clock=0;render(0);
+ if(s.kind==="try"){hud("✋ interactive: use the mouse",true);return}
+ if(!auto.checked)return;playing=true;
+ if(s.clip&&!hasClip[cur]&&el().classList.contains("clip")){hud("… loading clip",true);return}
+ if(hasClip[cur]){const v=el().querySelector("video");v.currentTime=0;v.muted=!voice.checked;v.play().catch(()=>{v.muted=true;blocked();v.play().catch(()=>{})});render(m.seconds);return}
+ audio.src=m.audio;audio.currentTime=0;last=performance.now();
+ if(voice.checked)audio.play().catch(()=>blocked());raf=requestAnimationFrame(tickF)}
+function togglePlay(){if(hasClip[cur]){const v=el().querySelector("video");if(v.paused){if(v.ended)v.currentTime=0;v.muted=!voice.checked;v.play();hud("▶ playing")}else{v.pause();hud("⏸ paused · Space to play",true)}return}
+ if(playing){stopAll();hud("⏸ paused · Space to play",true)}else{hud("▶ playing");if(clock>=M[S[cur].key].seconds-.05)clock=0;playing=true;last=performance.now();if(voice.checked){audio.src||(audio.src=M[S[cur].key].audio);audio.currentTime=clock;audio.play().catch(()=>{})}raf=requestAnimationFrame(tickF)}}
+function ended(){stopAll();hud(cur<S.length-1?"■ end of slide · → next":"■ end of the lecture",true);render(M[S[cur].key].seconds);if(adv.checked&&!S[cur].exercise)setTimeout(()=>{if(!playing&&$("#quiz").hidden)step(1)},1500)}
+// next / previous slide; optional slides are passed over when "Skip optional" is ticked
+function step(d){let i=cur+d;while(skip.checked&&i>0&&i<S.length-1&&S[i].optional)i+=d;go(i)}
+function preloadNext(i){for(const j of[i+1,i+2]){const e=document.getElementById("s"+j);const v=e&&e.querySelector("video");if(v&&v.src&&v.preload!=="auto"){v.preload="auto";try{v.load()}catch(_){}}}}
+let prevCur=null;
+function showSlide(from,to){const a=from!==null&&from!==to?$("#s"+from):null,b=$("#s"+to);
+ const move=a&&S[from].part!==S[to].part,dir=to>from?1:-1;
+ b.style.transition="none";b.style.visibility="visible";b.style.zIndex=2;b.style.transform=move?`translateX(${dir*100}%)`:"none";b.style.opacity=move?1:(a?0:1);
+ void b.offsetWidth;b.style.transition="";b.style.transform="none";b.style.opacity=1;
+ if(a){a.style.zIndex=1;if(move){a.style.transform=`translateX(${-dir*100}%)`}else{a.style.opacity=0}
+  setTimeout(()=>{if(prevCur!==from){a.style.visibility="hidden";a.style.opacity=0;a.style.transition="none";a.style.transform="none";void a.offsetWidth;a.style.transition=""}},650)}}
+function go(i){i=Math.max(0,Math.min(S.length-1,i));setTimeout(()=>{if(!$("#srcpanel").hidden)showSources()},0);preloadNext(i);if(exRun){clearInterval(et);exRun=false}closeQuiz();$("#text").hidden=true;cur=i;
+ showSlide(prevCur,i);prevCur=i;$("#num").textContent=`${i+1} / ${S.length}`;
+ try{history.replaceState(null,"","#"+S[i].key)}catch(e){}start();send();if(S[i].kind!=="try")hud(auto.checked?"▶ playing":"⏸ Space to play")}
+// check question with countdown
+let qt=0;
+function openQuiz(){const c=S[cur].check;const q=$("#quiz");if(!c){q.innerHTML=`<h2>No check question on this slide.</h2><div class="hint">Q or Esc to close</div>`;q.hidden=false;return}
+ stopAll();let left=+qsec.value||0;
+ q.innerHTML=`<h2>${esc(c.q)}</h2><div class="opts">${c.options.map((o,i)=>`<div class="opt">${String.fromCharCode(65+i)}  ${esc(o)}</div>`).join("")}</div>
+ <div class="timer">${left?left+" s":""}</div><div class="why"></div><button id="rev">Show answer (Enter)</button><div class="hint">Q or Esc to close</div>`;
+ q.hidden=false;q.querySelector("#rev").onclick=reveal;clearInterval(qt);
+ if(left)qt=setInterval(()=>{left--;q.querySelector(".timer").textContent=left>0?left+" s":"Time is up";if(left<=0){clearInterval(qt);reveal()}},1000)}
+function reveal(){clearInterval(qt);const c=S[cur].check,q=$("#quiz");if(!c)return;q.querySelectorAll(".opt").forEach((o,i)=>o.classList.add(i===c.answer?"right":"wrong"));q.querySelector(".why").textContent=c.why||""}
+function closeQuiz(){clearInterval(qt);$("#quiz").hidden=true}
+// exercise countdown
+// exercise countdown: S starts, S again stops (pauses), "reset" goes back to the full time; overtime counts up in red
+let et=0,exLeft={},exRun=false;
+function exShow(c,left){const a=Math.abs(left);c.textContent=(left<0?"+":"")+Math.floor(a/60)+":"+String(a%60).padStart(2,"0");c.classList.toggle("over",left<0)}
+function exStart(){const c=el().querySelector(".ex .clock");if(!c)return;
+ if(exRun){clearInterval(et);exRun=false;c.style.opacity=.55;return}
+ if(exLeft[cur]===undefined)exLeft[cur]=+c.dataset.min*60;exRun=true;c.style.opacity=1;exShow(c,exLeft[cur]);
+ et=setInterval(()=>{exLeft[cur]--;exShow(c,exLeft[cur])},1000)}
+function exReset(){const c=el().querySelector(".ex .clock");if(!c)return;clearInterval(et);exRun=false;exLeft[cur]=+c.dataset.min*60;c.style.opacity=1;exShow(c,exLeft[cur])}
+document.addEventListener("click",e=>{if(e.target.classList.contains("exgo"))exStart();if(e.target.classList.contains("exreset"))exReset()});
+// "Sources" button: the sources of the current slide with one short line each (film/slides_data.py ABOUT)
+function showSources(){const p=$("#srcpanel"),src=S[cur].sources||[];
+ p.innerHTML=`<div style="color:var(--dim);font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Sources · slide ${cur+1}</div>`+
+  (src.length?src.map(x=>`<div style="margin:0 0 12px"><a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--b)">${esc(x.label)}</a><div style="color:var(--dim);font-size:17px">${esc(x.about||"")}</div></div>`).join(""):"<div style='color:var(--dim)'>No sources on this slide.</div>")}
+function toggleSources(){const p=$("#srcpanel");if(p.hidden){showSources();p.hidden=false}else p.hidden=true}
+function toggleText(){const t=$("#text");if(t.hidden){t.textContent=S[cur].text;t.hidden=false}else t.hidden=true}
+function fs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+// Space on a focused tick box must pause the slide, not flip the box (the box flips on keyup)
+const isBox=t=>t&&t.tagName==="INPUT"&&t.type==="checkbox";
+addEventListener("keyup",e=>{if(e.key===" "&&isBox(e.target)){e.preventDefault()}},true);
+addEventListener("keydown",e=>{if(e.key===" "&&isBox(e.target)){e.preventDefault();e.target.blur()}},true);
+addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox(e.target)))return;const k=e.key;
+ if(k===" "){e.preventDefault();togglePlay()}
+ else if(["ArrowRight","PageDown"].includes(k)){e.preventDefault();step(1)}
+ else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();step(-1)}
+ else if(k==="n"||k==="N")openPresenter();
+ else if(k==="Home")go(0);else if(k==="End")go(S.length-1);
+ else if(k==="p"||k==="P")togglePlay();else if(k==="r"||k==="R")start();
+ else if(k==="v"||k==="V"){voice.checked=!voice.checked;voice.onchange()}
+ else if(k==="a"||k==="A"){auto.checked=!auto.checked;auto.onchange()}
+ 
+ else if(k==="Enter"&&!$("#quiz").hidden)reveal();
+ else if(k==="Escape"){closeQuiz();$("#srcpanel").hidden=true;$("#help").hidden=true;$("#text").hidden=true}
+ else if(k==="t"||k==="T")toggleText();else if(k==="f"||k==="F")fs();
+ else if(k==="h"||k==="H"||k==="?")$("#help").hidden=!$("#help").hidden;
+ else if(k==="s"||k==="S")exStart()});
+voice.onchange=()=>{store.set("voice",voice.checked);if(hasClip[cur]){el().querySelector("video").muted=!voice.checked}else if(playing){if(voice.checked){audio.currentTime=clock;audio.play().catch(()=>{})}else audio.pause()}};
+auto.onchange=()=>{store.set("auto",auto.checked);if(auto.checked)start();else stopAll()};
+adv.onchange=()=>store.set("adv",adv.checked);skip.onchange=()=>{store.set("skip",skip.checked);send()};$("#bn").onclick=openPresenter;qsec.onchange=()=>store.set("qsec",+qsec.value);
+document.querySelectorAll("#bar input,#bar button").forEach(x=>x.addEventListener("click",()=>setTimeout(()=>x.blur(),0)));
+$("#bq").onclick=openQuiz;$("#bsrc").onclick=toggleSources;$("#bt").onclick=toggleText;$("#bf").onclick=fs;$("#bh").onclick=()=>$("#help").hidden=!$("#help").hidden;
+// swipe for tablets
+let sx=null;addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});
+addEventListener("touchend",e=>{if(sx===null||PRESENTER)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60)step(dx<0?1:-1);sx=null});
+// bar hides while presenting
+let bt;addEventListener("mousemove",()=>{if(PRESENTER)return;if($("#hud").classList.contains("hide"))hud($("#hst").textContent);$("#bar").classList.remove("hide");clearTimeout(bt);bt=setTimeout(()=>$("#bar").classList.add("hide"),2500)});
+let pres=null,t0=null;
+function openPresenter(){pres=window.open(location.href.split("#")[0]+"#presenter","presenter","width=1400,height=850");setTimeout(send,600)}
+function send(){if(pres&&!pres.closed)try{pres.postMessage({deck:"state",cur,skip:skip.checked,voice:voice.checked,auto:auto.checked,t0},"*")}catch(e){}}
+addEventListener("message",e=>{const m=e.data||{};if(m.deck!=="cmd")return;pres=e.source;
+ if(m.do==="hello"){send();return}
+ if(m.do==="start"){t0=Date.now();send();return}
+ if(m.do==="next")step(1);else if(m.do==="prev")step(-1);else if(m.do==="go")go(m.i);else if(m.do==="play")togglePlay();else if(m.do==="replay")start();
+ else if(m.do==="quiz"){$("#quiz").hidden?openQuiz():closeQuiz()}else if(m.do==="answer")reveal();else if(m.do==="exstart")exStart();else if(m.do==="exreset")exReset();
+ else if(m.do==="voice"){voice.checked=!voice.checked;voice.onchange()}else if(m.do==="skip"){skip.checked=!skip.checked;skip.onchange()}
+ else if(m.do==="auto"){auto.checked=!auto.checked;auto.onchange()}send()});
+setInterval(send,1000);
+const h=location.hash.slice(1);const hi=S.findIndex(s=>s.key===h);
+// browsers allow sound only after one click: the first key or click starts the slide again with voice
+// the browser allows sound only after one click or key press in the page: until then the slide runs silent and a hint shows
+let soundBlocked=false;
+function blocked(){if(PRESENTER||!voice.checked)return;soundBlocked=true;$("#soundhint").hidden=false}
+function unlock(){if(!soundBlocked)return;soundBlocked=false;$("#soundhint").hidden=true;
+ if(hasClip[cur]){const v=el().querySelector("video");v.muted=!voice.checked}else if(playing&&voice.checked){audio.currentTime=clock;audio.play().catch(()=>{})}}
+addEventListener("pointerdown",unlock,true);addEventListener("keydown",unlock,true);
+if(PRESENTER){presenterView()}else{go(hi>=0?hi:0);}
+
+// ---------- presenter view (second window on the laptop; the slides stay on the projector) ----------
+function plan(skipOpt){ // planned minutes: exercises their own minutes, "beat" slides 2, key questions +0.5, the rest share 30 min of talk by note length
+ const w=S.map(s=>s.exercise||/^beat/.test(s.key)?0:1);   // relaxed plan: 1 min 15 s per talk slide
+ return S.map((s,i)=>(s.exercise?s.exercise.minutes:/^beat/.test(s.key)?2:1.25*w[i])+(s.key_q?.5:0))}
+function presenterView(){
+ document.title="Presenter: Brain Segmentation Lecture";$("#viewport").remove();$("#bar").remove();$("#prog").remove();
+ let P=plan(true),starts=P.map((_,i)=>P.slice(0,i).reduce((a,b)=>a+b,0));
+ document.body.insertAdjacentHTML("beforeend",`<style>
+ body{overflow:auto}#pv{display:grid;grid-template-columns:1.25fr 1fr;grid-template-rows:auto 1fr auto;gap:16px;padding:16px;height:100vh;box-sizing:border-box}
+ #pv .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;min-height:0;overflow:auto}
+ #pv h2{font-family:"Source Serif 4",Georgia,serif;margin:0 0 8px;font-size:30px}#pv h3{margin:0 0 6px;color:var(--dim);font-size:16px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+ #pv .notes{font-size:23px;line-height:1.45}#pv .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+ #pv .clock{font-size:46px;font-variant-numeric:tabular-nums;font-family:"Source Serif 4",Georgia,serif}#pv .pace{font-size:24px}
+ #pv .late{color:var(--r)}#pv .early{color:var(--g)}#pv img{max-width:100%;max-height:230px;border-radius:8px;background:#000}
+ #pv button{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 16px;font:inherit;font-size:18px;cursor:pointer}
+ #pv .pts li{font-size:18px;color:var(--dim)}#pv .tag{color:var(--y)}#pv .check{font-size:19px;color:var(--b)}
+ #pv select{font-size:16px;background:var(--bg);color:var(--ink);max-width:100%}</style>
+ <div id="pv">
+  <div class="card" style="grid-row:1/3"><h3>Now <span id="pnum"></span></h3><h2 id="ptitle"></h2><div class="check" id="pcheck"></div><div class="notes" id="pnotes"></div></div>
+  <div class="card"><div class="row"><div><h3>Lecture clock</h3><div class="clock" id="pclock">0:00</div></div><div><h3>Plan</h3><div class="pace" id="ppace">press Start</div></div></div>
+   <div class="row" style="margin-top:10px"><button id="pstart">Start clock</button><button data-c="prev">◀ Back</button><button data-c="next">Next ▶</button><button data-c="play">Play / pause</button>
+   <button data-c="exstart">Exercise timer start / stop</button><button data-c="exreset">reset</button>
+   <button data-c="voice" id="pvoice">Voice</button><span id="pskip" hidden></span></div>
+   <div style="margin-top:10px"><select id="pjump"></select></div></div>
+  <div class="card"><h3>Next</h3><h2 id="nt" style="font-size:24px"></h2><img id="nimg" alt=""><ul class="pts" id="npts"></ul></div>
+  <div class="card" style="grid-column:1/3;font-size:15px;color:var(--dim)">Keys work here too: → next, ← back, Space or P pause / play, S exercise timer, V voice.
+   Put the other window on the projector and press F there for fullscreen.</div></div>`);
+ const op=window.opener;const cmd=(d,x)=>{if(op&&!op.closed)op.postMessage(Object.assign({deck:"cmd",do:d},x||{}),"*")};
+ if(!op){$("#pnotes").textContent="Open this view from the slides with the N key, so the two windows are linked."}
+ document.querySelectorAll("#pv [data-c]").forEach(b=>b.onclick=()=>cmd(b.dataset.c));
+ $("#pstart").onclick=()=>cmd("start");
+ S.forEach((s,i)=>$("#pjump").insertAdjacentHTML("beforeend",`<option value="${i}">${i+1}. ${esc(s.title)}${s.optional?" (optional)":""} · plan ${fmt(starts[i]*60)}</option>`));
+ $("#pjump").onchange=e=>cmd("go",{i:+e.target.value});
+ addEventListener("keydown",e=>{const k=e.key;if(k===" "){e.preventDefault();cmd("play")}else if(["ArrowRight","PageDown"].includes(k)){e.preventDefault();cmd("next")}else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();cmd("prev")}
+  else if("pP".includes(k))cmd("play");else if("sS".includes(k))cmd("exstart");
+  else if("vV".includes(k))cmd("voice");else if("oO".includes(k))cmd("skip")});
+ let st={cur:0,t0:null};
+ function fmt(x){x=Math.round(x);const a=Math.abs(x);return (x<0?"-":"")+Math.floor(a/60)+":"+String(a%60).padStart(2,"0")}
+ function draw(){const s=S[st.cur],m=M[s.key];$("#pnum").textContent=`${st.cur+1} / ${S.length} · ${s.part}${s.optional?" · optional":""}`;
+  $("#ptitle").textContent=s.title;$("#pnotes").innerHTML=esc(s.notes||s.text)+(s.background?`<details style="margin-top:14px;font-size:17px;color:var(--dim)"><summary>background</summary>${esc(s.background)}</details>`:"");
+  P=plan(st.skip);starts=P.map((_,i)=>P.slice(0,i).reduce((a,b)=>a+b,0));
+  $("#pcheck").textContent=s.check?`${s.key_q?"★ KEY QUESTION (press Q) · ":"(spare question) "}${s.check.q}  →  ${s.check.options[s.check.answer]}`:(s.exercise?`Exercise: ${s.exercise.minutes} min · S starts the countdown`:"");
+  let j=st.cur+1;while(st.skip&&j<S.length-1&&S[j].optional)j++;const n=S[j];
+  if(n){const nm=M[n.key],im=nm.beats.map(b=>b.img).find(b=>b&&b!=="-");$("#nt").textContent=n.title+(n.optional?" (optional)":"");
+   $("#nimg").hidden=!im;if(im)$("#nimg").src="img/"+im+".jpg";$("#npts").innerHTML=nm.beats.flatMap(b=>b.pts).map(p=>`<li>${esc(p.text)}</li>`).join("")}
+  else{$("#nt").textContent="(end)";$("#nimg").hidden=true;$("#npts").innerHTML=""}
+  $("#pvoice").textContent="Voice: "+(st.voice?"on":"off");$("#pskip").textContent="Skip optional: "+(st.skip?"on":"off");$("#pjump").value=st.cur}
+ function clock(){if(!st.t0){return}const el=(Date.now()-st.t0)/1000;$("#pclock").textContent=fmt(el);
+  const due=starts[st.cur]*60,diff=el-due;$("#ppace").innerHTML=`slide planned at ${fmt(due)}<br><span class="${diff>60?"late":diff<-60?"early":""}">${diff>=0?"behind":"ahead"} by ${fmt(Math.abs(diff))}</span>`}
+ addEventListener("message",e=>{const m=e.data||{};if(m.deck!=="state")return;const changed=m.cur!==st.cur||m.skip!==st.skip||m.voice!==st.voice;st=m;if(changed||!draw.done){draw();draw.done=1}clock()});
+ setInterval(clock,1000);cmd("hello");draw();
+}
+</script>
+</body>
+</html>

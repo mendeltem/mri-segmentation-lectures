@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WMH by hand: your Dice score</title>
+<style>
+  :root{
+    --bg:#14181d; --panel:#1c2229; --panel2:#252d37; --line:#34404d;
+    --ink:#e8ecf1; --muted:#9dabb9; --accent:#6db3ee; --accent-ink:#08131d;
+    --own:#ffb000; --agree:#00d68f; --missed:#4da3ff; --extra:#ff5a36; --ignored:#aaaab4;
+    --warn:#ffcf70; --late:#ff5d5d;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       font-size:15px;line-height:1.45}
+  a{color:var(--accent)}
+  h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.01em}
+  h2{font-size:16px;margin:0 0 6px}
+  h3{font-size:12px;margin:0 0 6px;color:var(--muted);font-weight:600;
+     text-transform:uppercase;letter-spacing:.08em}
+  p{margin:0 0 8px}
+  button{font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line);
+         border-radius:8px;padding:7px 11px;cursor:pointer;min-height:36px}
+  button:hover:not(:disabled){border-color:var(--accent)}
+  button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  button.on{background:rgba(109,179,238,.20);border-color:var(--accent)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+  button.primary:hover:not(:disabled){filter:brightness(1.08)}
+  button.big{width:100%;padding:11px 12px;font-size:16px}
+  button.quiet{background:transparent}
+  input[type=range]{width:100%;accent-color:var(--accent);margin:2px 0 0;min-height:22px}
+  .wrap{max-width:1500px;margin:0 auto;padding:0 14px}
+
+  /* ---- header ---- */
+  header.top{border-bottom:1px solid var(--line);background:var(--panel)}
+  header.top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-top:10px;padding-bottom:10px}
+  .brand .sub{font-size:12.5px;color:var(--muted)}
+  nav.tabs{display:flex;flex-wrap:wrap;gap:6px}
+  nav.tabs button{display:flex;align-items:center;gap:7px}
+  nav.tabs .num{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;
+                background:var(--line);font-size:12px;font-weight:700}
+  nav.tabs button.done .num{background:var(--agree);color:#04261a}
+  nav.tabs .tabscore{font-variant-numeric:tabular-nums;color:var(--agree);font-weight:700}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .seg button{border:0;border-radius:0;background:transparent;min-height:34px;padding:6px 10px;font-size:13.5px}
+  .seg button + button{border-left:1px solid var(--line)}
+  .seg button.on{background:rgba(109,179,238,.22)}
+  .spacer{flex:1}
+  .timer{display:flex;align-items:baseline;gap:8px;border:1px solid var(--line);border-radius:8px;
+         padding:4px 11px;background:var(--panel2)}
+  .timer .tlabel{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+  .timer .tval{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;min-width:3.2em;text-align:right}
+  .timer.over{border-color:var(--late)}
+  .timer.over .tlabel,.timer.over .tval{color:var(--late)}
+  .late{color:var(--late)}
+
+  /* ---- intro ---- */
+  details.intro{margin:12px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 14px}
+  details.intro summary{cursor:pointer;font-weight:700;padding:2px 0}
+  .introgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px;margin-top:6px}
+  .introgrid ol{margin:0;padding-left:20px}
+  .introgrid li{margin:0 0 3px}
+  .introgrid p{margin:0 0 4px}
+  .no{color:var(--warn)}
+
+  /* ---- workspace ---- */
+  main.work{display:grid;grid-template-columns:214px minmax(0,1fr) 300px;gap:12px;margin:12px 0 18px;align-items:start}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .tools{display:flex;flex-direction:column;gap:12px}
+  .tools .grp{display:flex;flex-direction:column;gap:6px}
+  .row{display:flex;gap:6px;flex-wrap:wrap}
+  .row > button{flex:1 1 0;min-width:0;padding-left:6px;padding-right:6px}
+  label.sl{display:block;font-size:13px;color:var(--muted)}
+  label.sl b{color:var(--ink);font-weight:600;float:right;font-variant-numeric:tabular-nums}
+  label.chk{display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--muted);cursor:pointer}
+  kbd{font:11px ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-radius:4px;
+      padding:0 4px;color:var(--muted);margin-left:3px}
+  .keys{font-size:12px;color:var(--muted);line-height:1.6}
+
+  .stage{min-width:0}
+  .view{position:relative;height:clamp(340px,calc(100vh - 230px),820px);background:#000;
+        border:1px solid var(--line);border-radius:10px;overflow:hidden;touch-action:none;
+        user-select:none;-webkit-user-select:none}
+  .view canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+  .view.tool-move canvas{cursor:grab}
+  .view.locked canvas{cursor:default}
+  .view.hidecursor canvas{cursor:none}
+  .badge{position:absolute;font-size:12.5px;padding:3px 8px;border-radius:6px;pointer-events:none;
+         background:rgba(10,14,18,.72);color:var(--ink)}
+  #sliceLabel{left:8px;top:8px}
+  #lockBadge{right:8px;top:8px;border:1px solid var(--agree);color:var(--agree)}
+  .side{position:absolute;top:50%;transform:translateY(-50%);font-weight:700;font-size:13px;
+        color:#ffe9a8;background:rgba(10,14,18,.6);padding:2px 6px;border-radius:5px;pointer-events:none}
+  #sideR{left:6px} #sideL{right:6px}
+  #sideA{position:absolute;left:50%;top:6px;transform:translateX(-50%)}
+  #orientNote{left:8px;bottom:8px;color:var(--muted);font-size:12px}
+  .strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .thumb{padding:4px;display:flex;flex-direction:column;align-items:center;gap:3px;background:var(--panel);min-height:0}
+  .thumb canvas{display:block;border-radius:4px;background:#000}
+  .thumb span{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
+  .thumb .dot{width:8px;height:8px;border-radius:50%;border:1px solid var(--muted)}
+  .thumb.painted .dot{background:var(--own);border-color:var(--own)}
+  .thumb.on{border-color:var(--accent);background:rgba(109,179,238,.16)}
+  .thumb.on span{color:var(--ink)}
+
+  /* ---- score panel ---- */
+  .score .meta{font-size:12.5px;color:var(--muted)}
+  .hint{font-size:12.5px;color:var(--muted)}
+  .dicebox{text-align:center;margin:8px 0 10px;padding:10px;border-radius:10px;background:var(--panel2)}
+  .dicebox .lab{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .dicebox .val{font-size:52px;font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums}
+  .dicebox .scope{font-size:12.5px;color:var(--warn)}
+  dl.kv{display:grid;grid-template-columns:1fr auto;gap:3px 10px;margin:0 0 10px;font-size:14px}
+  dl.kv dt{color:var(--muted)} dl.kv dt small{display:block;font-size:11.5px}
+  dl.kv dd{margin:0;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+  .formula{font:13px ui-monospace,Menlo,Consolas,monospace;background:#11161b;border:1px solid var(--line);
+           border-radius:8px;padding:8px;margin:0 0 10px;overflow-wrap:anywhere}
+  .formula b{color:var(--ink)}
+  ul.legend{list-style:none;margin:0 0 10px;padding:0;font-size:13.5px}
+  ul.legend li{display:grid;grid-template-columns:16px 1fr auto;gap:8px;align-items:center;margin:0 0 4px}
+  ul.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+  ul.legend small{color:var(--muted)}
+  ul.legend b{font-variant-numeric:tabular-nums}
+  .stack{display:flex;flex-direction:column;gap:8px}
+
+  /* ---- summary ---- */
+  section.summary{margin:14px 0 20px}
+  .sumgrid{display:grid;grid-template-columns:minmax(260px,340px) minmax(0,1fr);gap:12px;align-items:start}
+  .bigmean{font-size:60px;font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums}
+  .rating{font-size:18px;font-weight:700;margin:4px 0 2px}
+  .tablewrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  th{color:var(--muted);font-weight:600;font-size:12.5px;white-space:normal;vertical-align:bottom}
+  th:first-child,td:first-child{text-align:left}
+  td.strong{font-weight:800;font-size:16px}
+  .bars{margin:12px 0 4px}
+  .bar{display:grid;grid-template-columns:74px 1fr 52px;gap:10px;align-items:center;margin:0 0 8px;font-size:13.5px}
+  .track{position:relative;height:16px;background:#11161b;border:1px solid var(--line);border-radius:8px}
+  .fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:7px 0 0 7px}
+  .tick{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--warn);border-radius:2px}
+  .barkey{font-size:12.5px;color:var(--muted)}
+  .barkey i{display:inline-block;vertical-align:middle;margin-right:5px}
+  ul.refs{margin:6px 0 0;padding-left:18px;font-size:13.5px}
+  ul.refs small{color:var(--muted);display:block}
+
+  /* ---- footer, dialog, toast ---- */
+  footer{border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;padding:12px 0 26px}
+  footer p{margin:0 0 5px}
+  .modal{position:fixed;inset:0;background:rgba(5,8,11,.72);display:grid;place-items:center;z-index:50;padding:16px}
+  .modalbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;max-width:440px;width:100%}
+  .modalbox .row{justify-content:flex-end;margin-top:14px}
+  .modalbox .row button{flex:0 0 auto;padding:8px 14px}
+  #toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--panel2);
+         border:1px solid var(--accent);border-radius:10px;padding:9px 14px;z-index:40;max-width:92vw;font-size:14px}
+  .error{margin:14px 0;padding:12px;border:1px solid var(--extra);border-radius:10px;color:#ffd2c7}
+
+  /* ---- narrower screens: tools on top, score below ---- */
+  @media (max-width: 1040px){
+    main.work{grid-template-columns:minmax(0,1fr) 280px}
+    .tools{grid-column:1 / -1;flex-direction:row;flex-wrap:wrap;gap:10px 18px;align-items:flex-start}
+    .tools .grp{flex:1 1 170px;min-width:150px}
+    .tools .grp.keys{display:none}
+    .view{height:clamp(340px,calc(100vh - 330px),760px)}
+  }
+  @media (max-width: 820px){
+    main.work{grid-template-columns:minmax(0,1fr)}
+    .introgrid{grid-template-columns:1fr}
+    .sumgrid{grid-template-columns:1fr}
+    .view{height:min(72vh,110vw)}
+  }
+  @media (max-width: 520px){
+    .wrap{padding:0 8px}
+    h1{font-size:17px}
+    .tools .grp{flex-basis:100%;min-width:0}
+    .dicebox .val{font-size:44px}
+    .bigmean{font-size:48px}
+  }
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <div class="brand">
+    <h1>WMH by hand: your Dice score</h1>
+    <div class="sub">Paint white matter hyperintensities on FLAIR MRI and compare with the expert</div>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Cases"></nav>
+  <div class="timer" id="timer" role="timer" hidden title="Time for this case. It only informs you: you can go on painting and scoring after it has run out.">
+    <span class="tlabel" id="timerLabel">Time left</span><span class="tval" id="timerValue"></span>
+  </div>
+  <span class="spacer"></span>
+  <div class="seg" id="modeSeg" role="group" aria-label="Number of slices per case" hidden>
+    <button type="button" data-mode="class" title="3 slices per case, about 3 minutes per case">Class: 3 slices</button>
+    <button type="button" data-mode="home" title="All 8 prepared slices per case">All 8 slices (homework)</button>
+  </div>
+  <button type="button" id="tutBtn" class="quiet">Tutorial</button><button type="button" id="startOver" class="quiet">Start over</button>
+</div></header>
+
+<div class="wrap">
+  <div id="fatal" class="error" hidden></div>
+
+  <details class="intro" id="intro" open>
+    <summary>How to</summary>
+    <div class="introgrid">
+      <ol>
+        <li><b>Paint</b> every white matter hyperintensity (WMH) you see with the brush. Use the eraser to correct and zoom in for small spots.</li>
+        <li><b>Check every slice</b> (thumbnails under the picture), then press <b>Score this case</b>.</li>
+        <li><b>Compare</b> your mask with the expert's: one patient, 3 slices, 6 minutes.</li>
+      </ol>
+      <div>
+        <p><b>What to mark:</b> on FLAIR, WMH are bright spots in the white matter, around the ventricles and in the deep white matter. Mark only WMH, no other lesions.</p>
+        <p class="no"><b>Do not mark:</b> the bright cortex, the choroid plexus inside the ventricles, artefacts. Tricky: the thin bright rim along the ventricles and the caps at their tips.</p>
+        <p class="hint" id="orientText"></p>
+      </div>
+    </div>
+  </details>
+
+  <main class="work" id="work">
+    <aside class="tools card" aria-label="Painting tools">
+      <div class="grp">
+        <h3>Tool</h3>
+        <div class="row" id="toolRow">
+          <button type="button" data-tool="brush" title="Brush (B)">Brush</button>
+          <button type="button" data-tool="eraser" title="Eraser (E)">Eraser</button>
+          <button type="button" data-tool="move" title="Move the picture (M). The right mouse button also moves.">Move</button>
+        </div>
+        <label class="sl" for="brushSize">Brush size <b id="brushVal"></b></label>
+        <input type="range" id="brushSize" min="1" max="30" step="1">
+        <div class="row">
+          <button type="button" id="undo" title="Undo the last stroke (Z)">Undo</button>
+          <button type="button" id="clearSlice" title="Remove your mask on this slice (can be undone)">Clear slice</button>
+        </div>
+      </div>
+      <div class="grp">
+        <h3>View</h3>
+        <div class="row">
+          <button type="button" id="zoomOut" title="Zoom out (-)" aria-label="Zoom out">&minus;</button>
+          <button type="button" id="zoomFit" title="Fit the picture (0)">Fit</button>
+          <button type="button" id="zoomIn" title="Zoom in (+)" aria-label="Zoom in">+</button>
+        </div>
+        <label class="sl" for="bright">Brightness <b id="brightVal"></b></label>
+        <input type="range" id="bright" min="-100" max="100" step="1">
+        <label class="sl" for="contrast">Contrast <b id="contrastVal"></b></label>
+        <input type="range" id="contrast" min="-100" max="100" step="1">
+        <button type="button" id="resetGrey" class="quiet">Reset brightness / contrast</button>
+      </div>
+      <div class="grp">
+        <h3>Mask</h3>
+        <label class="sl" for="opacity">Mask opacity <b id="opacityVal"></b></label>
+        <input type="range" id="opacity" min="10" max="100" step="5">
+        <button type="button" id="toggleMask" title="Hide or show the mask (H)">Hide my mask</button>
+        <label class="chk"><input type="checkbox" id="smooth"> Smooth picture</label>
+      </div>
+      <div class="grp keys">
+        Wheel or pinch: zoom. Right mouse button or Move tool: shift the picture.
+        Keys: <kbd>B</kbd> <kbd>E</kbd> <kbd>M</kbd> tools, <kbd>Z</kbd> undo, <kbd>H</kbd> hide mask,
+        <kbd>[</kbd> <kbd>]</kbd> brush size, <kbd>&larr;</kbd> <kbd>&rarr;</kbd> slice.
+      </div>
+    </aside>
+
+    <section class="stage">
+      <div class="view" id="view">
+        <canvas id="cv" aria-label="MRI slice with your mask"></canvas>
+        <span class="badge" id="sliceLabel"></span>
+        <span class="badge" id="lockBadge" hidden>Scored and locked</span>
+        <span class="side" id="sideR" title="Patient's right">R</span>
+        <span class="side" id="sideL" title="Patient's left">L</span>
+        <span class="side" id="sideA" title="Front of the head (anterior)">front</span>
+        <span class="badge" id="orientNote">Right side of the picture = patient's left</span>
+      </div>
+      <div class="strip" id="strip" aria-label="Slices of this case"></div>
+    </section>
+
+    <aside class="score card" id="scorePanel" aria-live="polite"></aside>
+  </main>
+
+  <section class="summary" id="summary" hidden></section>
+
+  <footer>
+    <p><b>Data:</b> MICCAI WMH Segmentation Challenge, Kuijf et al., IEEE TMI 2019,
+      <a href="https://doi.org/10.1109/TMI.2019.2905770" target="_blank" rel="noopener">https://doi.org/10.1109/TMI.2019.2905770</a>;
+      data: <a href="https://doi.org/10.34894/AECRSD" target="_blank" rel="noopener">https://doi.org/10.34894/AECRSD</a>, CC BY-NC 4.0.</p>
+    <p id="footCases"></p>
+    <p id="footSoftware"></p>
+    <p id="footStorage"></p>
+  </footer>
+</div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modalbox">
+    <h2 id="modalTitle"></h2>
+    <p id="modalText"></p>
+    <div class="row">
+      <button type="button" id="modalCancel">Cancel</button>
+      <button type="button" id="modalOk" class="primary">OK</button>
+    </div>
+  </div>
+</div>
+<div id="toast" hidden role="status"></div>
+
+<!-- Picture and reference data. Loaded as scripts (not fetch) so the page also works from file:// -->
+<script src="data/case_easy.js"></script>
+<script src="data/case_medium.js"></script>
+<script src="data/case_hard.js"></script>
+
+<script>
+"use strict";
+/* ==========================================================================
+   TIMER  -  seconds a student has for one case. 0 switches the timer off.
+   The countdown starts when the case opens. At zero it turns red and counts
+   up as overtime. It only informs: painting and scoring are never blocked.
+   ========================================================================== */
+const SECONDS_PER_CASE = 360;   /* 10.11.2026, lecturer: one patient, 3 slices, 6 minutes */
+
+/* ==========================================================================
+   REFERENCE POINTS  -  the ONE place for rating bands and comparison values.
+   Rules:
+   - Every entry has a "source".
+   - An entry with value: null is NOT shown on the page. Fill it only after
+     checking the source (for example the challenge paper).
+   - The BIANCA numbers come from local files; build/reference_points_local.json
+     holds the same numbers and build/03_test_page.mjs checks that they match.
+   ========================================================================== */
+const REFERENCE_POINTS = {
+
+  // Rating of the MEAN Dice of the three cases. The first band whose minDice
+  // is reached is shown.
+  ratingBands: [
+    { minDice: 0.85, label: "Very close to the expert",
+      text: "Your masks and the expert reference overlap almost completely.",
+      source: "Teaching convention chosen for this exercise. NOT a literature value. Lecturer: change as you see fit." },
+    { minDice: 0.70, label: "Close to the expert",
+      text: "You differ mainly at lesion borders or in a few small lesions.",
+      source: "Teaching convention chosen for this exercise. NOT a literature value. Lecturer: change as you see fit." },
+    { minDice: 0.50, label: "Moderate deviation from the expert",
+      text: "You found the main lesions, but borders or small lesions differ clearly.",
+      source: "Teaching convention chosen for this exercise. NOT a literature value. Lecturer: change as you see fit." },
+    { minDice: 0.00, label: "Strong deviation from the expert",
+      text: "Large parts of your masks and the expert reference do not overlap. Look at the overlays: mostly missed, or mostly extra?",
+      source: "Teaching convention chosen for this exercise. NOT a literature value. Lecturer: change as you see fit." },
+  ],
+
+  // Volume ratio = your volume / reference volume, summed over the three cases.
+  volumeTendency: {
+    overSegmentAbove:  { value: 1.10, source: "Teaching convention chosen for this exercise. NOT a literature value." },
+    underSegmentBelow: { value: 0.90, source: "Teaching convention chosen for this exercise. NOT a literature value." },
+  },
+
+  // BIANCA (FSL) = automatic method, trained on 30 other scans of the same
+  // public data set. Dice on exactly the slices the students see.
+  biancaSameSlices: {
+    label: "BIANCA (automatic method), same slices",
+    easy:   { classSlices: 0.885, allSlices: 0.891 },
+    medium: { classSlices: 0.868, allSlices: 0.873 },
+    hard:   { classSlices: 0.599, allSlices: 0.493 },
+    source: "Re-computed by build/01_prepare_cases.py from the BIANCA probability maps of the film project (bianca-film/bianca/<case>_prob.nii.gz; threshold 0.95, white matter mask, clusters of 3 voxels or more).",
+  },
+
+  // The same BIANCA result, scored over the whole scan.
+  biancaWholeScan: {
+    label: "BIANCA (automatic method), whole scan",
+    easy:   { value: 0.889 },
+    medium: { value: 0.855 },
+    hard:   { value: 0.479 },
+    source: "bianca-film/film_data.json, field dice_thr_wm_cluster (public WMH Challenge scans, held out from BIANCA training).",
+  },
+
+  // Literature values: to be filled by the lecturer's assistant after checking
+  // the paper. While value is null nothing is shown.
+  humanInterObserver: {
+    label: "Two human observers in the WMH Challenge (Dice)",
+    value: null,
+    source: "TODO verify",
+  },
+  bestChallengeMethod: {
+    label: "Best automatic method in the WMH Challenge (Dice, whole scan)",
+    value: null,
+    source: "TODO verify",
+  },
+};
+
+/* ==========================================================================
+   Small settings
+   ========================================================================== */
+const LEVELS = ["medium"];        /* 10.11.2026, lecturer: one patient is enough (all slices); easy/hard data stay for the tutorial */
+const LEVEL_NAMES = { easy: "Easy", medium: "Patient", hard: "Hard" };
+const MODES = ["class", "home"];
+const STORAGE_KEY = "wmh-dice-exercise-v1";
+const COLORS = {                       // red, green, blue
+  own:     [255, 176,   0],            // your mask while painting
+  agree:   [  0, 214, 143],            // you and the expert
+  missed:  [ 77, 163, 255],            // only the expert (false negative)
+  extra:   [255,  90,  54],            // only you (false positive)
+  ignored: [170, 170, 180],            // other pathology, not scored
+};
+const CASES = window.WMH_CASES || {};
+const $ = id => document.getElementById(id);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+/* ==========================================================================
+   State
+   ========================================================================== */
+const state = {
+  mode: "class",            // 3 slices of one patient (lecturer 10.11.2026)
+  cur: "medium",             // "easy" | "medium" | "hard" | "summary"
+  tool: "brush",            // "brush" | "eraser" | "move"
+  brushMm: 4,               // brush diameter in millimetres
+  opacity: 55,              // mask opacity in percent
+  bright: 0, contrast: 0,   // -100 .. 100
+  showMask: true,
+  smooth: false,
+  introOpen: true,
+  work: null,               // work[mode][level] = { slice, scored, usedMs, masks[8] }
+};
+let lastCase = "medium";                 // case shown before the summary was opened
+const scores = { class: {}, home: {} };// scores[mode][level], filled when a case is scored
+const undoStacks = { easy: [], medium: [], hard: [] };
+const pictures = {};                   // pictures[level][position] = Uint8Array of grey values
+const refCache = {};                   // decoded reference / ignore masks
+let storageWorks = true;
+
+// One case, untouched. usedMs = time the case has been open so far (milliseconds).
+function emptyCaseWork(){ return { slice: 0, scored: false, usedMs: 0, masks: new Array(8).fill(null) }; }
+function emptyWork(){
+  const work = {};
+  for (const mode of MODES){
+    work[mode] = {};
+    for (const level of LEVELS) work[mode][level] = emptyCaseWork();
+  }
+  return work;
+}
+state.work = emptyWork();
+
+// Which of the 8 prepared slices are used in the current mode?
+function slicePositions(level, mode){
+  const c = CASES[level];
+  return (mode || state.mode) === "home" ? c.slices.map((s, i) => i) : c.classPositions;
+}
+function curWork(level){ return state.work[state.mode][level || state.cur]; }
+function curPos(level){
+  level = level || state.cur;
+  const list = slicePositions(level);
+  return list[clamp(curWork(level).slice, 0, list.length - 1)];
+}
+function getMask(level, pos, create){
+  const w = state.work[state.mode][level];
+  if (!w.masks[pos] && create) w.masks[pos] = new Uint8Array(CASES[level].width * CASES[level].height);
+  return w.masks[pos];
+}
+function countVoxels(mask){ let n = 0; if (mask) for (let i = 0; i < mask.length; i++) n += mask[i]; return n; }
+
+/* ==========================================================================
+   Run-length coding: [start, length, start, length, ...]
+   ========================================================================== */
+function rleDecode(runs, n){
+  const mask = new Uint8Array(n);
+  for (let i = 0; i + 1 < runs.length; i += 2){
+    const start = runs[i], len = runs[i + 1];
+    if (!(start >= 0 && len > 0 && start + len <= n)) throw new Error("bad run");
+    mask.fill(1, start, start + len);
+  }
+  return mask;
+}
+function rleEncode(mask){
+  const runs = [];
+  let i = 0;
+  const n = mask.length;
+  while (i < n){
+    if (mask[i]){ let j = i; while (j < n && mask[j]) j++; runs.push(i, j - i); i = j; }
+    else i++;
+  }
+  return runs;
+}
+function refMask(level, pos){
+  const key = level + ":" + pos;
+  if (!refCache[key]){
+    const c = CASES[level], n = c.width * c.height, s = c.slices[pos];
+    refCache[key] = { ref: rleDecode(s.ref, n), ignore: rleDecode(s.ignore || [], n) };
+  }
+  return refCache[key];
+}
+
+/* ==========================================================================
+   Saving and loading (localStorage). Every access is in try/catch: the page
+   also works when storage is blocked, it then simply forgets on reload.
+   ========================================================================== */
+function save(){
+  try {
+    const out = { v: 1, mode: state.mode, cur: state.cur, tool: state.tool, brushMm: state.brushMm,
+                  opacity: state.opacity, smooth: state.smooth, introOpen: state.introOpen, work: {} };
+    for (const mode of MODES){
+      out.work[mode] = {};
+      for (const level of LEVELS){
+        const w = state.work[mode][level];
+        out.work[mode][level] = { slice: w.slice, scored: w.scored, usedMs: Math.round(w.usedMs),
+                                  masks: w.masks.map(m => (m ? rleEncode(m) : null)) };
+      }
+    }
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(out));
+    storageWorks = true;
+  } catch (err){ storageWorks = false; }
+  showStorageNote();
+}
+function load(){
+  let saved = null;
+  try { saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "null"); }
+  catch (err){ storageWorks = false; saved = null; }
+  if (!saved || saved.v !== 1 || !saved.work) return;
+  try {
+    const work = emptyWork();
+    for (const mode of MODES) for (const level of LEVELS){
+      const from = saved.work[mode] && saved.work[mode][level];
+      if (!from) continue;
+      const c = CASES[level], n = c.width * c.height;
+      const w = work[mode][level];
+      w.slice = clamp(from.slice | 0, 0, 7);
+      w.scored = from.scored === true;
+      w.usedMs = from.usedMs > 0 && Number.isFinite(from.usedMs) ? from.usedMs : 0;
+      for (let pos = 0; pos < 8; pos++){
+        const runs = from.masks && from.masks[pos];
+        if (Array.isArray(runs) && runs.length) w.masks[pos] = rleDecode(runs, n);
+      }
+    }
+    state.work = work;
+    /* mode stays "class": one patient, 3 slices */
+    if (LEVELS.includes(saved.cur) || saved.cur === "summary") state.cur = saved.cur;
+    if (["brush", "eraser", "move"].includes(saved.tool)) state.tool = saved.tool;
+    if (saved.brushMm >= 1 && saved.brushMm <= 30) state.brushMm = Math.round(saved.brushMm);
+    if (saved.opacity >= 10 && saved.opacity <= 100) state.opacity = Math.round(saved.opacity);
+    state.smooth = saved.smooth === true;
+    state.introOpen = saved.introOpen !== false;
+  } catch (err){
+    state.work = emptyWork();        // broken save: start clean instead of crashing
+  }
+}
+function showStorageNote(){
+  $("footStorage").textContent = storageWorks
+    ? "Your masks and scores are saved in this browser only (nothing is uploaded)."
+    : "This browser blocks local storage: your progress is lost when the page is reloaded.";
+}
+
+/* ==========================================================================
+   Scoring
+   TP = marked by you AND by the expert      (agreement)
+   FP = marked only by you                   (extra)
+   FN = marked only by the expert            (missed)
+   Voxels of "other pathology" are ignored: neither right nor wrong.
+   ========================================================================== */
+function computeScore(level, mode){
+  mode = mode || state.mode;
+  const c = CASES[level];
+  let tp = 0, fp = 0, fn = 0, ignoredPainted = 0;
+  const positions = slicePositions(level, mode);
+  for (const pos of positions){
+    const own = state.work[mode][level].masks[pos];
+    const { ref, ignore } = refMask(level, pos);
+    for (let i = 0; i < ref.length; i++){
+      const o = own ? own[i] : 0;
+      if (ignore[i]){ ignoredPainted += o; continue; }
+      if (o && ref[i]) tp++; else if (o) fp++; else if (ref[i]) fn++;
+    }
+  }
+  const denominator = 2 * tp + fp + fn;
+  return {
+    tp, fp, fn, ignoredPainted, nSlices: positions.length,
+    dice: denominator ? 2 * tp / denominator : null,
+    sensitivity: tp + fn ? tp / (tp + fn) : null,
+    precision: tp + fp ? tp / (tp + fp) : null,
+    ownMl: (tp + fp) * c.voxelMl,
+    refMl: (tp + fn) * c.voxelMl,
+  };
+}
+function allScored(){ return LEVELS.every(l => state.work[state.mode][l].scored); }
+function refreshScores(){
+  for (const mode of MODES) for (const level of LEVELS)
+    scores[mode][level] = state.work[mode][level].scored ? computeScore(level, mode) : null;
+}
+
+/* ==========================================================================
+   Timer: counts the time a case is open (only the case on the screen, only
+   until it is scored, not while the browser tab is in the background).
+   ========================================================================== */
+let timeLimit = SECONDS_PER_CASE;        // seconds per case; 0 = no timer
+let lastTick = performance.now();
+let lastTimeSave = 0;
+const clock = s => { s = Math.max(0, Math.floor(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+// "3:12", or "4:48 (0:48 over)" when the limit was passed
+function timeUsedText(usedMs){
+  const used = Math.floor(usedMs / 1000);
+  return clock(used) + (used > timeLimit ? ` (${clock(used - timeLimit)} over)` : "");
+}
+function tickTimer(){
+  const now = performance.now();
+  const passed = Math.min(now - lastTick, 2000);     // a sleeping laptop does not add minutes
+  lastTick = now;
+  if (!timeLimit) return;
+  const tutOpen = document.getElementById("tut") && !document.getElementById("tut").hidden;   // the tutorial does not cost time
+  if (state.cur !== "summary" && !document.hidden && !tutOpen && !curWork().scored){
+    curWork().usedMs += passed;
+    if (now - lastTimeSave > 5000){ lastTimeSave = now; save(); }
+  }
+  renderTimer();
+}
+function renderTimer(){
+  const box = $("timer");
+  if (!timeLimit || state.cur === "summary"){ box.hidden = true; return; }
+  const w = curWork(), used = w.usedMs / 1000, left = timeLimit - used;
+  let label, value, over;
+  if (w.scored){ label = "Time used"; value = clock(used); over = Math.floor(used) > timeLimit; }
+  else if (left > 0){ label = "Time left"; value = clock(Math.ceil(left)); over = false; }
+  else { label = "Overtime"; value = "+" + clock(-left); over = true; }
+  box.hidden = false;
+  box.classList.toggle("over", over);
+  box.dataset.used = used;
+  if ($("timerLabel").textContent !== label) $("timerLabel").textContent = label;
+  if ($("timerValue").textContent !== value) $("timerValue").textContent = value;
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) lastTick = performance.now(); });
+
+/* ==========================================================================
+   Number formatting
+   ========================================================================== */
+const f3 = v => (v === null || v === undefined ? "n/a" : v.toFixed(3));
+const pct = v => (v === null || v === undefined ? "n/a" : Math.round(v * 100) + " %");
+const ml = v => v.toFixed(2) + " ml";
+
+/* ==========================================================================
+   Drawing
+   ========================================================================== */
+const cv = $("cv"), ctx = cv.getContext("2d"), viewEl = $("view");
+const baseCanvas = document.createElement("canvas");   // grey picture, one pixel per voxel
+const maskCanvas = document.createElement("canvas");   // mask colours, one pixel per voxel
+const view = { zoom: 1, panX: 0, panY: 0 };
+let viewW = 0, viewH = 0, dpr = 1;
+let hover = null;            // pointer position over the picture (for the brush ring)
+let drawQueued = false;
+
+// Where is the picture on the screen?  px, py = screen pixels per voxel.
+function geometry(){
+  const c = CASES[state.cur];
+  const [mmX, mmY] = c.voxelMm;
+  const fit = 0.97 * Math.min(viewW / (c.width * mmX), viewH / (c.height * mmY));
+  const pxPerMm = fit * view.zoom;
+  const px = pxPerMm * mmX, py = pxPerMm * mmY;
+  return { px, py, pxPerMm,
+           ox: (viewW - c.width * px) / 2 + view.panX,
+           oy: (viewH - c.height * py) / 2 + view.panY };
+}
+function clampPan(){
+  const c = CASES[state.cur];
+  const g = geometry();
+  const limX = (c.width * g.px + viewW) / 2 - 60, limY = (c.height * g.py + viewH) / 2 - 60;
+  view.panX = clamp(view.panX, -limX, limX);
+  view.panY = clamp(view.panY, -limY, limY);
+}
+function zoomAt(mx, my, factor){
+  const before = geometry();
+  const vx = (mx - before.ox) / before.px, vy = (my - before.oy) / before.py;
+  view.zoom = clamp(view.zoom * factor, 1, 16);
+  if (view.zoom === 1){ view.panX = 0; view.panY = 0; }
+  else {
+    const c = CASES[state.cur];
+    const g = geometry();
+    view.panX += mx - (g.ox + vx * g.px);
+    view.panY += my - (g.oy + vy * g.py);
+    void c;
+  }
+  clampPan(); requestDraw();
+}
+function fitView(){ view.zoom = 1; view.panX = 0; view.panY = 0; requestDraw(); }
+
+// Brightness / contrast as a lookup table for the 256 grey values.
+function greyTable(){
+  const gain = Math.pow(2, state.contrast / 50);        // 0.25 .. 4
+  const shift = state.bright * 1.28;
+  const table = new Uint8ClampedArray(256);
+  for (let v = 0; v < 256; v++) table[v] = (v - 128) * gain + 128 + shift;
+  return table;
+}
+function drawBase(){
+  const c = CASES[state.cur], grey = pictures[state.cur][curPos()];
+  baseCanvas.width = c.width; baseCanvas.height = c.height;
+  const img = new ImageData(c.width, c.height), d = img.data, table = greyTable();
+  for (let i = 0, j = 0; i < grey.length; i++, j += 4){
+    const v = table[grey[i]];
+    d[j] = v; d[j + 1] = v; d[j + 2] = v; d[j + 3] = 255;
+  }
+  baseCanvas.getContext("2d").putImageData(img, 0, 0);
+}
+// Colour of one voxel: [r, g, b] or null. Before scoring only your own mask
+// is shown; after scoring agreement, missed and extra.
+function voxelColor(own, ref, ignore, scored){
+  if (!scored) return own ? COLORS.own : null;
+  if (ignore) return COLORS.ignored;
+  if (own && ref) return COLORS.agree;
+  if (ref) return COLORS.missed;
+  if (own) return COLORS.extra;
+  return null;
+}
+function fillMaskImage(level, pos, img){
+  const scored = curWork(level).scored;
+  const own = getMask(level, pos, false);
+  const r = scored ? refMask(level, pos) : null;
+  const d = img.data;
+  for (let i = 0, j = 0; i < img.width * img.height; i++, j += 4){
+    const col = voxelColor(own ? own[i] : 0, r ? r.ref[i] : 0, r ? r.ignore[i] : 0, scored);
+    if (col){ d[j] = col[0]; d[j + 1] = col[1]; d[j + 2] = col[2]; d[j + 3] = 255; }
+    else d[j + 3] = 0;
+  }
+}
+function drawMask(){
+  const c = CASES[state.cur];
+  maskCanvas.width = c.width; maskCanvas.height = c.height;
+  const img = new ImageData(c.width, c.height);
+  fillMaskImage(state.cur, curPos(), img);
+  maskCanvas.getContext("2d").putImageData(img, 0, 0);
+}
+function requestDraw(){
+  if (drawQueued) return;
+  drawQueued = true;
+  requestAnimationFrame(() => { drawQueued = false; drawMain(); });
+}
+function drawMain(){
+  if (state.cur === "summary" || !viewW) return;
+  const c = CASES[state.cur], g = geometry();
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, viewW, viewH);
+  const w = c.width * g.px, h = c.height * g.py;
+  ctx.imageSmoothingEnabled = state.smooth;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(baseCanvas, g.ox, g.oy, w, h);
+  if (state.showMask){
+    ctx.imageSmoothingEnabled = false;          // the mask is never smoothed: one sharp square per voxel
+    ctx.globalAlpha = state.opacity / 100;
+    ctx.drawImage(maskCanvas, g.ox, g.oy, w, h);
+    ctx.globalAlpha = 1;
+  }
+  // brush ring under the pointer
+  const painting = state.tool !== "move" && !curWork().scored;
+  if (hover && painting){
+    const radius = Math.max(2, state.brushMm / 2 * g.pxPerMm);
+    ctx.lineWidth = 3; ctx.strokeStyle = "rgba(0,0,0,.7)";
+    ctx.beginPath(); ctx.arc(hover.x, hover.y, radius, 0, 2 * Math.PI); ctx.stroke();
+    ctx.lineWidth = 1.5; ctx.strokeStyle = state.tool === "eraser" ? "#ffffff" : "#ffd27a";
+    ctx.setLineDash(state.tool === "eraser" ? [4, 3] : []);
+    ctx.beginPath(); ctx.arc(hover.x, hover.y, radius, 0, 2 * Math.PI); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  viewEl.classList.toggle("hidecursor", !!hover && painting);
+}
+function resizeCanvas(){
+  viewW = viewEl.clientWidth; viewH = viewEl.clientHeight;
+  dpr = window.devicePixelRatio || 1;
+  cv.width = Math.max(1, Math.round(viewW * dpr));
+  cv.height = Math.max(1, Math.round(viewH * dpr));
+  if (state.cur !== "summary"){ clampPan(); drawMain(); }
+}
+
+/* ==========================================================================
+   Painting (in voxel coordinates)
+   ========================================================================== */
+let gesture = null;                    // the stroke, pan or pinch that is going on
+const pointers = new Map();            // all pointers that are down
+
+function screenToVoxel(clientX, clientY){
+  const rect = cv.getBoundingClientRect(), g = geometry();
+  return { vx: (clientX - rect.left - g.ox) / g.px, vy: (clientY - rect.top - g.oy) / g.py,
+           x: clientX - rect.left, y: clientY - rect.top };
+}
+// Set all voxels whose centre lies inside the brush circle (measured in mm,
+// so the brush is round on the screen even when voxels are not square).
+function stamp(st, vx, vy){
+  const c = CASES[st.level], [mmX, mmY] = c.voxelMm;
+  const r = state.brushMm / 2, r2 = r * r;
+  const cx = Math.floor(vx), cy = Math.floor(vy);
+  const x0 = Math.max(0, Math.floor(vx - r / mmX)), x1 = Math.min(c.width - 1, Math.ceil(vx + r / mmX));
+  const y0 = Math.max(0, Math.floor(vy - r / mmY)), y1 = Math.min(c.height - 1, Math.ceil(vy + r / mmY));
+  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++){
+    const dx = (x + 0.5 - vx) * mmX, dy = (y + 0.5 - vy) * mmY;
+    if (dx * dx + dy * dy > r2 && !(x === cx && y === cy)) continue;   // the voxel under the pointer always counts
+    const i = y * c.width + x;
+    if (st.mask[i] !== st.val){ st.mask[i] = st.val; st.changed.push(i); }
+  }
+}
+function stampLine(st, vx, vy){
+  if (st.last){
+    const dx = vx - st.last.vx, dy = vy - st.last.vy;
+    const steps = Math.ceil(Math.hypot(dx, dy) / 0.5);
+    for (let k = 1; k <= steps; k++) stamp(st, st.last.vx + dx * k / steps, st.last.vy + dy * k / steps);
+  } else stamp(st, vx, vy);
+  st.last = { vx, vy };
+}
+function startStroke(e){
+  const level = state.cur, pos = curPos();
+  gesture = { kind: "stroke", id: e.pointerId, level, pos, val: state.tool === "eraser" ? 0 : 1,
+              mask: getMask(level, pos, true), changed: [], last: null };
+  const p = screenToVoxel(e.clientX, e.clientY);
+  stampLine(gesture, p.vx, p.vy);
+  drawMask(); requestDraw();
+}
+function endStroke(keep){
+  const st = gesture; gesture = null;
+  if (!st || st.kind !== "stroke") return;
+  if (!keep){                                    // a second finger came down: take the stroke back
+    for (const i of st.changed) st.mask[i] = 1 - st.val;
+  } else if (st.changed.length){
+    pushUndo(st.level, { pos: st.pos, val: st.val, changed: Uint32Array.from(st.changed) });
+    save();
+  }
+  drawMask(); requestDraw(); renderStrip(); renderScorePanel(); renderTools();
+}
+function pushUndo(level, entry){
+  const stack = undoStacks[level];
+  stack.push(entry);
+  if (stack.length > 200) stack.shift();
+}
+function undo(){
+  if (state.cur === "summary" || curWork().scored) return;
+  const entry = undoStacks[state.cur].pop();
+  if (!entry) return;
+  const mask = getMask(state.cur, entry.pos, true);
+  for (const i of entry.changed) mask[i] = 1 - entry.val;
+  const list = slicePositions(state.cur);
+  if (list.indexOf(entry.pos) >= 0) curWork().slice = list.indexOf(entry.pos);   // jump to the slice of that stroke
+  save(); renderCase();
+}
+function clearSlice(){
+  if (state.cur === "summary" || curWork().scored) return;
+  const pos = curPos(), mask = getMask(state.cur, pos, false);
+  if (!mask) return;
+  const changed = [];
+  for (let i = 0; i < mask.length; i++) if (mask[i]){ changed.push(i); mask[i] = 0; }
+  if (!changed.length) return;
+  pushUndo(state.cur, { pos, val: 0, changed: Uint32Array.from(changed) });
+  save(); renderCase();
+  toast("Slice cleared. Undo brings it back.");
+}
+
+function touchPoints(){ return [...pointers.values()].filter(p => p.type === "touch"); }
+function startPinch(){
+  const [a, b] = touchPoints(), rect = cv.getBoundingClientRect();
+  const mx = (a.x + b.x) / 2 - rect.left, my = (a.y + b.y) / 2 - rect.top, g = geometry();
+  gesture = { kind: "pinch", dist: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)), zoom: view.zoom,
+              vx: (mx - g.ox) / g.px, vy: (my - g.oy) / g.py };
+}
+function movePinch(){
+  const pts = touchPoints();
+  if (pts.length < 2) return;
+  const [a, b] = pts, rect = cv.getBoundingClientRect();
+  const mx = (a.x + b.x) / 2 - rect.left, my = (a.y + b.y) / 2 - rect.top;
+  view.zoom = clamp(gesture.zoom * Math.hypot(a.x - b.x, a.y - b.y) / gesture.dist, 1, 16);
+  const g = geometry();                         // keep the voxel between the fingers under the fingers
+  view.panX += mx - (g.ox + gesture.vx * g.px);
+  view.panY += my - (g.oy + gesture.vy * g.py);
+  clampPan(); requestDraw();
+}
+
+cv.addEventListener("pointerdown", e => {
+  if (state.cur === "summary") return;
+  e.preventDefault();
+  try { cv.setPointerCapture(e.pointerId); } catch (err){ /* older browsers */ }
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY, type: e.pointerType });
+  if (e.pointerType === "touch" && touchPoints().length === 2){
+    if (gesture && gesture.kind === "stroke") endStroke(false);
+    startPinch();
+    return;
+  }
+  if (gesture) return;
+  if (e.button === 2 || e.button === 1 || state.tool === "move"){
+    gesture = { kind: "pan", id: e.pointerId, x: e.clientX, y: e.clientY, panX: view.panX, panY: view.panY };
+  } else if (e.button === 0){
+    if (curWork().scored){ toast("This case is scored and locked. Press \"Try again\" to repaint it."); return; }
+    startStroke(e);
+  }
+});
+cv.addEventListener("pointermove", e => {
+  if (state.cur === "summary") return;
+  if (pointers.has(e.pointerId)){ const p = pointers.get(e.pointerId); p.x = e.clientX; p.y = e.clientY; }
+  if (e.pointerType !== "touch"){ const p = screenToVoxel(e.clientX, e.clientY); hover = { x: p.x, y: p.y }; }
+  if (gesture && gesture.kind === "pinch") movePinch();
+  else if (gesture && gesture.kind === "pan" && gesture.id === e.pointerId){
+    view.panX = gesture.panX + e.clientX - gesture.x;
+    view.panY = gesture.panY + e.clientY - gesture.y;
+    clampPan();
+  } else if (gesture && gesture.kind === "stroke" && gesture.id === e.pointerId){
+    let events = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+    if (!events.length) events = [e];
+    for (const ev of events){ const p = screenToVoxel(ev.clientX, ev.clientY); stampLine(gesture, p.vx, p.vy); }
+    drawMask();
+  }
+  requestDraw();
+});
+function pointerEnd(e){
+  pointers.delete(e.pointerId);
+  if (!gesture) return;
+  if (gesture.kind === "stroke" && gesture.id === e.pointerId) endStroke(e.type !== "pointercancel");
+  else if (gesture.kind === "pan" && gesture.id === e.pointerId) gesture = null;
+  else if (gesture.kind === "pinch" && touchPoints().length < 2) gesture = null;
+}
+cv.addEventListener("pointerup", pointerEnd);
+cv.addEventListener("pointercancel", pointerEnd);
+cv.addEventListener("pointerleave", () => { hover = null; requestDraw(); });
+cv.addEventListener("contextmenu", e => e.preventDefault());       // right button = move, no menu
+cv.addEventListener("wheel", e => {
+  if (state.cur === "summary") return;
+  e.preventDefault();
+  const rect = cv.getBoundingClientRect();
+  const delta = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY;
+  zoomAt(e.clientX - rect.left, e.clientY - rect.top, Math.exp(-delta * (e.ctrlKey ? 0.01 : 0.0015)));
+}, { passive: false });
+
+/* ==========================================================================
+   Page parts
+   ========================================================================== */
+function renderTabs(){
+  let html = "";
+  LEVELS.forEach((level, i) => {
+    const s = scores[state.mode][level];
+    html += `<button type="button" data-go="${level}" class="${state.cur === level ? "on" : ""} ${s ? "done" : ""}">` +
+            `<span class="num">${i + 1}</span>${LEVEL_NAMES[level]}` +
+            (s ? `<span class="tabscore">${f3(s.dice)}</span>` : "") + `</button>`;
+  });
+  html += `<button type="button" data-go="summary" class="${state.cur === "summary" ? "on" : ""} ${allScored() ? "done" : ""}">Summary</button>`;
+  $("tabs").innerHTML = html;
+  for (const b of $("modeSeg").querySelectorAll("button")) b.classList.toggle("on", b.dataset.mode === state.mode);
+}
+function renderTools(){
+  const locked = state.cur !== "summary" && curWork().scored;
+  for (const b of $("toolRow").querySelectorAll("button")){
+    b.classList.toggle("on", b.dataset.tool === state.tool);
+    b.disabled = locked && b.dataset.tool !== "move";
+  }
+  $("brushSize").value = state.brushMm; $("brushVal").textContent = state.brushMm + " mm";
+  $("brushSize").disabled = locked;
+  $("opacity").value = state.opacity; $("opacityVal").textContent = state.opacity + " %";
+  $("bright").value = state.bright; $("brightVal").textContent = state.bright;
+  $("contrast").value = state.contrast; $("contrastVal").textContent = state.contrast;
+  $("smooth").checked = state.smooth;
+  const word = locked ? "overlay" : "my mask";
+  $("toggleMask").textContent = (state.showMask ? "Hide " : "Show ") + word;
+  $("toggleMask").classList.toggle("on", !state.showMask);
+  $("undo").disabled = locked || state.cur === "summary" || !undoStacks[state.cur].length;
+  $("clearSlice").disabled = locked || state.cur === "summary" || !countVoxels(getMask(state.cur, curPos(), false));
+  viewEl.classList.toggle("tool-move", state.tool === "move");
+  viewEl.classList.toggle("locked", locked && state.tool !== "move");
+}
+function renderStrip(){
+  const level = state.cur, c = CASES[level], list = slicePositions(level);
+  const strip = $("strip");
+  const [mmX, mmY] = c.voxelMm, thumbH = 78, thumbW = Math.round(thumbH * (c.width * mmX) / (c.height * mmY));
+  // build the buttons once per case and mode, afterwards only repaint them
+  const key = level + ":" + state.mode;
+  if (strip.dataset.key !== key){
+    strip.dataset.key = key;
+    strip.innerHTML = list.map((pos, i) =>
+      `<button type="button" class="thumb" data-slice="${i}" title="Slice ${i + 1} of ${list.length}">` +
+      `<canvas width="${c.width}" height="${c.height}" style="width:${thumbW}px;height:${thumbH}px"></canvas>` +
+      `<span><i class="dot"></i>Slice ${i + 1}</span></button>`).join("");
+  }
+  const scored = curWork(level).scored;
+  [...strip.children].forEach((btn, i) => {
+    const pos = list[i], grey = pictures[level][pos], own = getMask(level, pos, false);
+    const r = scored ? refMask(level, pos) : null;
+    const tctx = btn.querySelector("canvas").getContext("2d");
+    const img = new ImageData(c.width, c.height), d = img.data;
+    for (let k = 0, j = 0; k < grey.length; k++, j += 4){
+      let red = grey[k], green = grey[k], blue = grey[k];
+      const col = state.showMask ? voxelColor(own ? own[k] : 0, r ? r.ref[k] : 0, r ? r.ignore[k] : 0, scored) : null;
+      if (col){ red = 0.3 * red + 0.7 * col[0]; green = 0.3 * green + 0.7 * col[1]; blue = 0.3 * blue + 0.7 * col[2]; }
+      d[j] = red; d[j + 1] = green; d[j + 2] = blue; d[j + 3] = 255;
+    }
+    tctx.putImageData(img, 0, 0);
+    btn.classList.toggle("on", i === curWork(level).slice);
+    btn.classList.toggle("painted", countVoxels(own) > 0);
+  });
+}
+function renderView(){
+  const level = state.cur, c = CASES[level], list = slicePositions(level);
+  const i = clamp(curWork().slice, 0, list.length - 1);
+  $("sliceLabel").textContent = `${LEVEL_NAMES[level]} case · slice ${i + 1} of ${list.length}` +
+    ` (scan slice ${c.slices[list[i]].z + 1} of ${c.nSlicesInScan})`;
+  $("lockBadge").hidden = !curWork().scored;
+  drawBase(); drawMask(); requestDraw();
+}
+function renderScorePanel(){
+  if (state.cur === "summary") return;
+  const level = state.cur, c = CASES[level], w = curWork(), list = slicePositions(level);
+  const number = LEVELS.indexOf(level) + 1;
+  let html = `<h2>Case ${number}: ${LEVEL_NAMES[level]}</h2>` +
+    `<p class="meta">Scanner: ${c.scanner} · voxel ${c.voxelMm.map(v => +v.toFixed(2)).join(" × ")} mm · ${list.length} slices</p>`;
+  if (!w.scored){
+    const painted = list.filter(pos => countVoxels(getMask(level, pos, false)) > 0).length;
+    html += `<p>Slices with a mask: <b id="paintedCount">${painted} of ${list.length}</b></p>` +
+      `<div class="stack"><button type="button" class="primary big" data-act="score" id="btnScore">Score this case</button></div>` +
+      `<p class="hint" style="margin-top:10px">The expert reference stays hidden until you score. ` +
+      `Scoring locks the case. Mark only WMH, no other lesions.</p>`;
+  } else {
+    const s = scores[state.mode][level];
+    const ratio = s.refMl > 0 ? s.ownMl / s.refMl : null;
+    const sum = 2 * s.tp + s.fp + s.fn;
+    html += `<div class="dicebox"><div class="lab">Dice</div>` +
+      `<div class="val" id="diceValue" data-value="${s.dice === null ? "" : s.dice}">${f3(s.dice)}</div>` +
+      `<div class="scope">over the ${s.nSlices} slices shown here, not the whole brain</div></div>` +
+      `<dl class="kv">` +
+      `<dt>Sensitivity<small>share of the reference you found</small></dt><dd id="sensValue" data-value="${s.sensitivity === null ? "" : s.sensitivity}">${pct(s.sensitivity)}</dd>` +
+      `<dt>Precision<small>share of your mask that is right</small></dt><dd id="precValue" data-value="${s.precision === null ? "" : s.precision}">${pct(s.precision)}</dd>` +
+      `<dt>Your mask<small>volume on these slices</small></dt><dd id="ownMl" data-value="${s.ownMl}">${ml(s.ownMl)}</dd>` +
+      `<dt>Reference<small>volume on these slices</small></dt><dd id="refMl" data-value="${s.refMl}">${ml(s.refMl)}</dd>` +
+      (ratio === null ? "" : `<dt>Your volume / reference</dt><dd>${ratio.toFixed(2)}</dd>`) +
+      (timeLimit ? `<dt>Time used<small>planned: ${clock(timeLimit)}</small></dt>` +
+        `<dd id="timeUsed" data-value="${w.usedMs / 1000}" class="${Math.floor(w.usedMs / 1000) > timeLimit ? "late" : ""}">${timeUsedText(w.usedMs)}</dd>` : "") +
+      `</dl>` +
+      `<ul class="legend" id="legend">` +
+      `<li><i style="background:var(--agree)"></i><span>Agreement <small>(TP, you and the expert)</small></span><b>${s.tp}</b></li>` +
+      `<li><i style="background:var(--missed)"></i><span>Missed <small>(FN, only the expert)</small></span><b>${s.fn}</b></li>` +
+      `<li><i style="background:var(--extra)"></i><span>Extra <small>(FP, only you)</small></span><b>${s.fp}</b></li>` +
+      (s.ignoredPainted || hasIgnore(level) ? `<li><i style="background:var(--ignored)"></i><span>Other pathology <small>(not scored)</small></span><b>${s.ignoredPainted}</b></li>` : "") +
+      `</ul>` +
+      `<div class="formula" id="formula" data-tp="${s.tp}" data-fp="${s.fp}" data-fn="${s.fn}">` +
+      `Dice = 2·TP / (2·TP + FP + FN)<br>` +
+      (sum ? `= 2·${s.tp} / (2·${s.tp} + ${s.fp} + ${s.fn})<br>= ${2 * s.tp} / ${sum} = <b>${f3(s.dice)}</b>`
+           : `not defined: neither you nor the expert marked anything`) +
+      `</div>` +
+      `<p class="hint">Counts are voxels. One voxel = ${(c.voxelMl * 1000).toFixed(2)} mm³.</p>` +
+      `<div class="stack">` +
+      (allScored()
+        ? `<button type="button" class="primary big" data-act="summary">Final summary</button>`
+        : `<button type="button" class="primary big" data-act="next">Next case</button>`) +
+      `<button type="button" data-act="retry">Try again</button></div>`;
+  }
+  $("scorePanel").innerHTML = html;
+}
+function hasIgnore(level){
+  return slicePositions(level).some(pos => (CASES[level].slices[pos].ignore || []).length > 0);
+}
+
+// The comparison lines of the summary. Entries with value null give nothing.
+function referenceLines(){
+  const R = REFERENCE_POINTS, lines = [];
+  const add = entry => {
+    if (!entry || entry.value === null || entry.value === undefined) return;
+    lines.push(`<li>${entry.label}: <b>${f3(entry.value)}</b><small>Source: ${entry.source}</small></li>`);
+  };
+  add(R.humanInterObserver);
+  add(R.bestChallengeMethod);
+  return lines;
+}
+function renderSummary(){
+  const R = REFERENCE_POINTS, mode = state.mode;
+  const done = LEVELS.filter(l => scores[mode][l]);
+  const slicesKey = mode === "home" ? "allSlices" : "classSlices";
+  let rows = "", bars = "", sumOwn = 0, sumRef = 0, sumDice = 0, sumMs = 0;
+  for (const level of LEVELS){
+    const s = scores[mode][level], c = CASES[level];
+    const usedMs = state.work[mode][level].usedMs;
+    const timeCell = timeLimit ? `<td class="${Math.floor(usedMs / 1000) > timeLimit ? "late" : ""}" data-seconds="${usedMs / 1000}">${clock(usedMs / 1000)}</td>` : "";
+    sumMs += usedMs;
+    const bSame = R.biancaSameSlices[level] ? R.biancaSameSlices[level][slicesKey] : null;
+    const bWhole = R.biancaWholeScan[level] ? R.biancaWholeScan[level].value : null;
+    const show = v => (v === null || v === undefined ? "" : f3(v));
+    if (s){
+      sumOwn += s.ownMl; sumRef += s.refMl; sumDice += s.dice === null ? 0 : s.dice;
+      rows += `<tr data-level="${level}"><td>${LEVEL_NAMES[level]}</td><td class="strong" data-dice="${s.dice === null ? "" : s.dice}">${f3(s.dice)}</td>` +
+        `<td>${pct(s.sensitivity)}</td><td>${pct(s.precision)}</td><td>${ml(s.ownMl)}</td><td>${ml(s.refMl)}</td>` +
+        `<td>${s.refMl > 0 ? (s.ownMl / s.refMl).toFixed(2) : "n/a"}</td><td>${show(bSame)}</td><td>${show(bWhole)}</td>${timeCell}</tr>`;
+    } else {
+      rows += `<tr data-level="${level}"><td>${LEVEL_NAMES[level]}</td><td colspan="6" style="text-align:left;color:var(--muted)">not scored yet</td>` +
+        `<td>${show(bSame)}</td><td>${show(bWhole)}</td>${timeCell}</tr>`;
+    }
+    bars += `<div class="bar"><span>${LEVEL_NAMES[level]}</span><div class="track">` +
+      (s && s.dice !== null ? `<div class="fill" style="width:${(s.dice * 100).toFixed(1)}%"></div>` : "") +
+      (bSame === null || bSame === undefined ? "" : `<div class="tick" style="left:calc(${(bSame * 100).toFixed(1)}% - 1px)" title="BIANCA, same slices: ${f3(bSame)}"></div>`) +
+      `</div><b>${s ? f3(s.dice) : ""}</b></div>`;
+    void c;
+  }
+  let left = "";
+  if (done.length === LEVELS.length){
+    const mean = sumDice / LEVELS.length;
+    const band = R.ratingBands.find(b => mean >= b.minDice) || R.ratingBands[R.ratingBands.length - 1];
+    const ratio = sumRef > 0 ? sumOwn / sumRef : null;
+    let tendency = "";
+    if (ratio !== null){
+      const percent = Math.round(Math.abs(ratio - 1) * 100);
+      if (ratio > R.volumeTendency.overSegmentAbove.value)
+        tendency = `<b>You tend to over-segment.</b> In total your masks are ${percent} % larger than the reference.`;
+      else if (ratio < R.volumeTendency.underSegmentBelow.value)
+        tendency = `<b>You tend to under-segment.</b> In total your masks are ${percent} % smaller than the reference.`;
+      else
+        tendency = `<b>Your total volume is close to the reference.</b> Neither clear over- nor under-segmentation.`;
+      tendency = `<p id="tendency" data-ratio="${ratio}">${tendency} ` +
+        `<span class="hint">(volume ratio ${ratio.toFixed(2)}: yours ${ml(sumOwn)}, reference ${ml(sumRef)})</span></p>`;
+    }
+    left = `<h3>Mean Dice of the three cases</h3><div class="bigmean" id="meanDice" data-value="${mean}">${f3(mean)}</div>` +
+      `<div class="rating" id="rating">${band.label}</div><p>${band.text}</p>${tendency}` +
+      (timeLimit ? `<p id="totalTime" data-value="${sumMs / 1000}"><b>Total time: ${clock(sumMs / 1000)}</b> ` +
+        `<span class="hint">(planned: ${LEVELS.length} \u00d7 ${clock(timeLimit)} = ${clock(LEVELS.length * timeLimit)})</span></p>` : "") +
+      `<p class="hint">The rating bands are a teaching convention of this exercise, not a published standard.</p>`;
+  } else {
+    left = `<h3>Final summary</h3><p id="notReady"><b>${done.length} of ${LEVELS.length} cases scored.</b> ` +
+      `Score all three cases to see your mean Dice and your rating.</p>`;
+  }
+  const refLines = referenceLines();
+  $("summary").innerHTML =
+    `<div class="sumgrid"><div class="card">${left}` +
+    `<div class="stack" style="margin-top:12px"><button type="button" data-act="back">Back to the cases</button></div></div>` +
+    `<div class="card"><h3>Your three cases (${mode === "home" ? "all 8 slices" : "class mode, 3 slices"} per case)</h3>` +
+    `<div class="bars">${bars}</div>` +
+    `<p class="barkey"><i style="width:22px;height:10px;background:var(--accent);border-radius:5px"></i>your Dice ` +
+    `&nbsp; <i style="width:3px;height:16px;background:var(--warn);border-radius:2px"></i>${R.biancaSameSlices.label}</p>` +
+    `<div class="tablewrap"><table id="sumTable"><thead><tr><th>Case</th><th>Dice</th><th>Sensitivity</th><th>Precision</th>` +
+    `<th>Your volume</th><th>Reference volume</th><th>Volume ratio</th><th>BIANCA Dice, same slices</th><th>BIANCA Dice, whole scan</th>${timeLimit ? "<th>Time used</th>" : ""}</tr></thead>` +
+    `<tbody>${rows}</tbody></table></div>` +
+    `<p class="hint" style="margin-top:10px">Your Dice is computed over the slices shown in the exercise, not the whole brain. ` +
+    `With small lesions a few voxels change the Dice a lot, so expect a lower score on the hard case.</p>` +
+    `<p class="hint">BIANCA is an automatic method (FSL), trained on 30 other scans of the same public data set. ` +
+    `Sources: same slices: ${R.biancaSameSlices.source} Whole scan: ${R.biancaWholeScan.source}</p>` +
+    (refLines.length ? `<h3 style="margin-top:12px">Other reference points</h3><ul class="refs" id="refLines">${refLines.join("")}</ul>` : "") +
+    `</div></div>`;
+}
+
+// Show the current case (or the summary) completely.
+function renderCase(){
+  const isSummary = state.cur === "summary";
+  $("work").hidden = isSummary;
+  $("summary").hidden = !isSummary;
+  renderTabs(); renderTimer();
+  if (isSummary){ renderSummary(); return; }
+  if (!viewW) resizeCanvas();
+  clampPan();
+  renderTools(); renderStrip(); renderView(); renderScorePanel();
+}
+function goTo(target){
+  if (gesture && gesture.kind === "stroke") endStroke(true);
+  tickTimer();                                   // book the time of the case we are leaving
+  if (target !== "summary" && target !== state.cur){ view.zoom = 1; view.panX = 0; view.panY = 0; }
+  if (state.cur !== "summary") lastCase = state.cur;
+  state.cur = target;
+  save(); renderCase();
+  if (target === "summary") window.scrollTo(0, 0);
+}
+function setSlice(i){
+  const list = slicePositions(state.cur);
+  curWork().slice = clamp(i, 0, list.length - 1);
+  save(); renderTools(); renderStrip(); renderView();
+}
+
+/* ==========================================================================
+   In-page dialog and short messages (no alert / confirm)
+   ========================================================================== */
+let modalResolve = null;
+function ask(title, text, okLabel, cancelLabel){
+  $("modalTitle").textContent = title;
+  $("modalText").textContent = text;
+  $("modalOk").textContent = okLabel;
+  $("modalCancel").textContent = cancelLabel || "Cancel";
+  $("modal").hidden = false;
+  $("modalCancel").focus();
+  return new Promise(resolve => { modalResolve = resolve; });
+}
+function closeModal(answer){
+  $("modal").hidden = true;
+  if (modalResolve){ const r = modalResolve; modalResolve = null; r(answer); }
+}
+$("modalOk").addEventListener("click", () => closeModal(true));
+$("modalCancel").addEventListener("click", () => closeModal(false));
+$("modal").addEventListener("pointerdown", e => { if (e.target === $("modal")) closeModal(false); });
+let toastTimer = 0;
+function toast(text){
+  $("toast").textContent = text; $("toast").hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { $("toast").hidden = true; }, 3500);
+}
+
+/* ==========================================================================
+   Actions
+   ========================================================================== */
+async function scoreCurrent(){
+  const level = state.cur, list = slicePositions(level);
+  const empty = list.filter(pos => countVoxels(getMask(level, pos, false)) === 0).length;
+  const note = empty ? ` ${empty} of ${list.length} slices have no mask yet.` : "";
+  const yes = await ask("Score this case?",
+    `The expert reference is shown and the case is locked.${note}`, "Score", "Keep painting");
+  if (!yes) return;
+  tickTimer();                                   // the clock of this case stops here
+  curWork(level).scored = true;
+  undoStacks[level].length = 0;
+  scores[state.mode][level] = computeScore(level);
+  state.showMask = true;
+  save(); renderCase();
+}
+async function retryCurrent(){
+  const level = state.cur;
+  const yes = await ask("Try this case again?",
+    "Your mask and your score for this case are removed and you start with empty slices.", "Try again", "Cancel");
+  if (!yes) return;
+  state.work[state.mode][level] = emptyCaseWork();   // also sets the time of this case back to zero
+  scores[state.mode][level] = null;
+  undoStacks[level].length = 0;
+  if (state.tool === "move") state.tool = "brush";
+  save(); renderCase();
+}
+async function startOver(){
+  const yes = await ask("Start over?",
+    "All your masks and scores on this device are removed (class mode and homework mode).", "Start over", "Cancel");
+  if (!yes) return;
+  state.work = emptyWork();
+  lastTick = performance.now();
+  for (const level of LEVELS) undoStacks[level].length = 0;
+  refreshScores();
+  state.mode = "class"; state.cur = "easy"; state.tool = "brush"; state.showMask = true;
+  view.zoom = 1; view.panX = 0; view.panY = 0;
+  $("strip").dataset.key = "";
+  save(); renderCase();
+  toast("Everything is reset.");
+}
+function setMode(mode){
+  if (mode === state.mode) return;
+  if (gesture && gesture.kind === "stroke") endStroke(true);
+  tickTimer();
+  state.mode = mode;
+  for (const level of LEVELS) undoStacks[level].length = 0;
+  save(); renderCase();
+  toast(mode === "home"
+    ? "Homework mode: all 8 slices per case. It has its own masks and scores; your class results are kept."
+    : "Class mode: 3 slices per case. Your homework results are kept.");
+}
+function nextCase(){
+  const open = LEVELS.filter(l => !state.work[state.mode][l].scored);
+  goTo(open.length ? open[0] : "summary");
+}
+
+$("tabs").addEventListener("click", e => { const b = e.target.closest("button[data-go]"); if (b) goTo(b.dataset.go); });
+$("modeSeg").addEventListener("click", e => { const b = e.target.closest("button[data-mode]"); if (b) setMode(b.dataset.mode); });
+$("startOver").addEventListener("click", startOver);
+$("toolRow").addEventListener("click", e => {
+  const b = e.target.closest("button[data-tool]");
+  if (b && !b.disabled){ state.tool = b.dataset.tool; save(); renderTools(); requestDraw(); }
+});
+$("brushSize").addEventListener("input", e => { state.brushMm = +e.target.value; save(); renderTools(); requestDraw(); });
+$("opacity").addEventListener("input", e => { state.opacity = +e.target.value; save(); renderTools(); requestDraw(); });
+$("bright").addEventListener("input", e => { state.bright = +e.target.value; renderTools(); drawBase(); requestDraw(); });
+$("contrast").addEventListener("input", e => { state.contrast = +e.target.value; renderTools(); drawBase(); requestDraw(); });
+$("resetGrey").addEventListener("click", () => { state.bright = 0; state.contrast = 0; renderTools(); drawBase(); requestDraw(); });
+$("smooth").addEventListener("change", e => { state.smooth = e.target.checked; save(); requestDraw(); });
+$("toggleMask").addEventListener("click", toggleMask);
+function toggleMask(){ state.showMask = !state.showMask; renderTools(); renderStrip(); requestDraw(); }
+$("undo").addEventListener("click", undo);
+$("clearSlice").addEventListener("click", clearSlice);
+$("zoomIn").addEventListener("click", () => zoomAt(viewW / 2, viewH / 2, 1.4));
+$("zoomOut").addEventListener("click", () => zoomAt(viewW / 2, viewH / 2, 1 / 1.4));
+$("zoomFit").addEventListener("click", fitView);
+$("strip").addEventListener("click", e => { const b = e.target.closest("button[data-slice]"); if (b) setSlice(+b.dataset.slice); });
+$("scorePanel").addEventListener("click", e => {
+  const b = e.target.closest("button[data-act]");
+  if (!b) return;
+  if (b.dataset.act === "score") scoreCurrent();
+  if (b.dataset.act === "retry") retryCurrent();
+  if (b.dataset.act === "next") nextCase();
+  if (b.dataset.act === "summary") goTo("summary");
+});
+$("summary").addEventListener("click", e => {
+  const b = e.target.closest("button[data-act]");
+  if (b && b.dataset.act === "back") goTo(lastCase);
+});
+$("intro").addEventListener("toggle", () => { state.introOpen = $("intro").open; save(); });
+
+window.addEventListener("keydown", e => {
+  if (!$("modal").hidden){ if (e.key === "Escape") closeModal(false); return; }
+  if (state.cur === "summary" || e.altKey) return;
+  const inField = e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA");
+  const key = e.key.toLowerCase();
+  if ((e.ctrlKey || e.metaKey) && key === "z"){ e.preventDefault(); undo(); return; }
+  if (e.ctrlKey || e.metaKey) return;
+  const locked = curWork().scored;
+  if (key === "b" && !locked){ state.tool = "brush"; }
+  else if (key === "e" && !locked){ state.tool = "eraser"; }
+  else if (key === "m"){ state.tool = "move"; }
+  else if (key === "z"){ undo(); return; }
+  else if (key === "h"){ toggleMask(); return; }
+  else if (key === "[" || key === "]"){ if (!locked) state.brushMm = clamp(state.brushMm + (key === "]" ? 1 : -1), 1, 30); }
+  else if (key === "+" || key === "="){ zoomAt(viewW / 2, viewH / 2, 1.4); return; }
+  else if (key === "-"){ zoomAt(viewW / 2, viewH / 2, 1 / 1.4); return; }
+  else if (key === "0"){ fitView(); return; }
+  else if ((key === "arrowright" || key === "arrowleft") && !inField){
+    e.preventDefault(); setSlice(curWork().slice + (key === "arrowright" ? 1 : -1)); return;
+  } else return;
+  save(); renderTools(); requestDraw();
+});
+window.addEventListener("pagehide", () => { tickTimer(); save(); });
+
+/* ==========================================================================
+   Start
+   ========================================================================== */
+function fatal(text){ $("fatal").textContent = text; $("fatal").hidden = false; $("work").hidden = true; }
+
+// Turn the PNG of every slice into a plain array of grey values.
+function decodePicture(level, pos){
+  return new Promise((resolve, reject) => {
+    const c = CASES[level], img = new Image();
+    img.onload = () => {
+      try {
+        const can = document.createElement("canvas");
+        can.width = c.width; can.height = c.height;
+        const cx = can.getContext("2d");
+        cx.drawImage(img, 0, 0);
+        const rgba = cx.getImageData(0, 0, c.width, c.height).data;
+        const grey = new Uint8Array(c.width * c.height);
+        for (let i = 0; i < grey.length; i++) grey[i] = rgba[i * 4];
+        pictures[level][pos] = grey;
+        resolve();
+      } catch (err){ reject(err); }
+    };
+    img.onerror = () => reject(new Error("picture could not be read"));
+    img.src = c.slices[pos].png;
+  });
+}
+
+function fillFooter(){
+  $("footCases").textContent = "Challenge training cases used: " + LEVELS.map(l =>
+    `${LEVEL_NAMES[l].toLowerCase()} = ${CASES[l].challengeId.replace("challenge-", "case ")} (${CASES[l].scanner})`).join(", ") +
+    ". The reference is the challenge's manual WMH mask; voxels labelled as other pathology are ignored in the score, as in the challenge.";
+  const sw = CASES.easy.software || {};
+  $("footSoftware").textContent = "Data prepared with: " +
+    Object.keys(sw).map(k => `${k} ${sw[k]}`).join(", ") + ". Grey window: " +
+    `${CASES.easy.window.percentiles[0]}th to ${CASES.easy.window.percentiles[1]}th percentile inside the brain mask, 8 bit.`;
+  $("orientText").textContent = "Picture orientation: front of the head at the top; the RIGHT side of the picture is the patient's LEFT " +
+    `(radiological convention; read from the NIfTI header, axis codes ${CASES.easy.orientation}).`;
+}
+
+async function start(){
+  const missing = LEVELS.filter(l => !CASES[l]);
+  if (missing.length){ fatal("The data files are missing (" + missing.map(l => `data/case_${l}.js`).join(", ") + "). Keep the data folder next to index.html."); return; }
+  try {
+    const jobs = [];
+    for (const level of LEVELS){
+      pictures[level] = [];
+      CASES[level].slices.forEach((s, pos) => jobs.push(decodePicture(level, pos)));
+    }
+    await Promise.all(jobs);
+  } catch (err){ fatal("The pictures could not be read in this browser: " + err.message); return; }
+  load();
+  refreshScores();
+  $("intro").open = state.introOpen;
+  fillFooter(); showStorageNote();
+  new ResizeObserver(resizeCanvas).observe(viewEl);
+  resizeCanvas();
+  renderCase();
+  lastTick = performance.now();
+  setInterval(tickTimer, 250);
+  document.documentElement.dataset.ready = "1";
+}
+
+/* Test hook: only with ?test=1 in the address. Used by build/03_test_page.mjs. */
+if (/[?&]test=1/.test(window.location.search)){
+  // the test may run with another time limit, e.g. ?test=1&seconds=3 or &seconds=0
+  const secondsInAddress = /[?&]seconds=(\d+)/.exec(window.location.search);
+  if (secondsInAddress) timeLimit = Number(secondsInAddress[1]);
+  window.__wmhTest = {
+    SECONDS_PER_CASE,
+    timeLimit(){ return timeLimit; },
+    usedSeconds(level){ return state.work[state.mode][level].usedMs / 1000; },
+    setUsedSeconds(level, seconds){ state.work[state.mode][level].usedMs = seconds * 1000; save(); renderCase(); },
+    cases: CASES, state, scores, REFERENCE_POINTS,
+    setMask(level, pos, indices){
+      const m = getMask(level, pos, true); m.fill(0);
+      for (const i of indices) m[i] = 1;
+      save(); renderCase();
+    },
+    paintReference(level){
+      for (const pos of slicePositions(level)) getMask(level, pos, true).set(refMask(level, pos).ref);
+      save(); renderCase();
+    },
+    clearCase(level){                          // empty, unscored case in the current mode
+      state.work[state.mode][level] = emptyCaseWork();
+      scores[state.mode][level] = null;
+      undoStacks[level].length = 0;
+      save(); renderCase();
+    },
+    setIgnore(level, pos, indices){            // pretend that some voxels are "other pathology"
+      const n = CASES[level].width * CASES[level].height, m = new Uint8Array(n);
+      for (const i of indices) m[i] = 1;
+      CASES[level].slices[pos].ignore = rleEncode(m);
+      delete refCache[level + ":" + pos];
+    },
+    maskCount(level, pos){ return countVoxels(getMask(level, pos, false)); },
+    positions(level){ return slicePositions(level); },
+    voxelToClient(x, y){                       // screen position of the centre of voxel (x, y)
+      const rect = cv.getBoundingClientRect(), g = geometry();
+      return { x: rect.left + g.ox + (x + 0.5) * g.px, y: rect.top + g.oy + (y + 0.5) * g.py };
+    },
+    view,
+  };
+}
+
+start();
+</script>
+
+<!-- Short tutorial before painting (10.11.2026, lecturer: "a short tutorial at the beginning, most important").
+     Example = another WMH Challenge patient (the "easy" case), not the one the students paint. -->
+<div id="tut" hidden style="position:fixed;inset:0;z-index:50;background:rgba(6,8,12,.92);display:flex;align-items:center;justify-content:center;padding:16px">
+ <div style="background:#141821;border:1px solid #2a2f3a;border-radius:14px;max-width:1100px;width:100%;padding:24px 28px;display:flex;gap:28px;flex-wrap:wrap;align-items:center">
+  <canvas id="tutCv" style="width:min(420px,100%);border-radius:10px;background:#000;image-rendering:pixelated"></canvas>
+  <div style="flex:1;min-width:260px;font-size:20px;line-height:1.5;color:#ece9e1">
+   <div id="tutStep" style="color:#8d929a;font-size:15px;letter-spacing:.08em;text-transform:uppercase"></div>
+   <h2 id="tutTitle" style="margin:.2em 0 .4em;font-size:28px"></h2><div id="tutText"></div>
+   <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+    <button type="button" id="tutBack" class="quiet">Back</button><button type="button" id="tutNext" class="primary">Next</button>
+    <button type="button" id="tutSkip" class="quiet">Skip tutorial</button></div></div></div></div>
+<script>
+(function(){
+  const E = window.WMH_CASES && window.WMH_CASES.easy; if (!E) return;
+  const st = E.slices.reduce((a, b) => b.refVoxels > a.refVoxels ? b : a);
+  const cv = document.getElementById("tutCv"), x = cv.getContext("2d"); cv.width = E.width; cv.height = E.height;
+  const img = new Image(); img.src = st.png;
+  const ref = new Uint8Array(E.width * E.height); for (let i = 0; i < st.ref.length; i += 2) ref.fill(1, st.ref[i], st.ref[i] + st.ref[i + 1]);
+  const STEPS = [
+   ["What to look for", "This is a FLAIR slice of another patient. White matter hyperintensities (WMH) are the <b>bright spots in the white matter</b>, mostly around the ventricles (the two dark holes). Find them yourself first.", false],
+   ["The answer for this example", "Yellow = what the expert marked. Notice: <b>not</b> the bright cortex at the edge, <b>not</b> the thin bright rim right along the ventricles. Small spots count too.", true],
+   ["How to paint", "<b>Brush</b>: paint the spots. <b>Eraser</b>: fix mistakes. <b>Mouse wheel</b>: zoom in for small spots. Paint all <b>3 slices</b> (thumbnails under the picture), then press <b>Score this case</b> and see your Dice. You have <b>6 minutes</b>.", false],
+  ];
+  let k = 0;
+  function draw(){
+    x.drawImage(img, 0, 0);
+    if (STEPS[k][2]){ const d = x.getImageData(0, 0, E.width, E.height); for (let p = 0; p < ref.length; p++) if (ref[p]){ const q = p * 4; d.data[q] = 255; d.data[q+1] = 214; d.data[q+2] = 60; } x.putImageData(d, 0, 0); }
+    document.getElementById("tutStep").textContent = `Tutorial ${k + 1} / ${STEPS.length}`;
+    document.getElementById("tutTitle").textContent = STEPS[k][0]; document.getElementById("tutText").innerHTML = STEPS[k][1];
+    document.getElementById("tutBack").disabled = k === 0; document.getElementById("tutNext").textContent = k === STEPS.length - 1 ? "Start painting" : "Next";
+  }
+  const box = document.getElementById("tut"), KEY = "wmhTutorialSeen.v1";
+  const open = () => { k = 0; box.hidden = false; if (img.complete) draw(); else img.onload = draw; };
+  const close = () => { box.hidden = true; try { localStorage.setItem(KEY, "1"); } catch (e) {} };
+  document.getElementById("tutNext").onclick = () => { if (k < STEPS.length - 1){ k++; draw(); } else close(); };
+  document.getElementById("tutBack").onclick = () => { if (k > 0){ k--; draw(); } };
+  document.getElementById("tutSkip").onclick = close;
+  document.getElementById("tutBtn").onclick = open;
+  let seen = false; try { seen = localStorage.getItem(KEY) === "1"; } catch (e) {}
+  if (!seen && !/[?&]test=1/.test(location.search)) open();
+})();
+</script>
+</body>
+</html>

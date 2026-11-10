@@ -1,0 +1,1 @@
+window.TRY = window.TRY || {}; window.TRY.f1 = {"img": "img/cmb_t2s.jpg", "refs": [[0.6642, 0.4752], [0.3305, 0.4407], [0.3296, 0.4141]], "radius": 0.03, "source": "VALDO 2021 (CC BY-NC-SA), sub-207, slice 103; reference = 26-connected clusters of the expert mask"};
