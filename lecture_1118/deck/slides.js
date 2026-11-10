@@ -1084,7 +1084,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/30_count4.mp4",
   "poster": "poster/30_count4.jpg",
-  "text": "Why count so carefully? New Alzheimer drugs can cause swelling and bleeding in the brain. With more than four micro-bleeds, they are not given. So four or five decides.",
+  "text": "Why count so carefully? New Alzheimer drugs remove amyloid, but they can cause swelling and new bleeds in the brain. The risk is higher in people who already have micro-bleeds. So with more than four, the drug is not given. Four or five: one dot decides.",
   "check": {
    "q": "A patient has 5 microbleeds. By the appropriate use recommendations ...",
    "options": [
@@ -1110,8 +1110,8 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": true,
-  "notes": "Why count so carefully? New Alzheimer drugs can cause swelling and bleeding in the brain. With more than four micro-bleeds, they are not given. So four or five decides.",
-  "background": "This slide answers why the count matters. New antibody drugs against amyloid, lecanemab and donanemab, can slow early Alzheimer's disease. Their main side effect is called ARIA: amyloid related imaging abnormalities, which means swelling (ARIA-E) and new bleedings (ARIA-H) seen on M R I. People who already have many micro-bleeds are at higher risk. So the appropriate use recommendations set a limit: more than four micro-bleeds on the baseline scan, and the drug is not given. For donanemab, any superficial siderosis also excludes treatment. In the European Union, more than four microhaemorrhages is a formal contraindication for both drugs; in the United States it is not a formal contraindication in the label, but the trials and the recommendations used the same limit. The scan must be a T two star or another blood-sensitive sequence such as S W I. Now think of a reader, or a program, that counts four when there are five, or five when there are four. One dot decides whether a patient gets a therapy. Question to the room: who should count, the radiologist, the program, or both?",
+  "notes": "Why count so carefully? New Alzheimer drugs remove amyloid, but they can cause swelling and new bleeds in the brain. The risk is higher in people who already have micro-bleeds. So with more than four, the drug is not given. Four or five: one dot decides.",
+  "background": "New antibody drugs against amyloid (lecanemab, donanemab) can slow early Alzheimer's disease. Their main side effect is ARIA: amyloid related imaging abnormalities, swelling (ARIA-E) and new bleeds (ARIA-H) on MRI. The risk is higher in people who already have microbleeds; the US label names 2 or more microhaemorrhages as a risk factor. So the appropriate use recommendations exclude treatment with more than 4 microbleeds on the baseline scan (Cummings 2023, Rabinovici 2025); for donanemab any superficial siderosis also excludes. In the EU more than 4 microhaemorrhages is a formal contraindication for both drugs. One dot more or less on the scan decides about a therapy. Question to the room: who should count, the radiologist, the program, or both?",
   "qr": null
  },
  {

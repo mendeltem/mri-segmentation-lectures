@@ -112,12 +112,14 @@
 
   /* ---------- 4. 26 neighbours: click voxels on three slices, count clusters ---------- */
   W.n26 = box => {
-    const N = 5, S = 70, G = 40, cv = h("canvas", { width: 3 * N * S + 2 * G, height: N * S + 50 }); cv.style.width = "880px"; const x = cv.getContext("2d");
-    const on = new Set(["1,1,1", "1,2,2", "0,2,3", "1,4,0", "2,4,1", "1,0,4"]); let conn = 26;   // a start example: k(slice), r, c
+    const N = 5, S = 70, G = 40, cv = h("canvas", { width: 3 * N * S + 2 * G, height: N * S }); cv.style.width = "880px"; const x = cv.getContext("2d");
+    // example: a bleed that touches only by an edge and a corner, plus one separate bleed -> 26 neighbours: 2 clusters, 6 neighbours: 4
+    const EXAMPLE = ["1,1,1", "1,2,2", "0,3,3", "2,1,4", "2,2,4"];
+    const on = new Set(EXAMPLE); let conn = 26;
     const pal = ["#83C167", "#58C4DD", "#FC8B3C", "#9A72AC", "#FFE14D", "#5CD0B3", "#FC6255"];
     const side = h("div", { className: "side" });
     side.innerHTML = `<div class="row"><button id="n6">6 neighbours</button><button class="on" id="n26">26 neighbours</button></div>
-      <div>clusters = microbleeds: <b class="big" id="nc">0</b></div><div class="row"><button id="nclr">clear</button></div>
+      <div>clusters = microbleeds: <b class="big" id="nc">0</b></div><div class="row"><button id="nex">example</button><button id="nclr">clear</button></div>
       <div class="dim">Click voxels to mark or unmark. Same colour = same cluster. Try two voxels that touch only at a corner.</div>`;
     function clusters() {
       const ids = {}, list = [...on]; let k = 0;
@@ -128,21 +130,24 @@
       return [ids, k];
     }
     function draw() {
-      const [ids, k] = clusters(); x.fillStyle = "#0b0d12"; x.fillRect(0, 0, cv.width, cv.height); x.font = "30px Source Sans 3, sans-serif"; x.fillStyle = C.dim;
-      ["slice above", "this slice", "slice below"].forEach((t, s) => x.fillText(t, s * (N * S + G) + 8, 34));
+      const [ids, k] = clusters(); x.fillStyle = "#0b0d12"; x.fillRect(0, 0, cv.width, cv.height); 
       for (let s = 0; s < 3; s++) for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
-        const X = s * (N * S + G) + c * S, Y = 50 + r * S, key = `${s},${r},${c}`;
+        const X = s * (N * S + G) + c * S, Y = r * S, key = `${s},${r},${c}`;
         x.fillStyle = on.has(key) ? pal[ids[key] % pal.length] : "#151922"; x.fillRect(X + 2, Y + 2, S - 4, S - 4);
         x.strokeStyle = "#2a2f3a"; x.strokeRect(X + 1, Y + 1, S - 2, S - 2); }
       side.querySelector("#nc").textContent = k;
     }
-    cv.onclick = e => { const r = cv.getBoundingClientRect(), X = (e.clientX - r.left) / r.width * cv.width, Y = (e.clientY - r.top) / r.height * cv.height - 50;
+    cv.onclick = e => { const r = cv.getBoundingClientRect(), X = (e.clientX - r.left) / r.width * cv.width, Y = (e.clientY - r.top) / r.height * cv.height;
       const s = Math.floor(X / (N * S + G)), c = Math.floor((X - s * (N * S + G)) / S), rr = Math.floor(Y / S);
       if (s < 0 || s > 2 || c < 0 || c >= N || rr < 0 || rr >= N) return; const key = `${s},${rr},${c}`; on.has(key) ? on.delete(key) : on.add(key); draw(); };
     const set = v => { conn = v; side.querySelector("#n6").classList.toggle("on", v === 6); side.querySelector("#n26").classList.toggle("on", v === 26); draw(); };
     side.querySelector("#n6").onclick = () => set(6); side.querySelector("#n26").onclick = () => set(26); side.querySelector("#nclr").onclick = () => { on.clear(); draw(); };
+    side.querySelector("#nex").onclick = () => { on.clear(); EXAMPLE.forEach(k => on.add(k)); draw(); };
     side.querySelectorAll("button").forEach(blurAfter);
-    const wrap = h("div", { className: "tw" }); wrap.append(cv, side); box.appendChild(wrap); draw();
+    const names = h("div", {}, ["slice above", "this slice", "slice below"].map(t => `<span>${t}</span>`).join(""));
+    names.style.cssText = "display:flex;justify-content:space-around;width:880px;font-size:24px;color:" + C.dim + ";margin-bottom:8px";
+    const left = h("div"); left.append(names, cv);
+    const wrap = h("div", { className: "tw" }); wrap.append(left, side); box.appendChild(wrap); draw();
   };
 
   /* ---------- 5. F1: click the microbleeds on a real VALDO slice ---------- */

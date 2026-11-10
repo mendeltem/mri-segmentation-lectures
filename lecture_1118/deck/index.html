@@ -95,7 +95,7 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label><input type="checkbox" id="adv"> Auto-advance</label>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bn">N presenter view</button>
-<span class="grow"></span><span style="color:var(--dim)">deck version 10.11. 19:00</span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck version 10.11. 20:00</span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -138,7 +138,8 @@ S.forEach((s,i)=>{if(s.kind==="try")M[s.key]=NOM;const m=M[s.key];const el=docum
  const v=el.querySelector("video");
  if(!PRESENTER&&s.clip){v.src=s.clip;v.preload=i<3?"auto":"metadata";el.classList.add("clip");v.hidden=false}
  v.addEventListener("loadedmetadata",()=>{hasClip[i]=true;const im=el.querySelector(".media img");if(im)im.remove();if(i===cur)start()});
- v.addEventListener("error",()=>{if(!s.clip)return;hasClip[i]=false;el.classList.remove("clip");v.hidden=true;if(i===cur)start()});v.addEventListener("waiting",()=>{if(i===cur)hud("… loading clip",true)});v.addEventListener("playing",()=>{if(i===cur)hud("▶ playing")});
+ let retried=false;   // a clip on the network drive can be busy for a moment (e.g. being replaced): try once more
+ v.addEventListener("error",()=>{if(!s.clip)return;if(!retried){retried=true;setTimeout(()=>{v.src=s.clip+"?r="+Date.now();v.load()},1500);return}hasClip[i]=false;el.classList.remove("clip");v.hidden=true;if(i===cur)start()});v.addEventListener("waiting",()=>{if(i===cur)hud("… loading clip",true)});v.addEventListener("playing",()=>{if(i===cur)hud("▶ playing")});
  v.addEventListener("ended",()=>{if(i===cur)ended()});
 });
 function fit(){if(PRESENTER)return;const k=Math.min(innerWidth/1600,innerHeight/900);$("#stage").style.transform=`scale(${k})`}
