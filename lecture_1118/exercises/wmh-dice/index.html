@@ -81,6 +81,7 @@
   kbd{font:11px ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-radius:4px;
       padding:0 4px;color:var(--muted);margin-left:3px}
   .keys{font-size:12px;color:var(--muted);line-height:1.6}
+  .tools .grp.keys{display:block}   /* running text: the key caps stay in the line */
 
   .stage{min-width:0}
   .view{position:relative;height:clamp(340px,calc(100vh - 230px),820px);background:#000;
@@ -100,6 +101,8 @@
   #sideA{position:absolute;left:50%;top:6px;transform:translateX(-50%)}
   #orientNote{left:8px;bottom:8px;color:var(--muted);font-size:12px}
   .strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  /* quick tools and free scroll margin next to the picture: only on phones / touch screens (see the end of this style block) */
+  .quick,.touchhint{display:none}
   .thumb{padding:4px;display:flex;flex-direction:column;align-items:center;gap:3px;background:var(--panel);min-height:0}
   .thumb canvas{display:block;border-radius:4px;background:#000}
   .thumb span{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
@@ -171,7 +174,7 @@
   @media (max-width: 820px){
     main.work{grid-template-columns:minmax(0,1fr)}
     .introgrid{grid-template-columns:1fr}
-    .sumgrid{grid-template-columns:1fr}
+    .sumgrid{grid-template-columns:minmax(0,1fr)}   /* minmax(0,..): the wide table scrolls inside its box instead of making the whole page wider than the phone */
     .view{height:min(72vh,110vw)}
   }
   @media (max-width: 520px){
@@ -180,6 +183,29 @@
     .tools .grp{flex-basis:100%;min-width:0}
     .dicebox .val{font-size:44px}
     .bigmean{font-size:48px}
+  }
+
+  /* ---- phones and touch screens (10.11.2026) ----
+     The picture takes every touch (one finger paints, two fingers zoom and move), so it must
+     not fill the whole width: a column on its right holds the tools needed while painting and
+     a free margin. A finger that starts in this column scrolls the page as usual. */
+  @media (max-width: 820px), (hover: none) and (pointer: coarse){
+    .viewrow{display:flex;gap:6px;align-items:stretch}
+    .viewrow .view{flex:1 1 auto;min-width:0}
+    .quick{display:flex;flex-direction:column;gap:6px;flex:0 0 58px;width:58px}
+    .quick button{min-height:44px;padding:4px 2px;font-size:13px}
+    .quick button.attn{border-color:var(--warn);color:var(--warn);font-weight:700}
+    .scrollgrip{flex:1 1 0;min-height:56px;border:1px dashed var(--line);border-radius:8px;
+                display:flex;align-items:center;justify-content:center;color:var(--muted);
+                font-size:12px;letter-spacing:.06em;writing-mode:vertical-rl;user-select:none;-webkit-user-select:none;
+                background:repeating-linear-gradient(0deg,transparent 0 7px,rgba(157,171,185,.10) 7px 8px)}
+    .touchhint{display:block;margin:8px 0 0}
+  }
+  /* one column: picture first, then the Score button, then the sliders */
+  @media (max-width: 820px){
+    .stage{order:1}
+    .score{order:2}
+    .tools{order:3}
   }
 </style>
 </head>
@@ -265,15 +291,28 @@
     </aside>
 
     <section class="stage">
-      <div class="view" id="view">
-        <canvas id="cv" aria-label="MRI slice with your mask"></canvas>
-        <span class="badge" id="sliceLabel"></span>
-        <span class="badge" id="lockBadge" hidden>Scored and locked</span>
-        <span class="side" id="sideR" title="Patient's right">R</span>
-        <span class="side" id="sideL" title="Patient's left">L</span>
-        <span class="side" id="sideA" title="Front of the head (anterior)">front</span>
-        <span class="badge" id="orientNote">Right side of the picture = patient's left</span>
+      <div class="viewrow">
+        <div class="view" id="view">
+          <canvas id="cv" aria-label="MRI slice with your mask"></canvas>
+          <span class="badge" id="sliceLabel"></span>
+          <span class="badge" id="lockBadge" hidden>Scored and locked</span>
+          <span class="side" id="sideR" title="Patient's right">R</span>
+          <span class="side" id="sideL" title="Patient's left">L</span>
+          <span class="side" id="sideA" title="Front of the head (anterior)">front</span>
+          <span class="badge" id="orientNote">Right side of the picture = patient's left</span>
+        </div>
+        <!-- phones / touch screens only: the tools needed while painting, right at the picture.
+             A finger that starts in this column scrolls the page. -->
+        <div class="quick" id="quickBar" aria-label="Quick tools next to the picture">
+          <button type="button" data-tool="brush" title="Brush">Brush</button>
+          <button type="button" data-tool="eraser" title="Eraser">Eraser</button>
+          <button type="button" data-tool="move" title="Move the picture with one finger">Move</button>
+          <button type="button" id="quickUndo" title="Undo the last stroke">Undo</button>
+          <button type="button" id="quickFit" title="Fit the picture: show the whole slice">Fit</button>
+          <div class="scrollgrip" aria-hidden="true">scroll page</div>
+        </div>
       </div>
+      <p class="hint touchhint">One finger paints. Two fingers zoom and move the picture. Swipe on the right margin to scroll the page.</p>
       <div class="strip" id="strip" aria-label="Slices of this case"></div>
     </section>
 
@@ -408,7 +447,7 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
    ========================================================================== */
 const state = {
   mode: "class",            // 3 slices of one patient (lecturer 10.11.2026)
-  cur: "medium",             // "easy" | "medium" | "hard" | "summary"
+  cur: LEVELS[0],           // one of LEVELS, or "summary"
   tool: "brush",            // "brush" | "eraser" | "move"
   brushMm: 4,               // brush diameter in millimetres
   opacity: 55,              // mask opacity in percent
@@ -418,7 +457,11 @@ const state = {
   introOpen: true,
   work: null,               // work[mode][level] = { slice, scored, usedMs, masks[8] }
 };
-let lastCase = "medium";                 // case shown before the summary was opened
+let lastCase = LEVELS[0];                // case shown before the summary was opened
+// The settings of a fresh first load. "Start over" goes back to exactly these.
+const FRESH_SETTINGS = { mode: state.mode, cur: LEVELS[0], tool: state.tool, brushMm: state.brushMm,
+                         opacity: state.opacity, bright: state.bright, contrast: state.contrast,
+                         showMask: state.showMask, smooth: state.smooth, introOpen: state.introOpen };
 const scores = { class: {}, home: {} };// scores[mode][level], filled when a case is scored
 const undoStacks = { easy: [], medium: [], hard: [] };
 const pictures = {};                   // pictures[level][position] = Uint8Array of grey values
@@ -652,28 +695,55 @@ function geometry(){
            ox: (viewW - c.width * px) / 2 + view.panX,
            oy: (viewH - c.height * py) / 2 + view.panY };
 }
+// Zoom limit: at the deepest zoom the shorter side of the picture area still shows about
+// MIN_VISIBLE_MM millimetres of the head (about 25 voxels), not just a handful of huge voxels.
+const MIN_VISIBLE_MM = 24;
+function maxZoom(){
+  const c = CASES[state.cur];
+  if (!c || !viewW || !viewH) return 1;
+  const [mmX, mmY] = c.voxelMm;
+  const fit = 0.97 * Math.min(viewW / (c.width * mmX), viewH / (c.height * mmY));
+  return clamp(Math.min(viewW, viewH) / (MIN_VISIBLE_MM * fit), 2, 16);
+}
+// Pan limit: the picture can never leave the picture area. A picture larger than the area
+// can be shifted until its edge is a quarter of the area inside; a smaller one stays fully visible.
 function clampPan(){
   const c = CASES[state.cur];
+  view.zoom = clamp(view.zoom, 1, maxZoom());
   const g = geometry();
-  const limX = (c.width * g.px + viewW) / 2 - 60, limY = (c.height * g.py + viewH) / 2 - 60;
+  const limX = Math.max(0, (c.width * g.px - viewW) / 2) + 0.25 * viewW;
+  const limY = Math.max(0, (c.height * g.py - viewH) / 2) + 0.25 * viewH;
   view.panX = clamp(view.panX, -limX, limX);
   view.panY = clamp(view.panY, -limY, limY);
 }
 function zoomAt(mx, my, factor){
   const before = geometry();
   const vx = (mx - before.ox) / before.px, vy = (my - before.oy) / before.py;
-  view.zoom = clamp(view.zoom * factor, 1, 16);
+  view.zoom = clamp(view.zoom * factor, 1, maxZoom());
   if (view.zoom === 1){ view.panX = 0; view.panY = 0; }
   else {
-    const c = CASES[state.cur];
     const g = geometry();
     view.panX += mx - (g.ox + vx * g.px);
     view.panY += my - (g.oy + vy * g.py);
-    void c;
   }
   clampPan(); requestDraw();
 }
 function fitView(){ view.zoom = 1; view.panX = 0; view.panY = 0; requestDraw(); }
+function isFitted(){ return view.zoom === 1 && view.panX === 0 && view.panY === 0; }
+// Keep the labels at the top of the picture apart. On a narrow picture (phone) the caption is
+// almost as wide as the picture: then the lock badge and "front" move below it.
+function layoutBadges(){
+  const label = $("sliceLabel"), front = $("sideA"), lock = $("lockBadge");
+  front.style.top = ""; lock.style.top = "";
+  if (!viewW || state.cur === "summary") return;
+  const touching = (a, b) => {
+    const p = a.getBoundingClientRect(), q = b.getBoundingClientRect();
+    return p.left < q.right + 6 && q.left < p.right + 6 && p.top < q.bottom + 3 && q.top < p.bottom + 3;
+  };
+  if (!lock.hidden && touching(lock, label)) lock.style.top = (label.offsetTop + label.offsetHeight + 4) + "px";
+  if (touching(front, label)) front.style.top = (label.offsetTop + label.offsetHeight + 4) + "px";
+  if (!lock.hidden && touching(front, lock)) front.style.top = (lock.offsetTop + lock.offsetHeight + 4) + "px";
+}
 
 // Brightness / contrast as a lookup table for the 256 grey values.
 function greyTable(){
@@ -753,13 +823,14 @@ function drawMain(){
     ctx.setLineDash([]);
   }
   viewEl.classList.toggle("hidecursor", !!hover && painting);
+  $("quickFit").classList.toggle("attn", !isFitted());      // phone: "Fit" lights up while the picture is zoomed or shifted
 }
 function resizeCanvas(){
   viewW = viewEl.clientWidth; viewH = viewEl.clientHeight;
   dpr = window.devicePixelRatio || 1;
   cv.width = Math.max(1, Math.round(viewW * dpr));
   cv.height = Math.max(1, Math.round(viewH * dpr));
-  if (state.cur !== "summary"){ clampPan(); drawMain(); }
+  if (state.cur !== "summary"){ clampPan(); drawMain(); layoutBadges(); }
 }
 
 /* ==========================================================================
@@ -843,21 +914,27 @@ function clearSlice(){
 }
 
 function touchPoints(){ return [...pointers.values()].filter(p => p.type === "touch"); }
+// Two fingers on the picture: the distance between the fingers zooms, the point between them
+// moves the picture, both at the same time. Every move continues from the last one, so nothing
+// "piles up" when a zoom or pan limit is reached.
 function startPinch(){
-  const [a, b] = touchPoints(), rect = cv.getBoundingClientRect();
-  const mx = (a.x + b.x) / 2 - rect.left, my = (a.y + b.y) / 2 - rect.top, g = geometry();
-  gesture = { kind: "pinch", dist: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)), zoom: view.zoom,
-              vx: (mx - g.ox) / g.px, vy: (my - g.oy) / g.py };
+  const [a, b] = touchPoints();
+  gesture = { kind: "pinch", dist: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)),
+              mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
 }
 function movePinch(){
   const pts = touchPoints();
   if (pts.length < 2) return;
   const [a, b] = pts, rect = cv.getBoundingClientRect();
-  const mx = (a.x + b.x) / 2 - rect.left, my = (a.y + b.y) / 2 - rect.top;
-  view.zoom = clamp(gesture.zoom * Math.hypot(a.x - b.x, a.y - b.y) / gesture.dist, 1, 16);
-  const g = geometry();                         // keep the voxel between the fingers under the fingers
-  view.panX += mx - (g.ox + gesture.vx * g.px);
-  view.panY += my - (g.oy + gesture.vy * g.py);
+  const dist = Math.max(1, Math.hypot(a.x - b.x, a.y - b.y));
+  const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+  const before = geometry();                    // voxel that was between the fingers a moment ago
+  const vx = (gesture.mx - rect.left - before.ox) / before.px, vy = (gesture.my - rect.top - before.oy) / before.py;
+  view.zoom = clamp(view.zoom * dist / gesture.dist, 1, maxZoom());
+  const g = geometry();                         // keep that voxel between the fingers
+  view.panX += (mx - rect.left) - (g.ox + vx * g.px);
+  view.panY += (my - rect.top) - (g.oy + vy * g.py);
+  gesture.dist = dist; gesture.mx = mx; gesture.my = my;
   clampPan(); requestDraw();
 }
 
@@ -865,6 +942,12 @@ cv.addEventListener("pointerdown", e => {
   if (state.cur === "summary") return;
   e.preventDefault();
   try { cv.setPointerCapture(e.pointerId); } catch (err){ /* older browsers */ }
+  if (e.pointerType === "touch" && e.isPrimary && touchPoints().length){
+    // a first finger arrives while old fingers are still on the books (a "finger up" got lost): forget them
+    if (gesture && gesture.kind === "stroke") endStroke(true);
+    gesture = null;
+    for (const [id, p] of [...pointers]) if (p.type === "touch") pointers.delete(id);
+  }
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY, type: e.pointerType });
   if (e.pointerType === "touch" && touchPoints().length === 2){
     if (gesture && gesture.kind === "stroke") endStroke(false);
@@ -932,7 +1015,7 @@ function renderTabs(){
 }
 function renderTools(){
   const locked = state.cur !== "summary" && curWork().scored;
-  for (const b of $("toolRow").querySelectorAll("button")){
+  for (const b of document.querySelectorAll("#toolRow button, #quickBar button[data-tool]")){
     b.classList.toggle("on", b.dataset.tool === state.tool);
     b.disabled = locked && b.dataset.tool !== "move";
   }
@@ -946,6 +1029,7 @@ function renderTools(){
   $("toggleMask").textContent = (state.showMask ? "Hide " : "Show ") + word;
   $("toggleMask").classList.toggle("on", !state.showMask);
   $("undo").disabled = locked || state.cur === "summary" || !undoStacks[state.cur].length;
+  $("quickUndo").disabled = $("undo").disabled;
   $("clearSlice").disabled = locked || state.cur === "summary" || !countVoxels(getMask(state.cur, curPos(), false));
   viewEl.classList.toggle("tool-move", state.tool === "move");
   viewEl.classList.toggle("locked", locked && state.tool !== "move");
@@ -986,6 +1070,7 @@ function renderView(){
   $("sliceLabel").textContent = `${LEVEL_NAMES[level]} case · slice ${i + 1} of ${list.length}` +
     ` (scan slice ${c.slices[list[i]].z + 1} of ${c.nSlicesInScan})`;
   $("lockBadge").hidden = !curWork().scored;
+  layoutBadges();
   drawBase(); drawMask(); requestDraw();
 }
 function renderScorePanel(){
@@ -1126,6 +1211,7 @@ function renderSummary(){
 
 // Show the current case (or the summary) completely.
 function renderCase(){
+  if (state.cur !== "summary" && !LEVELS.includes(state.cur)) state.cur = LEVELS[0];   // never a case that is not on this page
   const isSummary = state.cur === "summary";
   $("work").hidden = isSummary;
   $("summary").hidden = !isSummary;
@@ -1209,13 +1295,20 @@ async function startOver(){
   const yes = await ask("Start over?",
     "All your masks and scores on this device are removed (class mode and homework mode).", "Start over", "Cancel");
   if (!yes) return;
+  // Back to exactly the state of a fresh first load.
+  // (Until 10.11.2026 this set state.cur = "easy", a case that is no longer in LEVELS: every
+  //  function then failed, and after "Summary -> Start over" the picture area stayed black.)
+  if (gesture && gesture.kind === "stroke") endStroke(false);
+  gesture = null; pointers.clear(); hover = null;
+  Object.assign(state, FRESH_SETTINGS);
   state.work = emptyWork();
-  lastTick = performance.now();
-  for (const level of LEVELS) undoStacks[level].length = 0;
+  lastCase = LEVELS[0];
+  for (const level in undoStacks) undoStacks[level].length = 0;
   refreshScores();
-  state.mode = "class"; state.cur = "easy"; state.tool = "brush"; state.showMask = true;
   view.zoom = 1; view.panX = 0; view.panY = 0;
   $("strip").dataset.key = "";
+  $("intro").open = true;
+  lastTick = performance.now();
   save(); renderCase();
   toast("Everything is reset.");
 }
@@ -1241,6 +1334,32 @@ $("startOver").addEventListener("click", startOver);
 $("toolRow").addEventListener("click", e => {
   const b = e.target.closest("button[data-tool]");
   if (b && !b.disabled){ state.tool = b.dataset.tool; save(); renderTools(); requestDraw(); }
+});
+function quickAction(b){
+  if (!b || b.disabled) return;
+  if (b.dataset.tool){ state.tool = b.dataset.tool; save(); renderTools(); requestDraw(); }
+  else if (b.id === "quickUndo") undo();
+  else if (b.id === "quickFit") fitView();
+}
+// A finger tap right after a fast swipe on the picture can arrive without a
+// "click" (the browser swallows it). So a short touch on a quick button acts
+// on "pointerup"; a scroll drag ends with "pointercancel" and does nothing.
+let quickTap = null, quickTapAt = -1e9;
+$("quickBar").addEventListener("pointerdown", e => {
+  const b = e.target.closest("button");
+  quickTap = (b && e.pointerType === "touch") ? { id: e.pointerId, b, x: e.clientX, y: e.clientY } : null;
+});
+$("quickBar").addEventListener("pointercancel", () => { quickTap = null; });
+$("quickBar").addEventListener("pointerup", e => {
+  const t = quickTap; quickTap = null;
+  if (!t || t.id !== e.pointerId || e.target.closest("button") !== t.b) return;
+  if (Math.hypot(e.clientX - t.x, e.clientY - t.y) > 12) return;
+  quickTapAt = performance.now();
+  quickAction(t.b);
+});
+$("quickBar").addEventListener("click", e => {
+  if (performance.now() - quickTapAt < 700) return;   // already done on pointerup
+  quickAction(e.target.closest("button"));
 });
 $("brushSize").addEventListener("input", e => { state.brushMm = +e.target.value; save(); renderTools(); requestDraw(); });
 $("opacity").addEventListener("input", e => { state.opacity = +e.target.value; save(); renderTools(); requestDraw(); });
@@ -1395,6 +1514,8 @@ if (/[?&]test=1/.test(window.location.search)){
       return { x: rect.left + g.ox + (x + 0.5) * g.px, y: rect.top + g.oy + (y + 0.5) * g.py };
     },
     view,
+    maxZoom(){ return maxZoom(); },
+    geometry(){ return { ...geometry(), viewW, viewH }; },
   };
 }
 
