@@ -231,7 +231,7 @@
 <div class="wrap">
   <div id="fatal" class="error" hidden></div>
 
-  <details class="intro" id="intro" open>
+  <details class="intro" id="intro">
     <summary>How to</summary>
     <div class="introgrid">
       <ol>
@@ -454,7 +454,7 @@ const state = {
   bright: 0, contrast: 0,   // -100 .. 100
   showMask: true,
   smooth: false,
-  introOpen: true,
+  introOpen: false,   // "How to" starts closed
   work: null,               // work[mode][level] = { slice, scored, usedMs, masks[8] }
 };
 let lastCase = LEVELS[0];                // case shown before the summary was opened
@@ -577,7 +577,7 @@ function load(){
     if (saved.brushMm >= 1 && saved.brushMm <= 30) state.brushMm = Math.round(saved.brushMm);
     if (saved.opacity >= 10 && saved.opacity <= 100) state.opacity = Math.round(saved.opacity);
     state.smooth = saved.smooth === true;
-    state.introOpen = saved.introOpen !== false;
+    state.introOpen = false;                     // always closed after a (re)load, whatever was saved
   } catch (err){
     state.work = emptyWork();        // broken save: start clean instead of crashing
   }
@@ -1307,7 +1307,7 @@ async function startOver(){
   refreshScores();
   view.zoom = 1; view.panX = 0; view.panY = 0;
   $("strip").dataset.key = "";
-  $("intro").open = true;
+  $("intro").open = false;
   lastTick = performance.now();
   save(); renderCase();
   toast("Everything is reset.");

@@ -85,7 +85,7 @@ kbd{background:#000;border:1px solid var(--line);border-radius:4px;padding:0 6px
 <div id="quiz" hidden></div><div id="text" hidden></div>
 <div id="help" hidden><b>Keys</b><br>
 <kbd>→</kbd> next slide · <kbd>←</kbd> back (clicker: PageDown / PageUp)<br>
-<kbd>Space</kbd> or <kbd>P</kbd> pause / play the voice and the clip · <kbd>R</kbd> replay slide · <kbd>V</kbd> voice on / off · <kbd>A</kbd> autoplay on / off<br>
+<kbd>Space</kbd> or <kbd>P</kbd> pause / play the voice and the clip · <kbd>R</kbd> replay slide (interactive page: fresh picture) · <kbd>V</kbd> voice on / off · <kbd>A</kbd> autoplay on / off<br>
 <kbd>N</kbd> presenter view (second window: notes, next slide, clock)<br><kbd>T</kbd> spoken text · <kbd>F</kbd> fullscreen · <kbd>H</kbd> this help<br>
 Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops the countdown, "reset" sets it back.</div>
 </div></div>
@@ -95,7 +95,7 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label><input type="checkbox" id="adv"> Auto-advance</label>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bn">N presenter view</button>
-<span class="grow"></span><span style="color:var(--dim)">deck version 10.11. 17:35 · 37 slides</span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck version 10.11. 20:10 · 37 slides</span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -117,7 +117,7 @@ S.forEach((s,i)=>{if(s.kind==="try")M[s.key]=NOM;const m=M[s.key];const el=docum
  if(s.kind==="try"){el.classList.add("try");
   el.innerHTML=`<div class="head"><h1>${esc(s.title)}</h1><div class="hr"><span class="part">${esc(s.part)}</span></div></div><div class="body"><div class="widget" style="width:100%;height:100%"></div></div>
   <div class="src">${(s.sources||[]).map(x=>`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join("")}</div>`;
-  track.appendChild(el);if(!PRESENTER&&window.WIDGETS&&WIDGETS[s.widget])try{WIDGETS[s.widget](el.querySelector(".widget"))}catch(e){el.querySelector(".widget").textContent="widget error: "+e.message}
+  track.appendChild(el);if(!PRESENTER&&window.WIDGETS&&WIDGETS[s.widget])BUILD_WIDGET(s.widget,el.querySelector(".widget"),false)
   return}
  const firstImg=m.beats.map(b=>b.img).find(b=>b&&b!=="-");
  if(!firstImg&&!s.qr)el.classList.add("nomedia");
@@ -180,7 +180,12 @@ function showSlide(from,to){const a=from!==null&&from!==to?$("#s"+from):null,b=$
  void b.offsetWidth;b.style.transition="";b.style.transform="none";b.style.opacity=1;
  if(a){a.style.zIndex=1;if(move){a.style.transform=`translateX(${-dir*100}%)`}else{a.style.opacity=0}
   setTimeout(()=>{if(prevCur!==from){a.style.visibility="hidden";a.style.opacity=0;a.style.transition="none";a.style.transform="none";void a.offsetWidth;a.style.transition=""}},650)}}
-function go(i){i=Math.max(0,Math.min(S.length-1,i));setTimeout(()=>{if(!$("#srcpanel").hidden)showSources()},0);preloadNext(i);if(exRun){clearInterval(et);exRun=false}closeQuiz();$("#text").hidden=true;cur=i;
+// interactive slide: a fresh picture every time the slide is entered (a browser may drop canvas pictures of a waiting tab)
+function rebuildTry(i,from){if(PRESENTER||!window.BUILD_WIDGET)return;const s=S[i];
+ if(s&&s.kind==="try"&&WIDGETS[s.widget])BUILD_WIDGET(s.widget,document.querySelector("#s"+i+" .widget"),true);
+ setTimeout(()=>window.REDRAW_WIDGETS&&REDRAW_WIDGETS(),800);
+ if(from!==i&&S[from]&&S[from].kind==="try"&&WIDGETS[S[from].widget])setTimeout(()=>{if(cur!==from)BUILD_WIDGET(S[from].widget,document.querySelector("#s"+from+" .widget"),false)},900)}
+function go(i){i=Math.max(0,Math.min(S.length-1,i));setTimeout(()=>{if(!$("#srcpanel").hidden)showSources()},0);preloadNext(i);if(exRun){clearInterval(et);exRun=false}closeQuiz();$("#text").hidden=true;const leaving=cur;cur=i;rebuildTry(i,leaving);
  showSlide(prevCur,i);prevCur=i;$("#num").textContent=`${i+1} / ${S.length}`;
  try{history.replaceState(null,"","#"+S[i].key)}catch(e){}start();send();if(S[i].kind!=="try")hud(auto.checked?"▶ playing":"⏸ Space to play")}
 // check question with countdown
@@ -220,7 +225,7 @@ addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox
  else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();step(-1)}
  else if(k==="n"||k==="N")openPresenter();
  else if(k==="Home")go(0);else if(k==="End")go(S.length-1);
- else if(k==="p"||k==="P")togglePlay();else if(k==="r"||k==="R")start();
+ else if(k==="p"||k==="P")togglePlay();else if(k==="r"||k==="R"){start();rebuildTry(cur,cur)}
  else if(k==="v"||k==="V"){voice.checked=!voice.checked;voice.onchange()}
  else if(k==="a"||k==="A"){auto.checked=!auto.checked;auto.onchange()}
  
