@@ -96,7 +96,7 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label><input type="checkbox" id="adv"> Auto-advance</label>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v13 (11.11.) · 40 slides</span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck v14 (11.11.) · 40 slides</span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -217,7 +217,7 @@ function showSources(){const p=$("#srcpanel"),src=S[cur].sources||[];
 function toggleSources(){const p=$("#srcpanel");if(p.hidden){showSources();p.hidden=false;$("#qapanel").hidden=true}else p.hidden=true}
 // "Q&A" button: the ten most likely questions on the current slide, each with a short answer (film/qa/*.json -> qa.js)
 function qaHtml(key,open){const q=(window.QA||{})[key]||[];return q.length?q.map((x,i)=>`<details${open?" open":""} style="margin:0 0 10px"><summary style="cursor:pointer;color:var(--y)">${i+1}. ${esc(x.q)}</summary><div style="margin:6px 0 6px 26px">${esc(x.a)}</div></details>`).join(""):"<div style='color:var(--dim)'>No questions stored for this slide.</div>"}
-function showQA(){$("#qapanel").innerHTML=`<div style="color:var(--dim);font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Questions and answers · slide ${cur+1} · ${esc(S[cur].title)}</div>`+qaHtml(S[cur].key,false)}
+function showQA(){$("#qapanel").innerHTML=`<div style="color:var(--dim);font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Questions and answers · slide ${cur+1} · ${esc(S[cur].title)}</div>`+qaHtml(S[cur].key,false)+`<div style="margin-top:12px;border-top:1px solid var(--line);padding-top:10px"><a href="questions.mp4" target="_blank" style="color:var(--y)">Film: twelve hard questions, answered (6 min)</a></div>`}
 function toggleQA(){const p=$("#qapanel");if(p.hidden){showQA();p.hidden=false;$("#srcpanel").hidden=true}else p.hidden=true}
 function toggleText(){const t=$("#text");if(t.hidden){t.textContent=S[cur].text;t.hidden=false}else t.hidden=true}
 function fs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}

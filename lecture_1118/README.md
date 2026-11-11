@@ -2,6 +2,7 @@
 
 - `deck/` - the lecture as one HTML page (open `deck/index.html`): slides with animated clips and voice, presenter view (N),
   interactive slides, sources per slide.
+- `deck/questions.mp4` - a 6 minute film: twelve hard student questions, answered (linked in the Q&A panel, key Q)
 - `exercises/atlas-quiz/` - 10 questions: which structure is coloured?
 - `exercises/wmh-dice/` - paint white matter hyperintensities on one patient (3 slices) and get your Dice score.
 - `exercises/cmb-f1/` - click the microbleeds on three scans and get your F1 score.
