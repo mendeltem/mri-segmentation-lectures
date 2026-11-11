@@ -202,8 +202,8 @@ window.QA = {
 "a": "In the original paper (Fischl and Dale 2000), the standard deviation of the thickness between people was below 0.5 mm, and the method was tested by scanning the same people again. The authors conclude that focal thinning can be found in small groups."
 },
 {
-"q": "Is the picture on this slide real data?",
-"a": "No, it is a sketch: a cut through the cortex with two drawn lines. Real surfaces are meshes in three dimensions. The slide before shows real ones."
+"q": "Are the pictures on this slide real data?",
+"a": "The first part is a sketch: a cut through the cortex with two drawn lines. The turning brain at the end is real: FreeSurfer's average brain, a public template, with its two surfaces and its average thickness at every point. It is an average of many adults, not one person."
 },
 {
 "q": "Why is the white surface inside and the pial surface outside?",
