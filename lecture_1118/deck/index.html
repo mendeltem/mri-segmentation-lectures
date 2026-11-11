@@ -96,7 +96,7 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label><input type="checkbox" id="adv"> Auto-advance</label>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v16 (11.11.) · 44 slides</span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck v17 (11.11.) · 44 slides<span id="clipsN"></span></span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -187,7 +187,7 @@ function rebuildTry(i,from){if(PRESENTER||!window.BUILD_WIDGET)return;const s=S[
  if(s&&s.kind==="try"&&WIDGETS[s.widget])BUILD_WIDGET(s.widget,document.querySelector("#s"+i+" .widget"),true);
  setTimeout(()=>window.REDRAW_WIDGETS&&REDRAW_WIDGETS(),800);
  if(from!==i&&S[from]&&S[from].kind==="try"&&WIDGETS[S[from].widget])setTimeout(()=>{if(cur!==from)BUILD_WIDGET(S[from].widget,document.querySelector("#s"+from+" .widget"),false)},900)}
-function go(i){i=Math.max(0,Math.min(S.length-1,i));setTimeout(()=>{if(!$("#srcpanel").hidden)showSources();if(!$("#qapanel").hidden)showQA()},0);preloadNext(i);if(exRun){clearInterval(et);exRun=false}closeQuiz();$("#text").hidden=true;const leaving=cur;cur=i;rebuildTry(i,leaving);
+function go(i){i=Math.max(0,Math.min(S.length-1,i));setTimeout(()=>{if(!$("#srcpanel").hidden)showSources();if(!$("#qapanel").hidden)showQA()},0);preloadNext(i);if(exRun){clearInterval(et);exRun=false}closeQuiz();$("#text").hidden=true;const leaving=cur;cur=i;useBlob(leaving);rebuildTry(i,leaving);
  showSlide(prevCur,i);prevCur=i;$("#num").textContent=`${i+1} / ${S.length}`;
  try{history.replaceState(null,"","#"+S[i].key)}catch(e){}start();send();if(S[i].kind!=="try")hud(auto.checked?"▶ playing":"⏸ Space to play")}
 // check question with countdown
@@ -265,6 +265,18 @@ setInterval(send,1000);
 const h=location.hash.slice(1);const hi=S.findIndex(s=>s.key===h);
 // the browser allows sound only after one click or key press in the page: until then the slide waits at its start
 // with a large hint; the first click or key starts it from the beginning, with sound (lecturer 11.11.2026)
+// all clips are loaded completely in the background, the nearest slides first, so a slide change never waits
+// (lecturer 11.11.2026). From a web address: fetched whole and handed to the video; opened as a file: preload "auto".
+const blobs={};let clipsDone=0;
+function useBlob(i){const e=document.getElementById("s"+i),v=e&&e.querySelector("video");if(!v||!blobs[i]||v.dataset.blob||i===cur)return;v.dataset.blob="1";v.src=blobs[i];v.load()}
+function loadAllClips(){if(PRESENTER)return;
+ if(!/^https?:$/.test(location.protocol)){document.querySelectorAll(".slide video").forEach(v=>{if(v.src&&v.preload!=="auto")v.preload="auto"});return}
+ const todo=S.map((s,i)=>i).filter(i=>S[i].clip),total=todo.length,far=i=>i>=cur?i-cur:(cur-i)+3;
+ const worker=async()=>{while(todo.length){todo.sort((a,b)=>far(a)-far(b));const i=todo.shift();
+  try{const r=await fetch(S[i].clip);if(r.ok){blobs[i]=URL.createObjectURL(await r.blob());useBlob(i)}}catch(_){}
+  clipsDone++;$("#clipsN").textContent=clipsDone<total?` · loading clips ${clipsDone}/${total}`:" · all clips loaded"}};
+ worker();worker();worker()}
+setTimeout(loadAllClips,800);
 let soundBlocked=false;
 function blocked(){if(PRESENTER||!voice.checked)return false;soundBlocked=true;$("#soundhint").hidden=false;return true}
 function unlock(e){if(!soundBlocked)return;soundBlocked=false;$("#soundhint").hidden=true;
