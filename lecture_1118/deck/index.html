@@ -80,7 +80,7 @@ kbd{background:#000;border:1px solid var(--line);border-radius:4px;padding:0 6px
 <body>
 <div id="prog"></div><div id="hud" class="hide"><b id="hnum"></b><span id="htitle"></span><span class="st" id="hst"></span></div>
 <div id="viewport"><div id="stage"><div class="track" id="track"></div>
-<div id="soundhint" hidden style="position:absolute;right:28px;bottom:70px;z-index:6;background:var(--y);color:#111;font-size:24px;padding:12px 20px;border-radius:10px;font-weight:600">🔇 Click or press any key for sound</div>
+<div id="soundhint" hidden style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;background:var(--y);color:#111;font-size:40px;padding:26px 44px;border-radius:16px;font-weight:600;cursor:pointer;box-shadow:0 8px 40px #000a">▶ Click to start with sound</div>
 <div id="srcpanel" hidden style="position:absolute;right:40px;bottom:70px;width:760px;max-height:620px;overflow:auto;z-index:5;background:rgba(20,24,33,.97);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:19px;line-height:1.45"></div>
 <div id="qapanel" hidden style="position:absolute;right:40px;bottom:70px;width:900px;max-height:800px;overflow:auto;z-index:5;background:rgba(20,24,33,.97);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:21px;line-height:1.45"></div>
 <div id="quiz" hidden></div><div id="text" hidden></div>
@@ -96,7 +96,7 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label><input type="checkbox" id="adv"> Auto-advance</label>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v15 (11.11.) · 44 slides</span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck v16 (11.11.) · 44 slides</span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -166,9 +166,9 @@ function start(){stopAll();const s=S[cur],m=M[s.key];clock=0;render(0);
  if(s.kind==="try"){hud("✋ interactive: use the mouse",true);return}
  if(!auto.checked)return;playing=true;
  if(s.clip&&!hasClip[cur]&&el().classList.contains("clip")){hud("… loading clip",true);return}
- if(hasClip[cur]){const v=el().querySelector("video");v.currentTime=0;v.muted=!voice.checked;v.play().catch(()=>{v.muted=true;blocked();v.play().catch(()=>{})});render(m.seconds);return}
+ if(hasClip[cur]){const v=el().querySelector("video");v.currentTime=0;v.muted=!voice.checked;v.play().catch(()=>{if(!blocked()){v.muted=true;v.play().catch(()=>{})}});render(m.seconds);return}
  audio.src=m.audio;audio.currentTime=0;last=performance.now();
- if(voice.checked)audio.play().catch(()=>blocked());raf=requestAnimationFrame(tickF)}
+ if(voice.checked)audio.play().catch(()=>{if(blocked())stopAll()});raf=requestAnimationFrame(tickF)}
 function togglePlay(){if(hasClip[cur]){const v=el().querySelector("video");if(v.paused){if(v.ended)v.currentTime=0;v.muted=!voice.checked;v.play();hud("▶ playing")}else{v.pause();hud("⏸ paused · Space to play",true)}return}
  if(playing){stopAll();hud("⏸ paused · Space to play",true)}else{hud("▶ playing");if(clock>=M[S[cur].key].seconds-.05)clock=0;playing=true;last=performance.now();if(voice.checked){audio.src||(audio.src=M[S[cur].key].audio);audio.currentTime=clock;audio.play().catch(()=>{})}raf=requestAnimationFrame(tickF)}}
 function ended(){stopAll();hud(cur<S.length-1?"■ end of slide · → next":"■ end of the lecture",true);render(M[S[cur].key].seconds);if(adv.checked&&!S[cur].exercise)setTimeout(()=>{if(!playing&&$("#quiz").hidden)step(1)},1500)}
@@ -263,12 +263,13 @@ addEventListener("message",e=>{const m=e.data||{};if(m.deck!=="cmd")return;pres=
  else if(m.do==="auto"){auto.checked=!auto.checked;auto.onchange()}send()});
 setInterval(send,1000);
 const h=location.hash.slice(1);const hi=S.findIndex(s=>s.key===h);
-// browsers allow sound only after one click: the first key or click starts the slide again with voice
-// the browser allows sound only after one click or key press in the page: until then the slide runs silent and a hint shows
+// the browser allows sound only after one click or key press in the page: until then the slide waits at its start
+// with a large hint; the first click or key starts it from the beginning, with sound (lecturer 11.11.2026)
 let soundBlocked=false;
-function blocked(){if(PRESENTER||!voice.checked)return;soundBlocked=true;$("#soundhint").hidden=false}
-function unlock(){if(!soundBlocked)return;soundBlocked=false;$("#soundhint").hidden=true;
- if(hasClip[cur]){const v=el().querySelector("video");v.muted=!voice.checked}else if(playing&&voice.checked){audio.currentTime=clock;audio.play().catch(()=>{})}}
+function blocked(){if(PRESENTER||!voice.checked)return false;soundBlocked=true;$("#soundhint").hidden=false;return true}
+function unlock(e){if(!soundBlocked)return;soundBlocked=false;$("#soundhint").hidden=true;
+ if(e&&e.type==="keydown"){e.preventDefault();e.stopPropagation()}   // this key only starts the slide
+ start()}
 addEventListener("pointerdown",unlock,true);addEventListener("keydown",unlock,true);
 if(PRESENTER){presenterView()}else{go(hi>=0?hi:0);}
 
