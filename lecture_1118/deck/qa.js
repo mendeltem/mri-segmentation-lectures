@@ -588,6 +588,48 @@ window.QA = {
 "a": "Not with the score. You need to know which people have a lesion: from the clinical data, from the radiology report or from a lesion mask. Look at those scans yourself. And look at a random sample of the others."
 }
 ],
+"qc_euler": [
+{
+"q": "What is the Euler number in one sentence?",
+"a": "Count the corners of a surface, subtract the edges and add the faces. For a closed surface without holes the answer is always 2. FreeSurfer reports this number for the cortex surface it builds."
+},
+{
+"q": "Why is it 2 for a cube?",
+"a": "A cube has 8 corners, 12 edges and 6 faces. 8 minus 12 plus 6 is 2. Any other closed shape without holes gives the same answer, however many pieces it is made of."
+},
+{
+"q": "What is a handle?",
+"a": "Think of the handle of a cup, or of a ring: a part of the surface that forms a loop with a hole through it. Each handle lowers the Euler number by 2. One handle gives 0, two handles give minus 2."
+},
+{
+"q": "Why must the cortex surface have no handles?",
+"a": "FreeSurfer treats each hemisphere's surface as a closed sheet that can be blown up to a ball. That only works without holes or handles. The documentation says the topology fixer makes sure there are none."
+},
+{
+"q": "Where do the numbers minus 38 and 26 come from?",
+"a": "From our own FreeSurfer 8.2.0 run on a public stroke scan (Aphasia Recovery Cohort, sub-M2104). The log of the left hemisphere reports 26 defects and an Euler number of minus 38 before the repair. The right hemisphere had minus 42."
+},
+{
+"q": "Why 26 defects but 20 handles?",
+"a": "They are two different counts, and the log gives both. A defect is a region that FreeSurfer cuts out and builds again. The number of handles follows from the Euler number: 2 minus 2 times 20 is minus 38."
+},
+{
+"q": "If FreeSurfer repairs the defects, why should I care?",
+"a": "The repair makes the surface closed, but it does not make the image better. Many defects are a sign that the image was hard to read. The repaired surface can still lie in the wrong place, so look at such a scan."
+},
+{
+"q": "Which value is too bad?",
+"a": "There is no fixed limit. In Rosen 2018 the threshold from the training data was right in only 76 % of scans from another dataset. Compare the number across your own scans and look at the ones far out."
+},
+{
+"q": "How well does it find bad scans?",
+"a": "In Rosen 2018 it separated scans that experts rated unusable from the others with an AUC of 0.98 to 0.99 in three samples. An AUC of 1 would be perfect, 0.5 is guessing. The samples were young people and adults."
+},
+{
+"q": "Does SynthSeg have an Euler number too?",
+"a": "No. SynthSeg builds no surface, it labels voxels. Its warning number is the QC score from the slide before. The idea is the same: an automatic number tells you which scans to open first."
+}
+],
 "qc_test": [
 {
 "q": "What is the difference between accuracy and repeatability?",
