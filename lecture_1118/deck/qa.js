@@ -168,6 +168,48 @@ window.QA = {
 "a": "The surface method was published in 1999 by Dale, Fischl and Sereno, and was shown on more than 100 subjects. It is still the standard tool for cortical thickness today."
 }
 ],
+"fs_thick": [
+{
+"q": "How exactly is thickness measured at one point?",
+"a": "The surface is a mesh of small triangles. At every corner point of this mesh, FreeSurfer takes the closest distance from the white surface to the pial surface. This distance is the thickness at that point. So you do not get one number per brain, but one number per point of the surface."
+},
+{
+"q": "Why not simply count the cortex voxels?",
+"a": "Counting voxels gives a volume. Volume mixes two things: how thick the cortex is and how large its area is. And a voxel is about 1 mm wide, while the cortex is only a few millimetres thin. Two surfaces placed between the voxels measure the thickness itself, and more finely."
+},
+{
+"q": "How can a measurement be finer than one voxel?",
+"a": "A voxel at the border is partly grey and partly white matter, so its grey value lies in between. From the grey values of several neighbours, the border can be placed inside a voxel. The FreeSurfer documentation says the maps are not restricted to the voxel resolution and can detect submillimetre differences."
+},
+{
+"q": "How thick is the cortex?",
+"a": "Only a few millimetres, and it differs from region to region. That is why the method matters: a change that is interesting in research is much smaller than one voxel."
+},
+{
+"q": "What is the difference between thickness, area and volume?",
+"a": "Volume is roughly thickness times area. Two people can have the same cortex volume, one with a thinner cortex and a larger area, the other the opposite. FreeSurfer gives all three separately for every region."
+},
+{
+"q": "What can make the thickness wrong?",
+"a": "Every error of a surface. If the white or the pial surface is in the wrong place, the distance is wrong too. Typical causes are head motion, weak contrast, pieces of skull or brain membrane left in the image, and lesions. So look at the surfaces on the scan before you trust the numbers."
+},
+{
+"q": "Can SynthSeg measure cortical thickness?",
+"a": "No. SynthSeg gives a label for every voxel, and from that volumes. Thickness needs surfaces. FreeSurfer 8.2.0 ships a script, recon-all-clinical, that builds surfaces on clinical scans; we have not tested it."
+},
+{
+"q": "How precise is the measurement?",
+"a": "In the original paper (Fischl and Dale 2000), the standard deviation of the thickness between people was below 0.5 mm, and the method was tested by scanning the same people again. The authors conclude that focal thinning can be found in small groups."
+},
+{
+"q": "Is the picture on this slide real data?",
+"a": "No, it is a sketch: a cut through the cortex with two drawn lines. Real surfaces are meshes in three dimensions. The slide before shows real ones."
+},
+{
+"q": "Why is the white surface inside and the pial surface outside?",
+"a": "The names come from what they border. The white surface is the border between white matter and grey matter, so it is the inner side of the cortex. The pial surface is the border between grey matter and the brain fluid, the outer side. Pia is the thin membrane that covers the brain."
+}
+],
 "fs_atlas": [
 {
 "q": "Why blow the cortex up into a sphere?",
@@ -208,6 +250,48 @@ window.QA = {
 {
 "q": "Do I have to know all 34 names?",
 "a": "For this slide, keep the idea: inflate, match the folds, give names. And keep the number: 34 regions per hemisphere. The atlas quiz after this part trains the names of a few important structures."
+}
+],
+"fs_steps": [
+{
+"q": "What happens to the scan before the skull is removed?",
+"a": "It is resampled to a standard grid: 256 voxels in each direction, each 1 mm wide. And the brightness is evened out across the image, so that white matter has about the same grey value everywhere."
+},
+{
+"q": "Why must the skull be removed?",
+"a": "Skull, skin and the brain membranes have grey values that overlap with brain tissue. If pieces are left, later steps can take them for brain. A classic error: the pial surface is pulled outwards into a leftover piece of membrane."
+},
+{
+"q": "What is a mesh?",
+"a": "A surface made of many small triangles. The corner points are called vertices. Each vertex has a position in space and can carry a number, for example the thickness at that place."
+},
+{
+"q": "What does 'holes are repaired' mean?",
+"a": "The cortex of one hemisphere is one closed sheet, like the skin of a ball. Noise can create small holes or bridges in the first surface, which a real cortex cannot have. FreeSurfer finds these defects and repairs them. This is called topology correction."
+},
+{
+"q": "Why is the white surface built first?",
+"a": "On a T1 scan the border between white and grey matter is the clearest one. The outer border, towards fluid and membranes, is harder to find. So FreeSurfer starts at the safe border and grows outwards from it."
+},
+{
+"q": "What happens if an early step fails?",
+"a": "All later steps inherit the mistake, because each one works on the result of the step before. You repair the early result and run the later steps again. You do not start a different chain."
+},
+{
+"q": "Can errors be corrected by hand?",
+"a": "Yes. The documentation describes manual edits, for example editing the white matter volume when a lesion makes the white surface wrong. After the edit, the following steps are run again."
+},
+{
+"q": "Where are the deep structures, such as the hippocampus?",
+"a": "They come from a second branch of the same command. There, every voxel gets one of about 40 labels with the help of an atlas built from hand-labelled brains. The surfaces are only for the cortex."
+},
+{
+"q": "Why does all this take hours?",
+"a": "There are many steps, and the surfaces are fitted and repaired point by point for both hemispheres. The documentation gives run times from about 3 hours (version 6, parallel, new computer) to 20 to 40 hours on old pages."
+},
+{
+"q": "Do I have to start each step myself?",
+"a": "No. One command, recon-all, runs the whole chain in a fixed order. But you can run parts of it again, for example after a manual correction."
 }
 ],
 "fs_run": [
@@ -294,6 +378,48 @@ window.QA = {
 "a": "Billot and colleagues published it in 2023 in the journal Medical Image Analysis. The code is public, and SynthSeg is also part of FreeSurfer. The paper is under the Sources button."
 }
 ],
+"ss_make": [
+{
+"q": "Where do the label maps come from?",
+"a": "From segmented brains: 20 maps were drawn by hand, 1,000 more came from automatic segmentations of research scans that were checked by eye, half of them from young adults, half from older people, some with dementia. Automatic maps are allowed here, because the fake image is made from the map and fits it perfectly."
+},
+{
+"q": "Why bend the label map?",
+"a": "To get more brain shapes than there are label maps. Without this step the network lost 4.3 Dice points in the authors' test."
+},
+{
+"q": "Would realistic images not be better for training?",
+"a": "The authors tested this. Networks trained on images narrowed to the contrast or resolution of the target scans were worse, by 1.4 and 2.6 Dice points, although they were trained again for every target. Images beyond what is realistic force the network to rely on shape."
+},
+{
+"q": "What is the uneven brightness in step 3?",
+"a": "Real scanners do not receive the signal equally well from all places, so the same tissue is brighter in one corner than in another. This is called the bias field. The generator adds a random one. Without it the network lost 3.7 Dice points."
+},
+{
+"q": "Why make the image coarse on purpose?",
+"a": "Clinical scans often have thick slices. The generator blurs the image, keeps only thick slices in a random direction, and brings it back to the 1 mm grid. The target stays the sharp label map. So the network learns to give 1 mm labels even from a coarse scan."
+},
+{
+"q": "How many fake images does the network see?",
+"a": "A new one at every training step, and there are 300,000 steps. Images are made on the fly and never stored, so the network practically never sees the same image twice."
+},
+{
+"q": "How long does the training take?",
+"a": "About seven days on one graphics card, the authors write. But it is done only once: the trained network is shipped with FreeSurfer, and nobody has to train it again for a new kind of scan."
+},
+{
+"q": "Does the network really never see a real scan?",
+"a": "Not in training. The paper states that the training data does not include any real scan. Real scans are used only to choose settings and to test."
+},
+{
+"q": "Does the generator know lesions?",
+"a": "Partly. With 50 % probability, labels of white matter lesions are pasted into the map, to make the network robust against them. Without this, results on scans of older people dropped by 3.9 Dice points. A large stroke is a different matter, as the next slides show."
+},
+{
+"q": "Are the pictures on the slide the real generator?",
+"a": "They are a simplified illustration: one slice of a public scan, with the same steps in the same order. The real generator works in three dimensions and runs on the graphics card during training."
+}
+],
 "ss_fast": [
 {
 "q": "How fast is it exactly?",
@@ -334,6 +460,48 @@ window.QA = {
 {
 "q": "How do I run SynthSeg in practice?",
 "a": "With one command inside FreeSurfer, with the input scan and an output name. Options add the cortical regions, a table of volumes, a table of quality scores, and the robust version for difficult scans."
+}
+],
+"tool_choice": [
+{
+"q": "Can FreeSurfer be used on clinical scans at all?",
+"a": "The standard command needs a T1 scan with about 1 mm voxels. FreeSurfer 8.2.0 also ships a script for clinical scans, recon-all-clinical, which builds surfaces with the help of networks trained on synthetic images. We have not tested it."
+},
+{
+"q": "Is SynthSeg as accurate as a network trained on the same kind of scan?",
+"a": "Almost. On good 1 mm T1 scans it reached a Dice of 0.88, against 0.91 for networks trained on exactly this kind of scan. On every other kind of scan in the test, SynthSeg was the best method."
+},
+{
+"q": "Can I use both tools in one study?",
+"a": "Not for the same measure. Each tool has its own systematic differences, so a volume from one is not comparable with a volume from the other. Use one tool, in one version, for all people and all time points, and report it."
+},
+{
+"q": "I have a research T1 and clinical scans of the same people. What now?",
+"a": "Decide by the question. If all people have the T1 and you need thickness, use FreeSurfer on the T1. If only some have it, a tool that works on all scans gives you the same method for everybody."
+},
+{
+"q": "How long do 1,000 scans take?",
+"a": "With SynthSeg at about a minute per scan: roughly 17 hours on one normal computer. With FreeSurfer at several hours per scan you need a computing cluster, where many scans run side by side."
+},
+{
+"q": "Does SynthSeg also work on CT?",
+"a": "The authors tested it on CT scans with 3 mm slices and it gave usable labels. But the test set was small: 6 scans."
+},
+{
+"q": "Do the two tools give the same regions?",
+"a": "Largely. SynthSeg learned from label maps in FreeSurfer's naming, so the deep structures carry the same names. With an option, SynthSeg also divides the cortex into regions. The numbers still differ between the tools."
+},
+{
+"q": "Are there other tools than these two?",
+"a": "Yes, several. The lecture picks these two because they stand for two ideas: surfaces fitted to the image step by step, and a network trained on synthetic images. The questions on the slide apply to any other tool as well."
+},
+{
+"q": "What does 'look at the result' mean in practice?",
+"a": "Lay the labels over the scan and scroll through it. Check the borders of the cortex, the deep structures and every place with a lesion. For many scans, use the automatic quality scores first and look at the worst ones. The next slides show how."
+},
+{
+"q": "Why do both tools always give an answer?",
+"a": "Neither has a way to say 'I cannot do this scan'. FreeSurfer fits its surfaces to whatever is there; the network gives every voxel its most likely label. So a wrong result looks as tidy as a right one."
 }
 ],
 "qc_score": [
