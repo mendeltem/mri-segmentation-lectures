@@ -94,6 +94,11 @@ footer p{margin:0 0 4px}
 #dialog .box{background:#fff;border-radius:10px;padding:16px 18px;max-width:420px;box-shadow:0 10px 40px #0006}
 #dialog .row{justify-content:flex-end;margin-top:12px}
 [hidden]{display:none !important}
+#tut{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;padding:16px;z-index:11}
+#tut .box{background:var(--panel);border:1px solid var(--line);border-radius:12px;max-width:720px;width:100%;max-height:90vh;overflow:auto;padding:18px 22px;line-height:1.5}
+#tut h2{margin:0 0 8px}#tut ol{padding-left:22px;margin:8px 0}#tut li{margin:0 0 7px}#tut .order{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 4px;font-weight:600}
+#tut .order span{border:1px solid var(--line);border-radius:8px;padding:3px 10px}#tut .row{display:flex;justify-content:flex-end;margin-top:12px}
+#tabs button:disabled{opacity:.45;cursor:not-allowed}#bNextTop{margin-left:6px}
 
 @media (max-width:860px){
   main{grid-template-columns:minmax(0,1fr);padding:8px}
@@ -112,6 +117,7 @@ footer p{margin:0 0 4px}
   </div>
   <nav id="tabs" aria-label="Subjects"></nav>
   <div id="timer" hidden title="Time for this subject. It never blocks you: at zero it turns red and counts the overtime."></div>
+  <button id="bTut" title="How this exercise works">Tutorial</button>
   <button id="bStartOver" title="Remove all markers and scores">Start over</button>
 </header>
 
@@ -213,6 +219,23 @@ footer p{margin:0 0 4px}
   <p id="footSoftware"></p>
   <p>Your markers stay in this browser only. Nothing is sent anywhere.</p>
 </footer>
+
+<div id="tut" hidden role="dialog" aria-modal="true" aria-labelledby="tutTitle">
+  <div class="box">
+    <h2 id="tutTitle">How this exercise works</h2>
+    <p>Three subjects, <b>one after another</b>. The next one opens when you have scored the one before. About 3 minutes each; the clock never blocks you.</p>
+    <div class="order"><span>1 Easy</span>→<span>2 Medium</span>→<span>3 Hard</span>→<span>Summary</span></div>
+    <ol>
+      <li><b>Scroll through all slices</b> first: mouse wheel, arrow keys ↑ ↓, or the slider. Zoom with + / − or Ctrl + wheel, drag to move.</li>
+      <li><b>Look for microbleeds:</b> small, round or oval, dark spots, seen on only a few slices.</li>
+      <li><b>Scroll up and down before you click.</b> Lookalikes: a vessel goes on over many slices or runs as a line; calcification sits in the basal ganglia or the choroid plexus; air and bone make dark edges at the skull base.</li>
+      <li><b>Click on a microbleed</b> to mark it with a ring. Click the ring again to remove it.</li>
+      <li>Press <b>Score this subject</b>: you get your F1 score, the microbleeds you found, the ones you missed (with "Jump to"), and your false alarms.</li>
+      <li>Press <b>Next subject →</b> (at the top or under your result). After the hard subject comes the summary.</li>
+    </ol>
+    <div class="row"><button class="primary" id="tutGo">Start</button></div>
+  </div>
+</div>
 
 <div id="dialog" hidden role="dialog" aria-modal="true" aria-labelledby="dlgText">
   <div class="box">
@@ -401,7 +424,7 @@ function decodeSlice(id, z){
 
 /* ---------- clock per subject ---------- */
 let tickFrom = null;                       // Date.now() of the last tick while a clock is running
-function clockRunning(){ return SECONDS_PER_CASE > 0 && S.data && S.tab === S.data.id && !S.prog[S.tab].scored; }
+function clockRunning(){ return SECONDS_PER_CASE > 0 && S.data && S.tab === S.data.id && !S.prog[S.tab].scored && $("tut").hidden; }   // not while the tutorial is open
 function tick(){
   const now = Date.now();
   if (clockRunning()){
@@ -636,6 +659,7 @@ function clickAt(px, py){
 }
 
 document.addEventListener("keydown", e => {
+  if (!$("tut").hidden){ if (e.key === "Escape" || e.key === "Enter") $("tutGo").click(); return; }
   if (!$("dialog").hidden){ if (e.key === "Escape") closeDialog(); return; }
   const t = e.target.tagName;
   if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT" || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -677,6 +701,8 @@ $("dlgYes").addEventListener("click", () => { const f = dialogYes; closeDialog()
 $("dialog").addEventListener("click", e => { if (e.target === $("dialog")) closeDialog(); });
 
 /* ---------- tabs ---------- */
+// 13.11.2026 (lecturer): subjects one after another; a subject opens when all before it are scored
+const unlocked = id => CASE_IDS.slice(0, CASE_IDS.indexOf(id)).every(c => S.prog[c].scored);
 function renderTabs(){
   const nav = $("tabs"); nav.textContent = "";
   for (const c of MAN.cases){
@@ -684,14 +710,22 @@ function renderTabs(){
     const st = p.scored ? "F1 " + fmt3(metrics(p.result.tp, p.result.fp, p.result.fn).f1) : p.markers.length ? p.markers.length + " marked" : "";
     nav.append(el("button", {class: S.tab === c.id ? "on" : "", "data-tab": c.id, "aria-pressed": String(S.tab === c.id), onclick: () => openTab(c.id)},
       c.label, st ? el("span", {class: "st", text: st}) : null));
+    if (!unlocked(c.id)){ const b = nav.lastChild; b.disabled = true; b.title = "Score the subject before this one first"; }
   }
   const b = el("button", {class: S.tab === "summary" ? "on" : "", "data-tab": "summary", onclick: () => openTab("summary")}, "Summary");
   if (!allScored()){ b.disabled = true; b.title = "Score all three subjects first"; }
   nav.append(b);
+  // after scoring: the way on, at the top where it cannot be missed
+  if (CASE_IDS.includes(S.tab) && S.prog[S.tab].scored){
+    const next = CASE_IDS.find(c => !S.prog[c].scored);
+    const lab = next ? "Next: " + MAN.cases.find(c => c.id === next).label + " →" : "Final summary →";
+    nav.append(el("button", {class: "primary", id: "bNextTop", onclick: () => openTab(next || "summary")}, lab));
+  }
 }
 function openTab(id){
   tick();                                           // book the time of the subject we are leaving
   if (id === "summary" && !allScored()) id = CASE_IDS.find(c => !S.prog[c].scored);
+  if (CASE_IDS.includes(id) && !unlocked(id)) id = CASE_IDS.find(c => !S.prog[c].scored);
   S.tab = id; saveProgress(); renderTabs();
   $("work").hidden = id === "summary"; $("summary").hidden = id !== "summary";
   if (id === "summary"){ renderSummary(); renderClock(); window.scrollTo(0, 0); }
@@ -762,6 +796,7 @@ function doScore(){
   S.score = s;
   saveProgress(); renderTabs(); renderMarkers(); renderResult(); renderClock(); draw();
   setStatus("Scored. Green = found, blue = missed, red = false alarm.");
+  $("result").scrollIntoView({behavior: "smooth", block: "start"});
 }
 function calcLines(tp, fp, fn){
   const m = metrics(tp, fp, fn);
@@ -863,6 +898,9 @@ function askStartOver(){
     store.clear(); resetProgress(); S.tab = CASE_IDS[0]; openTab(S.tab); });
 }
 $("bStartOver").addEventListener("click", askStartOver);
+function showTut(on){ $("tut").hidden = !on; if (on) $("tutGo").focus(); }
+$("bTut").addEventListener("click", () => showTut(true));
+$("tutGo").addEventListener("click", () => { showTut(false); try { localStorage.setItem(STORE_KEY + "_tut", "1"); } catch (e){ /* page works without */ } });
 
 /* ---------- the little 3 x 3 x 3 picture ---------- */
 function drawConnFigure(){
@@ -900,6 +938,8 @@ function init(){
   restoreProgress();
   if (S.tab === "summary" && !allScored()) S.tab = CASE_IDS[0];
   openTab(S.tab);
+  let seen = null; try { seen = localStorage.getItem(STORE_KEY + "_tut"); } catch (e){ /* none */ }
+  if (!seen) showTut(true);                                   // first visit: the tutorial opens by itself
   let lastSave = Date.now();
   setInterval(() => { tick(); if (clockRunning() && Date.now() - lastSave > 5000){ lastSave = Date.now(); saveProgress(); } }, 250);
   window.addEventListener("pagehide", () => { tick(); saveProgress(); });
