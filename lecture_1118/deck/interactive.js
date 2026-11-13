@@ -168,7 +168,7 @@
 
   /* ---------- 4. 26 neighbours: click voxels on three slices, count clusters ---------- */
   W.n26 = (box, shown) => {
-    const N = 5, S = 66, G = 60, cv = h("canvas", { width: 3 * N * S + 2 * G, height: N * S }); cv.style.width = cv.width + "px"; cv.style.maxHeight = "none"; const x = cv.getContext("2d");
+    const N = 5, S = 56, G = 50, cv = h("canvas", { width: 3 * N * S + 2 * G, height: N * S }); cv.style.width = cv.width + "px"; cv.style.maxHeight = "none"; const x = cv.getContext("2d");
     // example: a bleed that touches only by an edge and a corner, plus one separate bleed -> 26 neighbours: 2 clusters, 6 neighbours: 4
     const EXAMPLE = ["1,1,1", "1,2,2", "0,3,3", "2,1,4", "2,2,4"];
     const on = new Set(EXAMPLE); let conn = 26, hover = null, lit = null, timers = [];
@@ -190,6 +190,38 @@
         while (st.length) { const u = st.pop(); for (const w of list) if (ids[w] === undefined && touch(u, w)) { ids[w] = k; st.push(w); } } k++; }
       return [ids, k];
     }
+    // 13.11.2026: fourth panel, the same 5 x 5 x 3 block in 3D. Only for looking (not clickable); it turns slowly by itself.
+    const cv3 = h("canvas", { width: 480, height: N * S + 50 }); cv3.style.cssText = "width:480px;max-height:none;cursor:default;background:#0b0d12"; const x3 = cv3.getContext("2d");
+    let yaw = 0.6, raf3 = 0, last3 = 0; const PITCH = 0.55;
+    const P3 = (X, Y, Z) => { const cy = Math.cos(yaw), sy = Math.sin(yaw), xr = X * cy - Y * sy, yr = X * sy + Y * cy, cp = Math.cos(PITCH), sp = Math.sin(PITCH);
+      return [xr, -Z * cp - yr * sp, yr * cp - Z * sp]; };                       // screen x, screen y, depth (bigger = farther away)
+    const shade = (hex, f) => { const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map(v => Math.round(Math.min(255, v * f))); return `rgb(${c})`; };
+    const FACES = [[[1,0,0],[[1,0,0],[1,1,0],[1,1,1],[1,0,1]]], [[-1,0,0],[[0,0,0],[0,1,0],[0,1,1],[0,0,1]]], [[0,1,0],[[0,1,0],[1,1,0],[1,1,1],[0,1,1]]],
+                   [[0,-1,0],[[0,0,0],[1,0,0],[1,0,1],[0,0,1]]], [[0,0,1],[[0,0,1],[1,0,1],[1,1,1],[0,1,1]]], [[0,0,-1],[[0,0,0],[1,0,0],[1,1,0],[0,1,0]]]];
+    function draw3() {
+      const W3 = cv3.width, H3 = cv3.height, sc = Math.min(W3, H3) / 6.4; x3.fillStyle = "#0b0d12"; x3.fillRect(0, 0, W3, H3);
+      const toS = (X, Y, Z) => { const q = P3(X - N / 2, Y - N / 2, Z - 1.5); return [W3 / 2 + q[0] * sc, H3 / 2 + q[1] * sc + 4, q[2]]; };
+      const line = (a, b, col, w) => { x3.strokeStyle = col; x3.lineWidth = w; x3.beginPath(); x3.moveTo(...toS(...a).slice(0, 2)); x3.lineTo(...toS(...b).slice(0, 2)); x3.stroke(); };
+      for (let z = 0; z <= 3; z++) { const c = [[0,0],[N,0],[N,N],[0,N],[0,0]]; for (let i = 0; i < 4; i++) line([...c[i], z], [...c[i + 1], z], "#2a2f3a", 1); }   // the three slices as layers
+      for (const [a, b] of [[0,0],[N,0],[N,N],[0,N]]) line([a, b, 0], [a, b, 3], "#2a2f3a", 1);
+      for (let z = 0; z < 3; z++) for (let i = 1; i < N; i++) { line([i, 0, z], [i, N, z], "#1a1e27", 1); line([0, i, z], [N, i, z], "#1a1e27", 1); }   // faint grid on the floor of each slice
+      const [ids] = clusters(), cubes = [];
+      for (let s3 = 0; s3 < 3; s3++) for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) { const key = `${s3},${r},${c}`; let col = null, glow = false;
+        if (lit) col = key === lit.centre ? C.ink : lit.on.has(key) ? KIND[kind(lit.centre, key)] : null;
+        else if (on.has(key)) col = pal[ids[key] % pal.length];
+        if (!lit && key === hover) glow = true;
+        if (col || glow) cubes.push({ X: c, Y: N - 1 - r, Z: 2 - s3, col, glow, d: toS(c + .5, N - 1 - r + .5, 2 - s3 + .5)[2] }); }   // slice above = top layer; row 0 = back
+      cubes.sort((a, b) => b.d - a.d);
+      const cy = Math.cos(yaw), sy = Math.sin(yaw), view = [0, -Math.cos(PITCH), Math.sin(PITCH)];
+      for (const q of cubes) { const g = lit ? 0.92 : 0.92;
+        for (const [n, vs] of FACES) { const nr = [n[0] * cy - n[1] * sy, n[0] * sy + n[1] * cy, n[2]];
+          if (nr[0] * view[0] + nr[1] * view[1] + nr[2] * view[2] <= 0) continue;
+          const pts = vs.map(v => toS(q.X + v[0] * g + (1 - g) / 2, q.Y + v[1] * g + (1 - g) / 2, q.Z + v[2] * g + (1 - g) / 2));
+          x3.beginPath(); pts.forEach((p, i) => i ? x3.lineTo(p[0], p[1]) : x3.moveTo(p[0], p[1])); x3.closePath();
+          if (q.col) { x3.fillStyle = shade(q.col, n[2] ? 1.0 : Math.abs(nr[0]) > Math.abs(nr[1]) ? 0.62 : 0.8); x3.fill(); }
+          x3.lineWidth = q.glow ? 2.5 : 1; x3.strokeStyle = q.glow ? C.ink : "#0b0d12"; x3.stroke(); } }
+    }
+    const spin = t => { yaw = 0.78 + 0.5 * Math.sin(t * 0.00045); last3 = t; draw3(); raf3 = requestAnimationFrame(spin); };   // rocks between two oblique views, never flat
     const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
     function draw() {
       const [ids, k] = clusters(); x.fillStyle = "#0b0d12"; x.fillRect(0, 0, cv.width, cv.height);
@@ -200,7 +232,7 @@
         x.fillStyle = on.has(key) ? pal[ids[key] % pal.length] : "#151922"; x.fillRect(X + 3, Y + 3, S - 6, S - 6);
         if (hover && key !== hover && nb(hover, key)) { x.lineWidth = 3; x.strokeStyle = C.blue; x.strokeRect(X + 5, Y + 5, S - 10, S - 10); }
         if (key === hover) { x.lineWidth = 3; x.strokeStyle = C.ink; x.strokeRect(X + 5, Y + 5, S - 10, S - 10); } }
-      ctl.querySelector("#nc").textContent = k; const k6 = clusters(6)[1], k26 = clusters(26)[1];
+      draw3(); ctl.querySelector("#nc").textContent = k; const k6 = clusters(6)[1], k26 = clusters(26)[1];
       both.textContent = !on.size ? "Nothing marked: 0 microbleeds." : on.size === 1 ? "1 marked voxel with no marked neighbour = 1 cluster of size 1 = 1 microbleed (with both rules)."
         : `${plural(on.size, "marked voxel")}  →  rule 26: ${plural(k26, "microbleed")}  ·  rule 6: ${plural(k6, "microbleed")}` + (k6 > k26 ? "  (rule 6 splits what touches only by an edge or a corner)" : "");
     }
@@ -226,8 +258,13 @@
     ctl.querySelectorAll("button").forEach(blurAfter);
     const names = h("div", {}, ["slice above", "this slice", "slice below"].map(t => `<span>${t}</span>`).join(""));
     names.style.cssText = "display:flex;justify-content:space-around;width:" + cv.width + "px;font-size:26px;color:" + C.dim;
-    const wrap = h("div", { className: "tw col" }); wrap.append(rule, names, cv, ctl, both, cap); box.appendChild(wrap); draw(); keep(cv, draw);
-    onLeave(() => { timers.forEach(clearTimeout); }); if (shown) timers.push(setTimeout(demo, 900));
+    const name3 = h("div", {}, "3D view (moves by itself)"); name3.style.cssText = "font-size:26px;color:" + C.dim + ";text-align:center";
+    const col2 = h("div"), col3 = h("div"); col2.append(names, cv); col3.append(name3, cv3);
+    [col2, col3].forEach(c => c.style.cssText = "display:flex;flex-direction:column;gap:8px");
+    const pics = h("div"); pics.style.cssText = "display:flex;gap:44px;align-items:center;justify-content:center"; pics.append(col2, col3);
+    const wrap = h("div", { className: "tw col" }); wrap.append(rule, pics, ctl, both, cap); box.appendChild(wrap); draw(); keep(cv, draw); keep(cv3, draw3);
+    raf3 = requestAnimationFrame(spin);
+    onLeave(() => { timers.forEach(clearTimeout); cancelAnimationFrame(raf3); }); if (shown) timers.push(setTimeout(demo, 900));
   };
 
   /* ---------- 5. F1: click the microbleeds on a real VALDO slice ---------- */
