@@ -75,6 +75,7 @@ border-top:1px solid var(--line);font-size:15px;flex-wrap:wrap;color:var(--dim);
 #text{position:absolute;left:56px;right:56px;bottom:70px;font-size:24px;line-height:1.35;background:rgba(20,24,33,.96);border:1px solid var(--line);padding:18px 22px;border-radius:10px;z-index:3}
 #help{position:absolute;inset:120px 300px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:30px 40px;font-size:24px;line-height:1.6;z-index:4}
 kbd{background:#000;border:1px solid var(--line);border-radius:4px;padding:0 6px}
+#bmode{font-weight:600}#bmode.on{background:var(--y);color:#111;border-color:var(--y)}
 </style>
 </head>
 <body>
@@ -85,19 +86,20 @@ kbd{background:#000;border:1px solid var(--line);border-radius:4px;padding:0 6px
 <div id="qapanel" hidden style="position:absolute;right:40px;bottom:70px;width:900px;max-height:800px;overflow:auto;z-index:5;background:rgba(20,24,33,.97);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:21px;line-height:1.45"></div>
 <div id="quiz" hidden></div><div id="text" hidden></div>
 <div id="help" hidden><b>Keys</b><br>
-<kbd>→</kbd> next point · <kbd>←</kbd> back (clicker: PageDown / PageUp) · after the last point the next slide · <kbd>↓</kbd> / <kbd>↑</kbd> whole slide<br>"Point by point" off: <kbd>→</kbd> / <kbd>←</kbd> go by slide and the voice runs on its own<br>
+<kbd>→</kbd> next point · <kbd>←</kbd> back (clicker: PageDown / PageUp) · after the last point the next slide · <kbd>↓</kbd> / <kbd>↑</kbd> whole slide<br>Button "Clicker / Auto" or <kbd>A</kbd>: Clicker = one click one point; Auto = the lecture plays by itself, slide after slide<br>
 <kbd>Space</kbd> or <kbd>P</kbd> pause / play the voice and the clip · <kbd>R</kbd> replay slide (interactive page: fresh picture) · <kbd>V</kbd> voice on / off · <kbd>A</kbd> autoplay on / off<br>
 <kbd>N</kbd> presenter view (second window: notes, next slide, clock)<br><kbd>Q</kbd> questions and answers for this slide (click a question to open the answer) · <kbd>T</kbd> spoken text · <kbd>F</kbd> fullscreen · <kbd>H</kbd> this help<br>
 Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops the countdown, "reset" sets it back.</div>
 </div></div>
 <div id="bar">
-<label><input type="checkbox" id="auto" checked> Autoplay</label>
+<button id="bmode" title="Clicker: one click = one point (lecture). Auto: the whole lecture plays by itself, slide after slide (key A)"></button>
+<input type="checkbox" id="auto" checked hidden>
 <label><input type="checkbox" id="voice" checked> Voice</label>
-<label><input type="checkbox" id="adv"> Auto-advance</label>
-<label title="clicker and arrow keys show the points of a slide one by one, then go to the next slide"><input type="checkbox" id="ptsmode"> Point by point</label>
+<input type="checkbox" id="adv" hidden>
+<input type="checkbox" id="ptsmode" hidden>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button><button id="brestart" title="back to slide 1, lecture clock and exercise timers to 0">⟲ Restart</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v29 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck v30 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -111,7 +113,7 @@ const $=s=>document.querySelector(s), S=window.SLIDES, M=window.MEDIA, PAGES="ht
 const PRESENTER=location.hash==="#presenter";
 S.forEach(s=>{s.check=null;s.key_q=false});   // 10.11.2026, lecturer: no check questions on the slides (kept in slides_data.py)
 const store={get(k,d){try{const v=localStorage.getItem("deck1118."+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("deck1118."+k,JSON.stringify(v))}catch(e){}}};
-const auto=$("#auto"),voice=$("#voice"),adv=$("#adv"),qsec=$("#qsec"),skip=$("#skip"),ptsmode=$("#ptsmode");skip.checked=false;ptsmode.checked=store.get("ptsmode",true);   // default: one click = one point with its piece of voice (untick for autoplay)
+const auto=$("#auto"),voice=$("#voice"),adv=$("#adv"),qsec=$("#qsec"),skip=$("#skip"),ptsmode=$("#ptsmode");skip.checked=false;ptsmode.checked=store.get("ptsmode",true);if(!ptsmode.checked){auto.checked=true;adv.checked=true}   // auto mode: autoplay and auto-advance together   // default: one click = one point with its piece of voice (untick for autoplay)
 auto.checked=store.get("auto",true);voice.checked=store.get("voice",true);adv.checked=store.get("adv",false);qsec.value=store.get("qsec",30);
 const audio=new Audio();audio.preload="auto";
 let cur=0,playing=false,clock=0,last=0,raf=0,hasClip={};
@@ -280,7 +282,7 @@ addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox
  else if(k==="Home")go(0);else if(k==="End")go(S.length-1);
  else if(k==="p"||k==="P")togglePlay();else if(k==="r"||k==="R"){start();rebuildTry(cur,cur)}
  else if(k==="v"||k==="V"){voice.checked=!voice.checked;voice.onchange()}
- else if(k==="a"||k==="A"){auto.checked=!auto.checked;auto.onchange()}
+ else if(k==="a"||k==="A"){setMode(ptsmode.checked?"auto":"clicker")}
  
  else if(k==="Enter"&&!$("#quiz").hidden)reveal();
  else if(k==="q"||k==="Q")toggleQA();
@@ -290,7 +292,16 @@ addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox
  else if(k==="s"||k==="S")exStart()});
 voice.onchange=()=>{store.set("voice",voice.checked);if(hasClip[cur]){el().querySelector("video").muted=!voice.checked}else if(playing){if(voice.checked){audio.currentTime=clock;audio.play().catch(()=>{})}else audio.pause()}};
 auto.onchange=()=>{store.set("auto",auto.checked);if(auto.checked)start();else stopAll()};
-adv.onchange=()=>store.set("adv",adv.checked);ptsmode.onchange=()=>{store.set("ptsmode",ptsmode.checked);start()};skip.onchange=()=>{store.set("skip",skip.checked);send()};$("#bn").onclick=openPresenter;qsec.onchange=()=>store.set("qsec",+qsec.value);
+adv.onchange=()=>store.set("adv",adv.checked);ptsmode.onchange=()=>{store.set("ptsmode",ptsmode.checked);start()};
+// 13.11.2026: one button for the two ways to run the deck (the three boxes Autoplay / Auto-advance / Point by point were
+// confusing and point by point silently overrode the other two). Clicker = point by point; Auto = play every slide in
+// full and go on by itself (pauses at interactive pages and exercises).
+function setMode(m){const clk=m!=="auto";ptsmode.checked=clk;auto.checked=!clk;adv.checked=!clk;
+ store.set("ptsmode",clk);store.set("auto",!clk);store.set("adv",!clk);
+ $("#bmode").textContent=clk?"☝ Clicker: point by point":"▶ Auto: plays by itself";$("#bmode").classList.toggle("on",!clk);
+ ptSlide=-1;playedKey="";start();hud(clk?"☝ clicker mode · → next point":"▶ auto mode · the lecture plays by itself",false)}
+$("#bmode").onclick=()=>setMode(ptsmode.checked?"auto":"clicker");
+setTimeout(()=>{if(PRESENTER)return;$("#bmode").textContent=ptsmode.checked?"☝ Clicker: point by point":"▶ Auto: plays by itself";$("#bmode").classList.toggle("on",!ptsmode.checked)},0);skip.onchange=()=>{store.set("skip",skip.checked);send()};$("#bn").onclick=openPresenter;qsec.onchange=()=>store.set("qsec",+qsec.value);
 document.querySelectorAll("#bar input,#bar button").forEach(x=>x.addEventListener("click",()=>setTimeout(()=>x.blur(),0)));
 $("#brestart").onclick=()=>{if(confirm("Restart the lecture from slide 1? The lecture clock and the exercise timers go back to 0."))restartAll()};$("#bpdf").onclick=()=>window.open("lecture_1118_slides.pdf","_blank");$("#bq").onclick=openQuiz;$("#bsrc").onclick=toggleSources;$("#bqa").onclick=toggleQA;$("#bt").onclick=toggleText;$("#bf").onclick=fs;$("#bh").onclick=()=>$("#help").hidden=!$("#help").hidden;
 // swipe for tablets
