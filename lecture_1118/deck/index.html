@@ -97,12 +97,13 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label title="clicker and arrow keys show the points of a slide one by one, then go to the next slide"><input type="checkbox" id="ptsmode"> Point by point</label>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button><button id="brestart" title="back to slide 1, lecture clock and exercise timers to 0">⟲ Restart</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v28 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck v29 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
 <script src="qa.js"></script>
 <script src="steps.js"></script>
+<script src="step_audio.js"></script>
 <script src="data/try_cutoff.js"></script><script src="data/try_qc.js"></script><script src="data/try_f1.js"></script>
 <script src="interactive.js"></script>
 <script>
@@ -189,20 +190,20 @@ function curPoint(){const ts=ptTimes();let k=-1;ts.forEach((t,i)=>{if(t<=clock+1
 // a clip draws a point only after its time mark. Each click plays the clip from the end of the previous point to just
 // before the next point (first point: from the start), muted, and stops there: the animation of this point, then the
 // finished state, so projector and presenter view show the same point. Back (animate=false) shows the finished frame.
-function showPoint(t,animate){stopAll();clock=t;render(t);
+// 13.11.2026: each step has its own recording of whole sentences (17_step_audio.py); the slide voice cut words
+function stepVoice(t){const sa=(window.STEP_AUDIO||{})[S[cur].key];if(!sa||!voice.checked)return 0;const i=ptTimes().findIndex(x=>Math.abs(x-t)<1e-3);
+ const f=sa[Math.max(0,i)];if(!f)return 0;audio.src=f.src;audio.currentTime=0;audio.play().catch(()=>{});return f.sec}
+function showPoint(t,animate){stopAll();clock=t;render(t);const vs=animate?stepVoice(t):0;if(vs){animUntil=Math.max(animUntil,Date.now()+vs*1000);send()}
  if(hasClip[cur]){const v=el().querySelector("video"),ts=ptTimes(),k=ts.findIndex(x=>x>t+1e-3),i=ts.findIndex(x=>Math.abs(x-t)<1e-3);
   const end=(v.duration||M[S[cur].key].seconds)-0.05,to=k>=0?Math.min(ts[k]-0.12,end):end;
   const from=i<=0?0:Math.max(0,ts[i]-0.12),key=cur+":"+i;
   if(animate&&v.readyState>=1&&to>from+0.05){playedKey=key;playSegment(v,from,to)}
   else{v.pause();try{v.currentTime=Math.max(0,to)}catch(e){}}}
- else if(animate&&voice.checked&&M[S[cur].key]&&M[S[cur].key].audio){const ts=ptTimes(),k=ts.findIndex(x=>x>t+1e-3),i=ts.findIndex(x=>Math.abs(x-t)<1e-3);
-  const from=i<=0?0:ts[i],to=k>=0?ts[k]:M[S[cur].key].seconds;audio.src=M[S[cur].key].audio;audio.currentTime=from;audio.play().catch(()=>{});
-  animUntil=Date.now()+(to-from)*1000;const tk=()=>{if(audio.currentTime>=to-0.03||audio.paused){audio.pause();animUntil=0;send();return}segRaf=requestAnimationFrame(tk)};segRaf=requestAnimationFrame(tk)}
  send()}
 // the "Voice" box decides: ticked, the piece plays with the voice; unticked, it plays silently
-function playSegment(v,from,to){v.muted=!voice.checked;try{v.currentTime=from}catch(e){}
- animUntil=Date.now()+(to-from)*1000;send();v.play().catch(()=>{});
- const tick=()=>{if(v.currentTime>=to-0.03||v.ended||v.paused&&v.currentTime>from+0.1){v.pause();try{v.currentTime=to}catch(e){}animUntil=0;send();return}
+function playSegment(v,from,to){const voiceUntil=animUntil;v.muted=!!window.STEP_AUDIO||!voice.checked;   // the voice comes from the step file (stepVoice)try{v.currentTime=from}catch(e){}
+ animUntil=Math.max(voiceUntil,Date.now()+(to-from)*1000);send();v.play().catch(()=>{});
+ const tick=()=>{if(v.currentTime>=to-0.03||v.ended||v.paused&&v.currentTime>from+0.1){v.pause();try{v.currentTime=to}catch(e){}if(animUntil<=Date.now()+50)animUntil=0;send();return}
   segRaf=requestAnimationFrame(tick)};segRaf=requestAnimationFrame(tick)}
 // the lecture clock starts by itself with the first click forward (clicker, arrow key or Next in the presenter view);
 // that first click only starts it and stays on the point that is showing, where the lecture begins
