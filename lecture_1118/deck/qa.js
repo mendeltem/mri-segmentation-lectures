@@ -106,8 +106,8 @@ window.QA = {
 "a": "Not without care. In one study, a new version of the same software alone changed the volumes by 8.8 % on average, on the very same images. Mixing scanners adds a bias too. For follow-up, keep scanner, protocol and software version fixed, or process all scans again with one version."
 },
 {
-"q": "Which volumes do drug trials report?",
-"a": "Most often the hippocampus, the lateral ventricles and the whole brain. One surprising result: in trials of the Alzheimer antibodies that cause brain swelling as a side effect, the ventricles grew faster on the drug than on placebo, by about 2 millilitres. We checked the finding, not an explanation for it."
+"q": "Why must volumes be corrected for head size?",
+"a": "Bigger heads have bigger brains and bigger structures, also in healthy people. Without a correction, a hippocampus may look small only because the head is small. Studies therefore divide by the intracranial volume or put it into the statistical model; O'Brien 2011 compares these ways."
 },
 {
 "q": "In multiple sclerosis: does less shrinkage mean my patient will do better?",
@@ -384,20 +384,20 @@ window.QA = {
 "a": "From segmented brains: 20 maps were drawn by hand, 1,000 more came from automatic segmentations of research scans that were checked by eye, half of them from young adults, half from older people, some with dementia. Automatic maps are allowed here, because the fake image is made from the map and fits it perfectly."
 },
 {
-"q": "Why bend the label map?",
-"a": "To get more brain shapes than there are label maps. Without this step the network lost 4.3 Dice points in the authors' test."
+"q": "Is the grey value the only thing that is random?",
+"a": "No. The slide shows only the painting step. The real generator also bends the label map (turn, stretch, warp), adds what a scanner adds (uneven brightness and noise), and makes the image coarse with thick slices. Without bending, the network lost 4.3 Dice points in the authors' test."
 },
 {
 "q": "Would realistic images not be better for training?",
 "a": "The authors tested this. Networks trained on images narrowed to the contrast or resolution of the target scans were worse, by 1.4 and 2.6 Dice points, although they were trained again for every target. Images beyond what is realistic force the network to rely on shape."
 },
 {
-"q": "What is the uneven brightness in step 3?",
-"a": "Real scanners do not receive the signal equally well from all places, so the same tissue is brighter in one corner than in another. This is called the bias field. The generator adds a random one. Without it the network lost 3.7 Dice points."
+"q": "What does 'uneven brightness' mean in the full generator?",
+"a": "Real scanners do not receive the signal equally well from all places, so the same tissue is brighter in one corner than in another. This is called the bias field. The generator adds a random one, so the network learns to ignore it."
 },
 {
-"q": "Why make the image coarse on purpose?",
-"a": "Clinical scans often have thick slices. The generator blurs the image, keeps only thick slices in a random direction, and brings it back to the 1 mm grid. The target stays the sharp label map. So the network learns to give 1 mm labels even from a coarse scan."
+"q": "Why does the full generator also make the image coarse?",
+"a": "Clinical scans often have thick slices. The generator blurs the image, keeps only thick slices in a random direction, and brings it back to the 1 mm grid, while the target stays the sharp label map. So the network learns to give sharp labels from a coarse scan."
 },
 {
 "q": "How many fake images does the network see?",
@@ -417,7 +417,7 @@ window.QA = {
 },
 {
 "q": "Are the pictures on the slide the real generator?",
-"a": "They are a simplified illustration: one slice of a public scan, with the same steps in the same order. The real generator works in three dimensions and runs on the graphics card during training."
+"a": "No, a simplified illustration: one slice of a public scan, painted three times with grey values we chose to show three clearly different contrasts. The real generator works in three dimensions, picks every grey value at random and adds the other steps."
 }
 ],
 "ss_fast": [
@@ -2012,8 +2012,8 @@ window.QA = {
 "a": "With the rule of the microbleed exercise: the centre of a detection must lie at most 2 mm from a microbleed within the slice and at most one slice above or below. Each microbleed counts once. Each scan was judged by a model that had not been trained on it."
 },
 {
-"q": "What is the diameter of a ball with the same volume?",
-"a": "Microbleeds are not perfect balls, so we take their volume and ask how wide a ball of that volume would be: d = (6 V / pi) to the power of one third. It is a fair size measure for any shape and is called the equivalent-sphere diameter."
+"q": "Why do follow-up scans need the same scanner and protocol?",
+"a": "Real change is small: whole-brain volume falls by about 0.45 % per year in older people without dementia (Fotenos 2005). In our run on public scans, repeat measurements of the thalamus varied by 3.4 %. A new scanner or protocol can shift volumes by more than years of change, so keep both fixed and use a longitudinal pipeline."
 }
 ],
 "two_ways": [

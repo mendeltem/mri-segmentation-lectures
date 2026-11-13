@@ -88,7 +88,7 @@ kbd{background:#000;border:1px solid var(--line);border-radius:4px;padding:0 6px
 <div id="help" hidden><b>Keys</b><br>
 <kbd>→</kbd> next point · <kbd>←</kbd> back (clicker: PageDown / PageUp) · after the last point the next slide · <kbd>↓</kbd> / <kbd>↑</kbd> whole slide<br>Button "Clicker / Auto" or <kbd>A</kbd>: Clicker = one click one point; Auto = the lecture plays by itself, slide after slide<br>
 <kbd>Space</kbd> or <kbd>P</kbd> pause / play the voice and the clip · <kbd>R</kbd> replay slide (interactive page: fresh picture) · <kbd>V</kbd> voice on / off · <kbd>A</kbd> autoplay on / off<br>
-<kbd>N</kbd> presenter view (second window: notes, next slide, clock)<br><kbd>Q</kbd> questions and answers for this slide (click a question to open the answer) · <kbd>T</kbd> spoken text · <kbd>F</kbd> fullscreen · <kbd>H</kbd> this help<br>
+<kbd>N</kbd> presenter view (second window: notes, next slide, clock)<br><kbd>K</kbd> key check questions on / off (about 10 slides marked "? question"; off by default) · <kbd>C</kbd> show the check question of this slide (Enter: answer)<br><kbd>Q</kbd> questions and answers for this slide (click a question to open the answer) · <kbd>T</kbd> spoken text · <kbd>F</kbd> fullscreen · <kbd>H</kbd> this help<br>
 Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops the countdown, "reset" sets it back.</div>
 </div></div>
 <div id="bar">
@@ -98,8 +98,8 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <input type="checkbox" id="adv" hidden>
 <input type="checkbox" id="ptsmode" hidden>
 <input type="checkbox" id="skip" hidden>
-<input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button><button id="brestart" title="back to slide 1, lecture clock and exercise timers to 0">⟲ Restart</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v33 (13.11.) · 53 slides<span id="clipsN"></span></span><span id="privTag" hidden style="color:var(--r);font-weight:600" title="the internal layer deck/private is loaded: some slides show internal clinical data (never online)"> · internal data loaded</span><span id="num"></span>
+<input type="number" id="qsec" value="30" hidden><span id="bq" hidden style="cursor:pointer;color:var(--b)" title="key check questions are on (K): C shows the question of this slide">? C check question</span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button><button id="brestart" title="back to slide 1, lecture clock and exercise timers to 0">⟲ Restart</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
+<span class="grow"></span><span style="color:var(--dim)">deck v34 (13.11.) · 53 slides<span id="clipsN"></span></span><span id="privTag" hidden style="color:var(--r);font-weight:600" title="the internal layer deck/private is loaded: some slides show internal clinical data (never online)"> · internal data loaded</span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -118,7 +118,8 @@ if(!/\.github\.io$/i.test(location.hostname))document.write('<script src="privat
 <script>
 const $=s=>document.querySelector(s), S=window.SLIDES, M=window.MEDIA, PAGES="https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/";
 const PRESENTER=location.hash==="#presenter";
-S.forEach(s=>{s.check=null;s.key_q=false});   // 10.11.2026, lecturer: no check questions on the slides (kept in slides_data.py)
+const KEYQ=(()=>{try{return JSON.parse(localStorage.getItem("deck1118.keyq"))===true}catch(e){return false}})();   // 13.11.2026: K switches the key check questions on (about 10; off by default)
+S.forEach(s=>{if(!(KEYQ&&s.key_q&&s.check)){s.check=null;s.key_q=false}});   // 10.11.2026, lecturer: no check questions on the slides (kept in slides_data.py); with K only the key ones
 const store={get(k,d){try{const v=localStorage.getItem("deck1118."+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("deck1118."+k,JSON.stringify(v))}catch(e){}}};
 const auto=$("#auto"),voice=$("#voice"),adv=$("#adv"),qsec=$("#qsec"),skip=$("#skip"),ptsmode=$("#ptsmode");skip.checked=false;ptsmode.checked=store.get("ptsmode",true);if(!ptsmode.checked){auto.checked=true;adv.checked=true}   // auto mode: autoplay and auto-advance together   // default: one click = one point with its piece of voice (untick for autoplay)
 auto.checked=store.get("auto",true);voice.checked=store.get("voice",true);adv.checked=store.get("adv",false);qsec.value=store.get("qsec",30);
@@ -249,10 +250,10 @@ function go(i){i=Math.max(0,Math.min(S.length-1,i));setTimeout(()=>{if(!$("#srcp
  try{history.replaceState(null,"","#"+S[i].key)}catch(e){}start();send();if(S[i].kind!=="try")hud(pointMode()&&!S[i].exercise?"● point by point · → next point · Space voice":auto.checked?"▶ playing":"⏸ Space to play")}
 // check question with countdown
 let qt=0;
-function openQuiz(){const c=S[cur].check;const q=$("#quiz");if(!c){q.innerHTML=`<h2>No check question on this slide.</h2><div class="hint">Q or Esc to close</div>`;q.hidden=false;return}
+function openQuiz(){const c=S[cur].check;const q=$("#quiz");if(!c){q.innerHTML=`<h2>No check question on this slide.</h2><div class="hint">C or Esc to close</div>`;q.hidden=false;return}
  stopAll();let left=+qsec.value||0;
  q.innerHTML=`<h2>${esc(c.q)}</h2><div class="opts">${c.options.map((o,i)=>`<div class="opt">${String.fromCharCode(65+i)}  ${esc(o)}</div>`).join("")}</div>
- <div class="timer">${left?left+" s":""}</div><div class="why"></div><button id="rev">Show answer (Enter)</button><div class="hint">Q or Esc to close</div>`;
+ <div class="timer">${left?left+" s":""}</div><div class="why"></div><button id="rev">Show answer (Enter)</button><div class="hint">C or Esc to close</div>`;
  q.hidden=false;q.querySelector("#rev").onclick=reveal;clearInterval(qt);
  if(left)qt=setInterval(()=>{left--;q.querySelector(".timer").textContent=left>0?left+" s":"Time is up";if(left<=0){clearInterval(qt);reveal()}},1000)}
 function reveal(){clearInterval(qt);const c=S[cur].check,q=$("#quiz");if(!c)return;q.querySelectorAll(".opt").forEach((o,i)=>o.classList.add(i===c.answer?"right":"wrong"));q.querySelector(".why").textContent=c.why||""}
@@ -300,6 +301,8 @@ addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox
  
  else if(k==="Enter"&&!$("#quiz").hidden)reveal();
  else if(k==="q"||k==="Q")toggleQA();
+ else if(k==="k"||k==="K"){store.set("keyq",!KEYQ);location.reload()}
+ else if(k==="c"||k==="C"){$("#quiz").hidden?openQuiz():closeQuiz()}
  else if(k==="Escape"){closeQuiz();$("#srcpanel").hidden=true;$("#qapanel").hidden=true;$("#help").hidden=true;$("#text").hidden=true}
  else if(k==="t"||k==="T")toggleText();else if(k==="f"||k==="F")fs();
  else if(k==="h"||k==="H"||k==="?")$("#help").hidden=!$("#help").hidden;
@@ -315,7 +318,7 @@ function setMode(m){const clk=m!=="auto";ptsmode.checked=clk;auto.checked=!clk;a
  $("#bmode").textContent=clk?"☝ Clicker: point by point":"▶ Auto: plays by itself";$("#bmode").classList.toggle("on",!clk);
  ptSlide=-1;playedKey="";start();hud(clk?"☝ clicker mode · → next point":"▶ auto mode · the lecture plays by itself",false)}
 $("#bmode").onclick=()=>setMode(ptsmode.checked?"auto":"clicker");
-setTimeout(()=>{if(PRESENTER)return;$("#bmode").textContent=ptsmode.checked?"☝ Clicker: point by point":"▶ Auto: plays by itself";$("#bmode").classList.toggle("on",!ptsmode.checked)},0);skip.onchange=()=>{store.set("skip",skip.checked);send()};$("#bn").onclick=openPresenter;qsec.onchange=()=>store.set("qsec",+qsec.value);
+setTimeout(()=>{if(PRESENTER)return;$("#bmode").textContent=ptsmode.checked?"☝ Clicker: point by point":"▶ Auto: plays by itself";$("#bmode").classList.toggle("on",!ptsmode.checked)},0);skip.onchange=()=>{store.set("skip",skip.checked);send()};$("#bn").onclick=openPresenter;qsec.onchange=()=>store.set("qsec",+qsec.value);if(KEYQ)$("#bq").hidden=false;
 document.querySelectorAll("#bar input,#bar button").forEach(x=>x.addEventListener("click",()=>setTimeout(()=>x.blur(),0)));
 $("#brestart").onclick=()=>{if(confirm("Restart the lecture from slide 1? The lecture clock and the exercise timers go back to 0."))restartAll()};$("#bpdf").onclick=()=>window.open("lecture_1118_slides.pdf","_blank");$("#bq").onclick=openQuiz;$("#bsrc").onclick=toggleSources;$("#bqa").onclick=toggleQA;$("#bt").onclick=toggleText;$("#bf").onclick=fs;$("#bh").onclick=()=>$("#help").hidden=!$("#help").hidden;
 // swipe for tablets
