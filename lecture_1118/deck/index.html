@@ -85,7 +85,7 @@ kbd{background:#000;border:1px solid var(--line);border-radius:4px;padding:0 6px
 <div id="qapanel" hidden style="position:absolute;right:40px;bottom:70px;width:900px;max-height:800px;overflow:auto;z-index:5;background:rgba(20,24,33,.97);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:21px;line-height:1.45"></div>
 <div id="quiz" hidden></div><div id="text" hidden></div>
 <div id="help" hidden><b>Keys</b><br>
-<kbd>→</kbd> next slide · <kbd>←</kbd> back (clicker: PageDown / PageUp)<br>
+<kbd>→</kbd> next point · <kbd>←</kbd> back (clicker: PageDown / PageUp) · after the last point the next slide · <kbd>↓</kbd> / <kbd>↑</kbd> whole slide<br>"Point by point" off: <kbd>→</kbd> / <kbd>←</kbd> go by slide and the voice runs on its own<br>
 <kbd>Space</kbd> or <kbd>P</kbd> pause / play the voice and the clip · <kbd>R</kbd> replay slide (interactive page: fresh picture) · <kbd>V</kbd> voice on / off · <kbd>A</kbd> autoplay on / off<br>
 <kbd>N</kbd> presenter view (second window: notes, next slide, clock)<br><kbd>Q</kbd> questions and answers for this slide (click a question to open the answer) · <kbd>T</kbd> spoken text · <kbd>F</kbd> fullscreen · <kbd>H</kbd> this help<br>
 Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops the countdown, "reset" sets it back.</div>
@@ -94,9 +94,10 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label><input type="checkbox" id="auto" checked> Autoplay</label>
 <label><input type="checkbox" id="voice" checked> Voice</label>
 <label><input type="checkbox" id="adv"> Auto-advance</label>
+<label title="clicker and arrow keys show the points of a slide one by one, then go to the next slide"><input type="checkbox" id="ptsmode"> Point by point</label>
 <input type="checkbox" id="skip" hidden>
-<input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v18 (11.11.) · 45 slides<span id="clipsN"></span></span><span id="num"></span>
+<input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
+<span class="grow"></span><span style="color:var(--dim)">deck v19 (13.11.) · 45 slides<span id="clipsN"></span></span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -108,7 +109,7 @@ const $=s=>document.querySelector(s), S=window.SLIDES, M=window.MEDIA, PAGES="ht
 const PRESENTER=location.hash==="#presenter";
 S.forEach(s=>{s.check=null;s.key_q=false});   // 10.11.2026, lecturer: no check questions on the slides (kept in slides_data.py)
 const store={get(k,d){try{const v=localStorage.getItem("deck1118."+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("deck1118."+k,JSON.stringify(v))}catch(e){}}};
-const auto=$("#auto"),voice=$("#voice"),adv=$("#adv"),qsec=$("#qsec"),skip=$("#skip");skip.checked=false;
+const auto=$("#auto"),voice=$("#voice"),adv=$("#adv"),qsec=$("#qsec"),skip=$("#skip"),ptsmode=$("#ptsmode");skip.checked=false;ptsmode.checked=store.get("ptsmode",true);
 auto.checked=store.get("auto",true);voice.checked=store.get("voice",true);adv.checked=store.get("adv",false);qsec.value=store.get("qsec",30);
 const audio=new Audio();audio.preload="auto";
 let cur=0,playing=false,clock=0,last=0,raf=0,hasClip={};
@@ -164,6 +165,7 @@ function hud(state,stay){if(PRESENTER)return;const s=S[cur];$("#hnum").textConte
 function stopAll(){playing=false;cancelAnimationFrame(raf);audio.pause();document.querySelectorAll("video").forEach(v=>v.pause())}
 function start(){stopAll();const s=S[cur],m=M[s.key];clock=0;render(0);
  if(s.kind==="try"){hud("✋ interactive: use the mouse",true);return}
+ if(pointMode()&&!s.exercise)return;   // point by point: the clicker shows the points, Space plays the voice
  if(!auto.checked)return;playing=true;
  if(s.clip&&!hasClip[cur]&&el().classList.contains("clip")){hud("… loading clip",true);return}
  if(hasClip[cur]){const v=el().querySelector("video");v.currentTime=0;v.muted=!voice.checked;v.play().catch(()=>{if(!blocked()){v.muted=true;v.play().catch(()=>{})}});render(m.seconds);return}
@@ -174,6 +176,17 @@ function togglePlay(){if(hasClip[cur]){const v=el().querySelector("video");if(v.
 function ended(){stopAll();hud(cur<S.length-1?"■ end of slide · → next":"■ end of the lecture",true);render(M[S[cur].key].seconds);if(adv.checked&&!S[cur].exercise)setTimeout(()=>{if(!playing&&$("#quiz").hidden)step(1)},1500)}
 // next / previous slide; optional slides are passed over when "Skip optional" is ticked
 function step(d){let i=cur+d;while(skip.checked&&i>0&&i<S.length-1&&S[i].optional)i+=d;go(i)}
+// 13.11.2026 (lecturer with a laser-pointer clicker): next / back walks through the points of a slide, after the last
+// point to the next slide. The picture or clip frame follows the point; Space plays the voice from that point on.
+function pointMode(){return ptsmode.checked&&!PRESENTER}
+function showPoint(t){stopAll();clock=t;render(t);if(hasClip[cur]){const v=el().querySelector("video");v.pause();try{v.currentTime=t}catch(e){}}}
+function stepPoint(d){const s=S[cur];
+ if(!pointMode()||s.exercise||s.kind==="try"){step(d);return}
+ const ts=[...el().querySelectorAll(".pt[data-t]")].map(p=>+p.dataset.t);
+ let k=-1;ts.forEach((t,i)=>{if(t<=clock+1e-3)k=i});
+ if(d>0){if(k>=ts.length-1){step(1);return}k++}
+ else{if(k<=0){const from=cur;step(-1);if(cur!==from&&!S[cur].exercise&&S[cur].kind!=="try")showPoint(M[S[cur].key].seconds);return}k--}
+ showPoint(ts[k]);hud(`point ${k+1} / ${ts.length}`)}
 function preloadNext(i){for(const j of[i+1,i+2]){const e=document.getElementById("s"+j);const v=e&&e.querySelector("video");if(v&&v.src&&v.preload!=="auto"){v.preload="auto";try{v.load()}catch(_){}}}}
 let prevCur=null;
 function showSlide(from,to){const a=from!==null&&from!==to?$("#s"+from):null,b=$("#s"+to);
@@ -189,7 +202,7 @@ function rebuildTry(i,from){if(PRESENTER||!window.BUILD_WIDGET)return;const s=S[
  if(from!==i&&S[from]&&S[from].kind==="try"&&WIDGETS[S[from].widget])setTimeout(()=>{if(cur!==from)BUILD_WIDGET(S[from].widget,document.querySelector("#s"+from+" .widget"),false)},900)}
 function go(i){i=Math.max(0,Math.min(S.length-1,i));setTimeout(()=>{if(!$("#srcpanel").hidden)showSources();if(!$("#qapanel").hidden)showQA()},0);preloadNext(i);if(exRun){clearInterval(et);exRun=false}closeQuiz();$("#text").hidden=true;const leaving=cur;cur=i;useBlob(leaving);rebuildTry(i,leaving);
  showSlide(prevCur,i);prevCur=i;$("#num").textContent=`${i+1} / ${S.length}`;
- try{history.replaceState(null,"","#"+S[i].key)}catch(e){}start();send();if(S[i].kind!=="try")hud(auto.checked?"▶ playing":"⏸ Space to play")}
+ try{history.replaceState(null,"","#"+S[i].key)}catch(e){}start();send();if(S[i].kind!=="try")hud(pointMode()&&!S[i].exercise?"● point by point · → next point · Space voice":auto.checked?"▶ playing":"⏸ Space to play")}
 // check question with countdown
 let qt=0;
 function openQuiz(){const c=S[cur].check;const q=$("#quiz");if(!c){q.innerHTML=`<h2>No check question on this slide.</h2><div class="hint">Q or Esc to close</div>`;q.hidden=false;return}
@@ -227,8 +240,9 @@ addEventListener("keyup",e=>{if(e.key===" "&&isBox(e.target)){e.preventDefault()
 addEventListener("keydown",e=>{if(e.key===" "&&isBox(e.target)){e.preventDefault();e.target.blur()}},true);
 addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox(e.target)))return;const k=e.key;
  if(k===" "){e.preventDefault();togglePlay()}
- else if(["ArrowRight","PageDown"].includes(k)){e.preventDefault();step(1)}
- else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();step(-1)}
+ else if(["ArrowRight","PageDown"].includes(k)){e.preventDefault();stepPoint(1)}
+ else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();stepPoint(-1)}
+ else if(k==="ArrowDown"){e.preventDefault();step(1)}else if(k==="ArrowUp"){e.preventDefault();step(-1)}
  else if(k==="n"||k==="N")openPresenter();
  else if(k==="Home")go(0);else if(k==="End")go(S.length-1);
  else if(k==="p"||k==="P")togglePlay();else if(k==="r"||k==="R"){start();rebuildTry(cur,cur)}
@@ -243,9 +257,9 @@ addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox
  else if(k==="s"||k==="S")exStart()});
 voice.onchange=()=>{store.set("voice",voice.checked);if(hasClip[cur]){el().querySelector("video").muted=!voice.checked}else if(playing){if(voice.checked){audio.currentTime=clock;audio.play().catch(()=>{})}else audio.pause()}};
 auto.onchange=()=>{store.set("auto",auto.checked);if(auto.checked)start();else stopAll()};
-adv.onchange=()=>store.set("adv",adv.checked);skip.onchange=()=>{store.set("skip",skip.checked);send()};$("#bn").onclick=openPresenter;qsec.onchange=()=>store.set("qsec",+qsec.value);
+adv.onchange=()=>store.set("adv",adv.checked);ptsmode.onchange=()=>{store.set("ptsmode",ptsmode.checked);start()};skip.onchange=()=>{store.set("skip",skip.checked);send()};$("#bn").onclick=openPresenter;qsec.onchange=()=>store.set("qsec",+qsec.value);
 document.querySelectorAll("#bar input,#bar button").forEach(x=>x.addEventListener("click",()=>setTimeout(()=>x.blur(),0)));
-$("#bq").onclick=openQuiz;$("#bsrc").onclick=toggleSources;$("#bqa").onclick=toggleQA;$("#bt").onclick=toggleText;$("#bf").onclick=fs;$("#bh").onclick=()=>$("#help").hidden=!$("#help").hidden;
+$("#bpdf").onclick=()=>window.open("lecture_1118_slides.pdf","_blank");$("#bq").onclick=openQuiz;$("#bsrc").onclick=toggleSources;$("#bqa").onclick=toggleQA;$("#bt").onclick=toggleText;$("#bf").onclick=fs;$("#bh").onclick=()=>$("#help").hidden=!$("#help").hidden;
 // swipe for tablets
 let sx=null;addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});
 addEventListener("touchend",e=>{if(sx===null||PRESENTER)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60)step(dx<0?1:-1);sx=null});
@@ -257,7 +271,7 @@ function send(){if(pres&&!pres.closed)try{pres.postMessage({deck:"state",cur,ski
 addEventListener("message",e=>{const m=e.data||{};if(m.deck!=="cmd")return;pres=e.source;
  if(m.do==="hello"){send();return}
  if(m.do==="start"){t0=Date.now();send();return}
- if(m.do==="next")step(1);else if(m.do==="prev")step(-1);else if(m.do==="go")go(m.i);else if(m.do==="play")togglePlay();else if(m.do==="replay")start();
+ if(m.do==="next")stepPoint(1);else if(m.do==="prev")stepPoint(-1);else if(m.do==="go")go(m.i);else if(m.do==="play")togglePlay();else if(m.do==="replay")start();
  else if(m.do==="quiz"){$("#quiz").hidden?openQuiz():closeQuiz()}else if(m.do==="answer")reveal();else if(m.do==="exstart")exStart();else if(m.do==="exreset")exReset();
  else if(m.do==="voice"){voice.checked=!voice.checked;voice.onchange()}else if(m.do==="skip"){skip.checked=!skip.checked;skip.onchange()}
  else if(m.do==="auto"){auto.checked=!auto.checked;auto.onchange()}send()});

@@ -7,7 +7,8 @@ clips and voice, interactive slides, a presenter view (key N) and the sources pe
 
 | Part | What | Link |
 |---|---|---|
-| Lecture | The slide deck (arrow keys = slides, Space = pause or play) | [lecture_1118/deck](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/deck/) |
+| Lecture | The slide deck (clicker / arrow keys = next point, then next slide; Space = voice on or off) | [lecture_1118/deck](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/deck/) |
+| Lecture as PDF | Every slide with its points, the spoken text and the sources; contents and full source list | [lecture_1118_slides.pdf](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/deck/lecture_1118_slides.pdf) |
 | Exercise 1 | Atlas quiz: which structure is coloured? | [atlas-quiz](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/exercises/atlas-quiz/) |
 | Exercise 2 | Paint white matter lesions and get your Dice score | [wmh-dice](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/exercises/wmh-dice/) |
 | Exercise 3 | Click the microbleeds and get your F1 score | [cmb-f1](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/exercises/cmb-f1/) |
