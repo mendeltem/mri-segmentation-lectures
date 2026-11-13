@@ -97,7 +97,7 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label title="clicker and arrow keys show the points of a slide one by one, then go to the next slide"><input type="checkbox" id="ptsmode"> Point by point</label>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v24 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck v25 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -203,6 +203,8 @@ function playSegment(v,from,to){v.muted=true;try{v.currentTime=from}catch(e){}
 // the lecture clock starts by itself with the first click forward (clicker, arrow key or Next in the presenter view);
 // that first click only starts it and stays on the point that is showing, where the lecture begins
 function stepPoint(d){if(d>0&&!t0){t0=Date.now();send();hud("⏱ lecture clock started · next click: next point");return}const s=S[cur];
+ // exercise slide: the first click forward starts its countdown, the next click goes on
+ if(s.exercise&&d>0&&exLeft[cur]===undefined){exStart();hud("⏱ exercise timer started · next click: next slide");send();return}
  if(!pointMode()||s.exercise||s.kind==="try"){step(d);return}
  const ts=ptTimes();let k=curPoint().k;
  if(d>0){if(k>=ts.length-1){step(1);return}k++}
@@ -240,8 +242,9 @@ let et=0,exLeft={},exRun=false;
 function exShow(c,left){const a=Math.abs(left);c.textContent=(left<0?"+":"")+Math.floor(a/60)+":"+String(a%60).padStart(2,"0");c.classList.toggle("over",left<0)}
 function exStart(){const c=el().querySelector(".ex .clock");if(!c)return;
  if(exRun){clearInterval(et);exRun=false;c.style.opacity=.55;return}
- if(exLeft[cur]===undefined)exLeft[cur]=+c.dataset.min*60;exRun=true;c.style.opacity=1;exShow(c,exLeft[cur]);
- et=setInterval(()=>{exLeft[cur]--;exShow(c,exLeft[cur])},1000)}
+ if(exLeft[cur]===undefined||exLeft[cur]<=0)exLeft[cur]=+c.dataset.min*60;exRun=true;c.style.opacity=1;c.classList.remove("over");exShow(c,exLeft[cur]);
+ // 13.11.2026: the countdown stops at 0:00 (red, "time is up") instead of counting overtime
+ et=setInterval(()=>{exLeft[cur]--;exShow(c,exLeft[cur]);if(exLeft[cur]<=0){clearInterval(et);exRun=false;exLeft[cur]=0;exShow(c,0);c.classList.add("over");hud("⏱ time is up · next click: next slide",true);send()}},1000)}
 function exReset(){const c=el().querySelector(".ex .clock");if(!c)return;clearInterval(et);exRun=false;exLeft[cur]=+c.dataset.min*60;c.style.opacity=1;exShow(c,exLeft[cur])}
 document.addEventListener("click",e=>{if(e.target.classList.contains("exgo"))exStart();if(e.target.classList.contains("exreset"))exReset()});
 // "Sources" button: the sources of the current slide with one short line each (film/slides_data.py ABOUT)
@@ -288,7 +291,7 @@ addEventListener("touchend",e=>{if(sx===null||PRESENTER)return;const dx=e.change
 let bt;addEventListener("mousemove",()=>{if(PRESENTER)return;if($("#hud").classList.contains("hide"))hud($("#hst").textContent);$("#bar").classList.remove("hide");clearTimeout(bt);bt=setTimeout(()=>$("#bar").classList.add("hide"),2500)});
 let pres=null,t0=null;
 function openPresenter(){pres=window.open(location.href.split("#")[0]+"#presenter","presenter","width=1400,height=850");setTimeout(send,600)}
-function send(){if(pres&&!pres.closed)try{pres.postMessage({deck:"state",cur,skip:skip.checked,voice:voice.checked,auto:auto.checked,t0,pm:pointMode(),pt:curPoint().k,npt:curPoint().n,anim:animUntil},"*")}catch(e){}}
+function send(){if(pres&&!pres.closed)try{pres.postMessage({deck:"state",cur,skip:skip.checked,voice:voice.checked,auto:auto.checked,t0,pm:pointMode(),pt:curPoint().k,npt:curPoint().n,anim:animUntil,exl:exLeft[cur],exr:exRun,exmin:S[cur].exercise?S[cur].exercise.minutes:0},"*")}catch(e){}}
 addEventListener("message",e=>{const m=e.data||{};if(m.deck!=="cmd")return;pres=e.source;
  if(m.do==="hello"){send();return}
  if(m.do==="start"){t0=Date.now();send();return}
@@ -393,7 +396,12 @@ function presenterView(){
  // animation on the projector: running (with seconds left) or finished, so the speaker knows when to go on
  setInterval(()=>{const e=$("#panim");if(!e)return;const s=S[st.cur],hasClip=!!(s&&s.clip);
   if(st.anim&&st.anim>Date.now()){e.innerHTML=`<span style="color:var(--y)">▶ animation running · ${((st.anim-Date.now())/1000).toFixed(1)} s</span>`}
-  else e.innerHTML=hasClip&&st.pm?`<span style="color:var(--g)">■ animation finished</span>`:""},150);
+  else e.innerHTML=hasClip&&st.pm?`<span style="color:var(--g)">■ animation finished</span>`:"";
+  // exercise countdown in large type
+  if(s&&s.exercise){const l=st.exl,big='style="font-size:44px;font-variant-numeric:tabular-nums"';
+   e.innerHTML=l===undefined||l===null?`<span ${big}>Exercise ${st.exmin}:00</span> <span style="color:var(--dim)">· click to start the countdown</span>`
+    :l<=0?`<span ${big} class="late">0:00 · time is up</span> <span style="color:var(--dim)">· next click: next slide</span>`
+    :`<span ${big}>${fmt(l)} left</span> <span style="color:var(--dim)">· exercise ${st.exr?"running":"paused (S)"}</span>`}},150);
  setInterval(clock,1000);cmd("hello");draw();
 }
 </script>
