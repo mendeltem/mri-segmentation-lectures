@@ -1529,28 +1529,19 @@ window.SLIDES = [
  {
   "n": 49,
   "key": "exam",
-  "title": "For the exam",
+  "title": "Conclusion",
   "part": "Wrap-up",
   "kind": "clip",
   "clip": "clips/44_exam.mp4",
   "poster": "poster/44_exam.jpg",
-  "text": "For the exam: read a quality score, compute a Dice, and count clusters for an F one. You just did all three.",
-  "check": {
-   "q": "TP = 8, FP = 2, FN = 2. Dice?",
-   "options": [
-    "0.67",
-    "0.80",
-    "0.89"
-   ],
-   "answer": 1,
-   "why": "2 x 8 / (2 x 8 + 2 + 2) = 16 / 20"
-  },
+  "text": "In the end, segmentation turns a scan into numbers: a volume, a lesion load, a count. Each number needs its own check: a quality score, a Dice, an F one. And every tool has a place where it fails: large lesions, small spots, a new scanner, a lookalike. So look at the picture before you trust the number.",
+  "check": null,
   "exercise": null,
   "sources": [],
   "optional": false,
   "key_q": false,
-  "notes": "For the exam: read a quality score, compute a Dice, and count clusters for an F one. You just did all three.",
-  "background": "Three skills for the exam on 27 January. One: read a QC score and decide when a segmentation needs a second look (below 0.65 for SynthSeg; an unusual Euler number for FreeSurfer). Two: compute a Dice score from TP, FP and FN by hand. Three: group marked voxels into clusters with 26 neighbours and compute precision, recall and F1. All three were in the exercises. Use the check question on this slide as a last practice.",
+  "notes": "In the end, segmentation turns a scan into numbers: a volume, a lesion load, a count. Each number needs its own check: a quality score, a Dice, an F one. And every tool has a place where it fails: large lesions, small spots, a new scanner, a lookalike. So look at the picture before you trust the number.",
+  "background": "Conclusion. Segmentation turns a scan into numbers: a volume for grey matter regions, a lesion load for white matter lesions, a count for microbleeds. Each number has its own check: the QC score (and the Euler number for FreeSurfer), Dice against a reference, F1 on clusters. And each tool fails somewhere: large lesions spoil grey matter labels, small lesions pull Dice down, a new scanner shifts BIANCA, vessels and calcium look like microbleeds. Take-home: look at the picture before you trust the number.",
   "qr": null
  },
  {
