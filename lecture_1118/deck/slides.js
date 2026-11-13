@@ -1155,7 +1155,7 @@ window.SLIDES = [
   "optional": false,
   "key_q": false,
   "notes": "How did you do? Bianka got zero point seven, a second expert about zero point seven eight, the best program, a U net, zero point eight. Hands up, who beat Bianka? The small spots are hard for everyone.",
-  "background": "Bring the room back after the exercise. Ask for a show of hands: who beat BIANCA? Our best BIANCA setup reached 0.695 on the 110 challenge test scans (trained on the 60 training scans, our own run); a second human expert reached 0.77 to 0.79 against the reference on the 60 training scans (Kuijf 2019); the challenge winner, a U-Net-like network (ensemble of three), reached 0.80 on the 110 test scans. Small spots lower everybody's Dice, people and programs alike. Your own catch question can go here.",
+  "background": "Bring the room back after the exercise. Ask for a show of hands: who beat BIANCA? Our best BIANCA setup reached 0.695 on the 110 challenge test scans (trained on the 60 training scans, our own run); a second human expert reached 0.77 to 0.79 against the reference on the 60 training scans (Kuijf 2019); the challenge winner, a U-Net-like network (ensemble of three), reached 0.80 on the 110 test scans. Small spots lower everybody's Dice, people and programs alike. Your own catch question can go here. Then give them the link for practice at home: the WMH trainer, mendeltem.github.io/wmh_trainer (110 public challenge scans, Dice against the expert and BIANCA, works on phones). It is also at the end of the exercise and in this slide's sources.",
   "qr": null
  },
  {
