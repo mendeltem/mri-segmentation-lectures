@@ -1534,14 +1534,14 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/44_exam.mp4",
   "poster": "poster/44_exam.jpg",
-  "text": "In the end, segmentation turns a scan into numbers: a volume, a lesion load, a count. Each number needs its own check: a quality score, a Dice, an F one. And every tool has a place where it fails: large lesions, small spots, a new scanner, a lookalike. So look at the picture before you trust the number.",
+  "text": "To conclude. First, know your image: a healthy brain, or one with a stroke lesion? These tools were trained on healthy brains, so you have to find out how to use them, for example by filling or masking the lesion. Second, a new scanner changes the image. A model trained on one data set often fails on another, so fine-tune it. Third, check with your own eyes: quality control really matters. Fourth, small lesions are always the problem. Large lesions and clusters are found in most cases, the small ones are the hard ones. And fifth, if you can, use several raters, because even experts do not agree.",
   "check": null,
   "exercise": null,
   "sources": [],
   "optional": false,
   "key_q": false,
-  "notes": "In the end, segmentation turns a scan into numbers: a volume, a lesion load, a count. Each number needs its own check: a quality score, a Dice, an F one. And every tool has a place where it fails: large lesions, small spots, a new scanner, a lookalike. So look at the picture before you trust the number.",
-  "background": "Conclusion. Segmentation turns a scan into numbers: a volume for grey matter regions, a lesion load for white matter lesions, a count for microbleeds. Each number has its own check: the QC score (and the Euler number for FreeSurfer), Dice against a reference, F1 on clusters. And each tool fails somewhere: large lesions spoil grey matter labels, small lesions pull Dice down, a new scanner shifts BIANCA, vessels and calcium look like microbleeds. Take-home: look at the picture before you trust the number.",
+  "notes": "To conclude. First, know your image: a healthy brain, or one with a stroke lesion? These tools were trained on healthy brains, so you have to find out how to use them, for example by filling or masking the lesion. Second, a new scanner changes the image. A model trained on one data set often fails on another, so fine-tune it. Third, check with your own eyes: quality control really matters. Fourth, small lesions are always the problem. Large lesions and clusters are found in most cases, the small ones are the hard ones. And fifth, if you can, use several raters, because even experts do not agree.",
+  "background": "Conclusion, five lessons. (1) Know your image: healthy or with a stroke lesion? FreeSurfer and SynthSeg were trained on healthy brains; with a lesion you must decide how to use them (fill the lesion, or mask it and its surroundings). (2) A new scanner changes contrast and brightness: a model trained on one data set (BIANCA on known scanners) drops on another; fine-tune or retrain on local data. (3) Check with your own eyes: QC scores and Euler numbers help, but look at the picture. (4) Small lesions are the hard part: large lesions and clusters are found in most cases, small WMH and small microbleeds pull Dice and F1 down. (5) Use several raters where possible: even experts disagree (inter-rater Dice about 0.8).",
   "qr": null
  },
  {
