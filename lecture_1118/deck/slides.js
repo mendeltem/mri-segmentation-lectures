@@ -1505,22 +1505,166 @@ window.SLIDES = [
     "label": "Sudre et al. 2024: best VALDO microbleed method, median F1",
     "url": "https://doi.org/10.1016/j.media.2023.103029",
     "about": "VALDO results: the best microbleed method reached a median F1 of about 0.68 per scan."
+   },
+   {
+    "label": "Microbleed trainer: click microbleeds on 57 public VALDO scans, F1 against the expert and a 3D U-Net",
+    "url": "https://mendeltem.github.io/cmb_detection_trainer/",
+    "about": "Practice at home: click every microbleed on the 57 public VALDO cross-validation scans, then see your F1 against the expert and against a 3D U-Net."
    }
   ],
   "optional": false,
   "key_q": false,
   "notes": "The best program reached an F one of about zero point seven. Hands up: who did better? Who found the big one, and who missed small ones?",
-  "background": "Ask for hands: F1 above 0.8, above 0.68. In the VALDO challenge the best method for microbleeds reached a median F1 of 68.42 per scan (Sudre 2024). Ask who found the single large microbleed in the easy scan, and who missed small ones in the hard scan. Misses are usually the small, low-contrast ones; false alarms are usually vessels cut across. Your own catch question can go here.",
+  "background": "Ask for hands: F1 above 0.8, above 0.68. In the VALDO challenge the best method for microbleeds reached a median F1 of 68.42 per scan (Sudre 2024). Ask who found the single large microbleed in the easy scan, and who missed small ones in the hard scan. Misses are usually the small, low-contrast ones; false alarms are usually vessels cut across. Your own catch question can go here. Then give the link to the microbleed trainer for home: mendeltem.github.io/cmb_detection_trainer (57 public VALDO scans, click every microbleed, F1 against the expert and against a 3D U-Net).",
   "qr": null
  },
  {
   "n": 48,
+  "key": "train_vs_own",
+  "title": "Does your data look like the training data?",
+  "part": "3  Microbleeds",
+  "kind": "clip",
+  "clip": "clips/43_train_vs_own.mp4",
+  "poster": "poster/43_train_vs_own.jpg",
+  "text": "Before you use a trained tool, ask: what was it trained on? Check the people, the scanner, the sequence, the slice thickness, and the number and size of the lesions. Even inside one challenge, the three sites differ: one point five or three tesla, slices from under one millimetre to four. At one site, three scans hold most of the micro-bleeds. And your scans? A second example: white matter lesions. Bianka was trained on scans from three scanners. On test scans from these scanners, the Dice was zero point seven. On two new scanners, zero point six six. One new scanner was worse, the other just as good. The gap is small here. But you only know it after you test. And size matters. Our micro-bleed detector, on public scans it had not seen in training. Over five millimetres, six of eight were found. Two to five millimetres: sixty five percent. Under two millimetres: only four of ten. The small ones fail first.",
+  "check": {
+   "q": "The tool was trained on 3 T T2* GRE scans. Your scans are SWI from another scanner. What do you do first?",
+   "options": [
+    "Use it as it is",
+    "Mark a few own scans and score the tool",
+    "Retrain it right away"
+   ],
+   "answer": 1,
+   "why": "Test first; adapt only if the score drops."
+  },
+  "exercise": null,
+  "sources": [
+   {
+    "label": "Sudre et al. 2024, Med Image Anal (VALDO challenge)",
+    "url": "https://doi.org/10.1016/j.media.2023.103029",
+    "about": "VALDO challenge (MICCAI 2021): automatic detection of small vessel lesions, including microbleeds."
+   },
+   {
+    "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
+    "url": "https://doi.org/10.1109/TMI.2019.2905770",
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80, second experts 0.77-0.79."
+   },
+   {
+    "label": "Griffanti et al. 2016, NeuroImage (BIANCA)",
+    "url": "https://doi.org/10.1016/j.neuroimage.2016.07.018",
+    "about": "BIANCA: k-nearest-neighbour WMH segmentation in FSL; Dice 0.76 in one cohort, 0.52 in another."
+   },
+   {
+    "label": "Our microbleed detector: cmb-valdo-chain (3D U-Net)",
+    "url": "https://github.com/mendeltem/cmb-valdo-chain",
+    "about": "Our 3D U-Net microbleed detector, trained on the public VALDO data; code and decision rules on GitHub. On the slide: its out-of-fold results on the 57 public cross-validation scans."
+   },
+   {
+    "label": "Our detector's results on the public VALDO scans: valdo-cmb-qc",
+    "url": "https://github.com/mendeltem/valdo-cmb-qc",
+    "about": "Quality-control pages of our detector on the public VALDO scans: every detection and every miss, scan by scan."
+   }
+  ],
+  "optional": false,
+  "key_q": false,
+  "notes": "Before you use a trained tool, ask: what was it trained on? Check the people, the scanner, the sequence, the slice thickness, and the number and size of the lesions. Even inside one challenge, the three sites differ: one point five or three tesla, slices from under one millimetre to four. At one site, three scans hold most of the micro-bleeds. And your scans? A second example: white matter lesions. Bianka was trained on scans from three scanners. On test scans from these scanners, the Dice was zero point seven. On two new scanners, zero point six six. One new scanner was worse, the other just as good. The gap is small here. But you only know it after you test. And size matters. Our micro-bleed detector, on public scans it had not seen in training. Over five millimetres, six of eight were found. Two to five millimetres: sixty five percent. Under two millimetres: only four of ten. The small ones fail first.",
+  "background": "Before using any trained tool, compare its training data with your scans: people (healthy, elderly, small vessel disease, stroke), scanner and field strength, sequence (2D T2* GRE, 3D T2* GRE, SWI), slice thickness, number and size of the lesions. Example: the three VALDO Task 2 training sites (Sudre 2024; counts recounted by us from the public reference masks, microbleed = 26-connected cluster): SABRE, London population cohort, Philips 3 T, 2D T2* GRE, 0.45 x 0.45 mm in-plane, 3 mm slices (4 mm spacing in the header), 11 scans, 106 microbleeds, 91 of them (86 %) in the 3 heaviest scans; RSS, Rotterdam population cohort aged 45 and over, GE 1.5 T, 3D T2* GRE, 0.49 x 0.49 x 0.8 mm, 34 scans, 96 microbleeds; ALFA, cognitively normal relatives of Alzheimer patients aged 45-74, GE Discovery 3 T, 2D T2* GRE, 1 x 1 mm, 3-4 mm slices, 27 scans, 34 microbleeds. (The paper's Table 2 lists 123 for SABRE: it counts differently; we count connected clusters.) WMH example (WMH Segmentation Challenge, our best BIANCA setup trained on the 60 training scans from 3 scanners, tested on the 110 official test scans): scans from the 3 training scanners Dice 0.702 (90 scans), scans from the 2 scanners not in training 0.664 (20 scans): 1.5 T GE Signa HDxt 0.621, 3 T Philips Ingenuity 0.706 (as good as the seen ones; seen scanners 0.667-0.764). The gap is small here - say it honestly; you only know after testing. Detector by size: our 3D U-Net (cmb-valdo-chain, two seeds averaged, fixed post-processing p > 0.3, at least 2 mm3, CSF rule), out-of-fold on the 57 public cross-validation scans (each scan predicted by a model that never trained on it). Hit rule of the microbleed exercise: the centre of a detection lies at most 2 mm from a microbleed voxel in the slice and at most one slice away. Size = equivalent-sphere diameter (a ball with the same volume). Found: over 5 mm 6 of 8 (75 %), 2-5 mm 79 of 121 (65 %), under 2 mm 4 of 10 (40 %); overall 89 of 139, F1 0.65. Wrong detections by detection size: under 2 mm 10 of 25 (40 %), 2-5 mm 36 of 107 (34 %), over 5 mm 1 of 4. Small classes are small; the trend matches BIANCA (under 10 voxels 24 % found, over 1,000 voxels 99 %). Decision (next slides): similar data -> use the tool and still check by eye; different -> mark a few own scans by hand and score the tool; only if it drops: mix your scans in and retrain, or fine-tune. Internal version: when the bottom bar says 'internal data loaded', this slide shows our own clinical cohorts instead of the open column (local copy only, never online).",
+  "qr": null
+ },
+ {
+  "n": 49,
+  "key": "two_ways",
+  "title": "Two ways to adapt",
+  "part": "3  Microbleeds",
+  "kind": "clip",
+  "clip": "clips/44_two_ways.mp4",
+  "poster": "poster/44_two_ways.jpg",
+  "text": "Your scans differ, and the score drops. There are two ways to adapt a tool. Way one: mix. Put a few of your own marked scans into the training pool, together with the public data, and train again. For this, you need the training data. Way two: fine-tune. You only have the trained model: the downloaded weights. You go on training it on your marked scans, in small steps. Mixing keeps what the model learned from the public data. Fine-tuning can overwrite it. That matters only if the model must still work on the old scanners. Our micro-bleed detector uses both ways: the U net is fine-tuned, and its second stage is retrained on public and local examples together.",
+  "check": {
+   "q": "You downloaded a trained model, but not its training data. Which way is open to you?",
+   "options": [
+    "Mixing your scans into the training pool",
+    "Fine-tuning the model on your marked scans",
+    "Neither"
+   ],
+   "answer": 1,
+   "why": "Mixing needs the training data; fine-tuning needs only the model."
+  },
+  "exercise": null,
+  "sources": [
+   {
+    "label": "Ghafoorian et al. 2017, MICCAI (transfer learning for a new scanner)",
+    "url": "https://doi.org/10.1007/978-3-319-66179-7_59",
+    "about": "White matter lesions: a network trained on old data, fine-tuned with only 2 scans from the new scanner, reached Dice 0.63 and clearly beat the same network trained from scratch on those 2 scans."
+   },
+   {
+    "label": "Kirkpatrick et al. 2017, PNAS (catastrophic forgetting)",
+    "url": "https://doi.org/10.1073/pnas.1611835114",
+    "about": "A network trained on a new task in sequence tends to forget the old one (catastrophic forgetting); the paper proposes a way to protect the weights that mattered for the old task."
+   },
+   {
+    "label": "Our microbleed detector: cmb-valdo-chain (3D U-Net)",
+    "url": "https://github.com/mendeltem/cmb-valdo-chain",
+    "about": "Our 3D U-Net microbleed detector, trained on the public VALDO data; code and decision rules on GitHub. On the slide: its out-of-fold results on the 57 public cross-validation scans."
+   }
+  ],
+  "optional": false,
+  "key_q": false,
+  "notes": "Your scans differ, and the score drops. There are two ways to adapt a tool. Way one: mix. Put a few of your own marked scans into the training pool, together with the public data, and train again. For this, you need the training data. Way two: fine-tune. You only have the trained model: the downloaded weights. You go on training it on your marked scans, in small steps. Mixing keeps what the model learned from the public data. Fine-tuning can overwrite it. That matters only if the model must still work on the old scanners. Our micro-bleed detector uses both ways: the U net is fine-tuned, and its second stage is retrained on public and local examples together.",
+  "background": "Two ways to adapt a trained tool to a new scanner, after testing showed a drop. (A) Mixing: put some of your own hand-marked scans into the training pool together with the public data and train again. Needs the training data (BIANCA: you always have it, because you train BIANCA yourself). (B) Fine-tuning: only the trained model is available (downloaded weights): continue training it on your own annotated scans with a small learning rate. Mixing keeps what was learned from the public data; fine-tuning can overwrite it (catastrophic forgetting, Kirkpatrick 2017). That matters only if the model must still work on the old scanners. Our microbleed detector (cmb-valdo-chain) uses both: the stage-1 U-Net is fine-tuned from the model trained on the public VALDO data; the stage-2 classifier is retrained jointly on VALDO and local candidates, so nothing learned from VALDO is overwritten there. Evidence that fine-tuning works with very few scans: Ghafoorian 2017 (WMH, 2 scans of the new domain, Dice 0.63, clearly better than from scratch on the same 2 scans).",
+  "qr": null
+ },
+ {
+  "n": 50,
+  "key": "finetune",
+  "title": "Fine-tuning: when you only have the model",
+  "part": "3  Microbleeds",
+  "kind": "clip",
+  "clip": "clips/45_finetune.mp4",
+  "poster": "poster/45_finetune.jpg",
+  "text": "Fine-tuning, step by step. A trained model already knows what a micro-bleed looks like. Fine-tuning keeps this knowledge: it starts from the model's weights, and trains a little more, in small steps, on a few of your own marked scans. So it learns your scanner's contrast and noise. Training from scratch starts from random weights, and needs many more marked scans. The options, cheapest first. One: choose a new threshold on your own scans. For this you only need scans without micro-bleeds. Two: adapt only the normalisation layers. Three: fine-tune the whole model. Four: train from scratch. And always test on your own scans that were not used for training. How many marked scans do you need? Measure it, with a learning curve. Train with three, five, ten, twenty scans, and each time test on the rest. Where the curve stops rising, more marking does not pay.",
+  "check": {
+   "q": "A public microbleed model marks many false microbleeds on your new scanner. What do you try first?",
+   "options": [
+    "Train a new model from scratch on 3 scans",
+    "Re-choose the threshold, then fine-tune on a few marked scans and test",
+    "Use it as it is"
+   ],
+   "answer": 1,
+   "why": "Cheapest first; from scratch needs many more marked scans."
+  },
+  "exercise": null,
+  "sources": [
+   {
+    "label": "Ghafoorian et al. 2017, MICCAI (transfer learning for a new scanner)",
+    "url": "https://doi.org/10.1007/978-3-319-66179-7_59",
+    "about": "White matter lesions: a network trained on old data, fine-tuned with only 2 scans from the new scanner, reached Dice 0.63 and clearly beat the same network trained from scratch on those 2 scans."
+   },
+   {
+    "label": "Karani et al. 2018, MICCAI (adapt only the normalisation layers)",
+    "url": "https://doi.org/10.1007/978-3-030-00928-1_54",
+    "about": "One network for several scanners: the filters are shared, only the normalisation layers are learned per scanner, from about 4 labelled scans each."
+   },
+   {
+    "label": "Our microbleed detector: cmb-valdo-chain (3D U-Net)",
+    "url": "https://github.com/mendeltem/cmb-valdo-chain",
+    "about": "Our 3D U-Net microbleed detector, trained on the public VALDO data; code and decision rules on GitHub. On the slide: its out-of-fold results on the 57 public cross-validation scans."
+   }
+  ],
+  "optional": false,
+  "key_q": false,
+  "notes": "Fine-tuning, step by step. A trained model already knows what a micro-bleed looks like. Fine-tuning keeps this knowledge: it starts from the model's weights, and trains a little more, in small steps, on a few of your own marked scans. So it learns your scanner's contrast and noise. Training from scratch starts from random weights, and needs many more marked scans. The options, cheapest first. One: choose a new threshold on your own scans. For this you only need scans without micro-bleeds. Two: adapt only the normalisation layers. Three: fine-tune the whole model. Four: train from scratch. And always test on your own scans that were not used for training. How many marked scans do you need? Measure it, with a learning curve. Train with three, five, ten, twenty scans, and each time test on the rest. Where the curve stops rising, more marking does not pay.",
+  "background": "When you only have the model. Fine-tuning = transfer learning: start from the weights of a trained model and train a little more with a small learning rate on a few annotated scans of the new site, so the model keeps what it learned (what a microbleed looks like) and adapts to the new contrast and noise. Training from scratch starts from random weights and needs more annotated scans. Evidence: Ghafoorian 2017 (WMH): a network fine-tuned with only 2 scans of the new domain reached Dice 0.63 and clearly beat the same network trained from scratch on those 2 scans. Karani 2018: shared filters, only the batch-normalisation layers learned per scanner, about 4 labelled scans each. Options, cheapest first: (1) re-choose the decision threshold on own scans - scans without microbleeds are enough to set it so that false alarms stay low; (2) adapt only the normalisation (and output) layers; (3) fine-tune the whole model; (4) train from scratch. Always test on own scans that were not used for adaptation. How many scans? Measure a learning curve: train with 3, 5, 10, 20 ... scans, test on the rest, and stop where it stops rising. Internal version: with the internal data layer loaded, the third step shows our own measured learning curve.",
+  "qr": null
+ },
+ {
+  "n": 51,
   "key": "wrap",
   "title": "Three tasks, one rule",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/43_wrap.mp4",
-  "poster": "poster/43_wrap.jpg",
+  "clip": "clips/46_wrap.mp4",
+  "poster": "poster/46_wrap.jpg",
   "text": "Grey matter: check the quality score. Lesions: Dice, and small ones are hard. Micro-bleeds: F one, and beware lookalikes. One rule for all: never trust a segmentation you have not checked.",
   "check": null,
   "exercise": null,
@@ -1532,32 +1676,63 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 49,
+  "n": 52,
   "key": "exam",
   "title": "Conclusion",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/44_exam.mp4",
-  "poster": "poster/44_exam.jpg",
-  "text": "To conclude. First, know your image: a healthy brain, or one with a stroke lesion? These tools were trained on healthy brains, so you have to find out how to use them, for example by filling or masking the lesion. Second, a new scanner changes the image. A model trained on one data set often fails on another, so fine-tune it. Third, check with your own eyes: quality control really matters. Fourth, small lesions are always the problem. Large lesions and clusters are found in most cases, the small ones are the hard ones. And fifth, if you can, use several raters, because even experts do not agree.",
+  "clip": "clips/47_exam.mp4",
+  "poster": "poster/47_exam.jpg",
+  "text": "To conclude. First, know your tool's training data: which patients, which scanners, which lesion sizes? None of these tools was trained on large stroke lesions, so fill or mask the lesion. Second, a new scanner changes the image. Test the tool on your own scans first. If it drops, mix your scans into the training, or fine-tune. Third, check with your own eyes: quality control really matters. Fourth, small lesions are the problem. Large lesions are found, the small ones are often missed. And fifth, if you can, use several raters, because even experts do not agree.",
   "check": null,
   "exercise": null,
-  "sources": [],
+  "sources": [
+   {
+    "label": "Fischl et al. 2002, Neuron",
+    "url": "https://doi.org/10.1016/S0896-6273(02)00569-X",
+    "about": "FreeSurfer's whole-brain segmentation of deep structures with a probabilistic atlas (37 labels)."
+   },
+   {
+    "label": "Billot et al. 2023, Med Image Anal (SynthSeg)",
+    "url": "https://doi.org/10.1016/j.media.2023.102789",
+    "about": "SynthSeg: a network trained only on synthetic images; segments scans of any contrast and resolution."
+   },
+   {
+    "label": "Gaser et al. 2024, GigaScience (CAT12)",
+    "url": "https://doi.org/10.1093/gigascience/giae049",
+    "about": "CAT12, the computational anatomy toolbox for SPM: its average template was made from the public IXI data set of healthy adults (the paper's figure registers 555 brains)."
+   },
+   {
+    "label": "Griffanti et al. 2016, NeuroImage (BIANCA)",
+    "url": "https://doi.org/10.1016/j.neuroimage.2016.07.018",
+    "about": "BIANCA: k-nearest-neighbour WMH segmentation in FSL; Dice 0.76 in one cohort, 0.52 in another."
+   },
+   {
+    "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
+    "url": "https://doi.org/10.1109/TMI.2019.2905770",
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80, second experts 0.77-0.79."
+   },
+   {
+    "label": "Sudre et al. 2024, Med Image Anal (VALDO challenge)",
+    "url": "https://doi.org/10.1016/j.media.2023.103029",
+    "about": "VALDO challenge (MICCAI 2021): automatic detection of small vessel lesions, including microbleeds."
+   }
+  ],
   "optional": false,
   "key_q": false,
-  "notes": "To conclude. First, know your image: a healthy brain, or one with a stroke lesion? These tools were trained on healthy brains, so you have to find out how to use them, for example by filling or masking the lesion. Second, a new scanner changes the image. A model trained on one data set often fails on another, so fine-tune it. Third, check with your own eyes: quality control really matters. Fourth, small lesions are always the problem. Large lesions and clusters are found in most cases, the small ones are the hard ones. And fifth, if you can, use several raters, because even experts do not agree.",
-  "background": "Conclusion, five lessons. (1) Know your image: healthy or with a stroke lesion? FreeSurfer and SynthSeg were trained on healthy brains; with a lesion you must decide how to use them (fill the lesion, or mask it and its surroundings). (2) A new scanner changes contrast and brightness: a model trained on one data set (BIANCA on known scanners) drops on another; fine-tune or retrain on local data. (3) Check with your own eyes: QC scores and Euler numbers help, but look at the picture. (4) Small lesions are the hard part: large lesions and clusters are found in most cases, small WMH and small microbleeds pull Dice and F1 down. (5) Use several raters where possible: even experts disagree (inter-rater Dice about 0.8).",
+  "notes": "To conclude. First, know your tool's training data: which patients, which scanners, which lesion sizes? None of these tools was trained on large stroke lesions, so fill or mask the lesion. Second, a new scanner changes the image. Test the tool on your own scans first. If it drops, mix your scans into the training, or fine-tune. Third, check with your own eyes: quality control really matters. Fourth, small lesions are the problem. Large lesions are found, the small ones are often missed. And fifth, if you can, use several raters, because even experts do not agree.",
+  "background": "Conclusion, five lessons. (1) Know your tool's training data. FreeSurfer's aseg atlas: 40 manually labelled scans (young, middle-aged and elderly people; Desikan 2006 also lists some with Alzheimer's disease, the atlas README calls them nondemented - the sources disagree). SynthSeg: trained on label maps only, 20 manual + 500 young (HCP) + 500 ageing (ADNI, including MCI and AD), with simulated white-matter-like lesions (Billot 2023). CAT12: average template from the public IXI data of healthy adults. BIANCA: no pretrained model - you train it on your own hand-marked patients. WMH challenge U-Nets: 60 patients with WMH from 3 scanners. VALDO microbleed models: 72 older people from population cohorts and relatives of Alzheimer patients, 3 scanners. None was trained on large stroke lesions: fill or mask the lesion. (2) A new scanner changes contrast and brightness: test the tool on a few of your own hand-marked scans first; if it drops, mix your scans into the training (BIANCA: just add them, retraining takes minutes) or fine-tune the model (U-Net, when only the weights are available). SynthSeg was designed not to need it. (3) Check with your own eyes: QC scores and Euler numbers help, but look at the picture. (4) Small lesions are the hard part: large lesions are found, small WMH and small microbleeds are often missed (BIANCA under 10 voxels 24 %; our microbleed detector under 2 mm 4 of 10). (5) Use several raters where possible: even experts disagree (second expert Dice 0.77-0.79).",
   "qr": null
  },
  {
-  "n": 50,
+  "n": 53,
   "key": "more",
   "title": "Films, slides and exercises stay online",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/45_more.mp4",
-  "poster": "poster/45_more.jpg",
-  "text": "Everything stays online. For more practice, there is the full atlas trainer. Thank you.",
+  "clip": "clips/48_more.mp4",
+  "poster": "poster/48_more.jpg",
+  "text": "Everything stays online. For more practice, there are three trainers: brain regions, lesions, and micro-bleeds. Thank you.",
   "check": null,
   "exercise": null,
   "sources": [
@@ -1575,11 +1750,16 @@ window.SLIDES = [
     "label": "WMH trainer: paint lesions on 110 challenge scans, Dice against the expert and BIANCA",
     "url": "https://mendeltem.github.io/wmh_trainer/",
     "about": "Practice at home: paint the WMH on 6 FLAIR slices of each of the 110 public WMH Challenge test scans, then see your Dice against the expert and against BIANCA. Works on phones."
+   },
+   {
+    "label": "Microbleed trainer: click microbleeds on 57 public VALDO scans, F1 against the expert and a 3D U-Net",
+    "url": "https://mendeltem.github.io/cmb_detection_trainer/",
+    "about": "Practice at home: click every microbleed on the 57 public VALDO cross-validation scans, then see your F1 against the expert and against a 3D U-Net."
    }
   ],
   "optional": false,
   "key_q": false,
-  "notes": "Everything stays online. For more practice, there is the full atlas trainer. Thank you.",
+  "notes": "Everything stays online. For more practice, there are three trainers: brain regions, lesions, and micro-bleeds. Thank you.",
   "background": "This is the closing slide. Keep it short and warm. Tell the room that the animated clips, the full slide deck and the three exercises are all online. They can go back to any part at their own pace. The exercises are the best way to make the material stick. For example, ask them to redo the hard lesion case at home and try to beat their Dice. Then ask the room one question: which of the three tasks, grey matter, W M H or micro-bleeds, felt hardest today? That question often shows which topic needs more time next year. Remind them that the films have sound, so they can switch the voice back on if they want. Point them to the source link on the slide: the lecture materials live on the Git Hub page github.com/mendeltem/mri-segmentation-lectures. Thank them for their attention and for the questions. Invite them to write to you with any follow-up. End on time.",
   "qr": null
  }

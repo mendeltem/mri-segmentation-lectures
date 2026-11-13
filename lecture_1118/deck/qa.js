@@ -1974,6 +1974,132 @@ window.QA = {
 "a": "The number comes from a competition held in 2021 and published in 2024. Newer programs may well be better. We did not check newer results for this lecture, so take 0.7 as a documented reference point, not as the latest record."
 }
 ],
+"train_vs_own": [
+{
+"q": "Why does the training data of a tool matter so much?",
+"a": "A trained tool only knows the kind of images it has seen. If your people, scanner, sequence or slice thickness differ, the images look different, and the tool can fail without any warning. So the first question before using it: what was it trained on?"
+},
+{
+"q": "What should I compare between the training data and my scans?",
+"a": "Five things: the people (healthy, elderly, small vessel disease, stroke), the scanner and its field strength, the sequence (for microbleeds 2D or 3D T2* gradient echo, or SWI), the slice thickness, and how many lesions there are and how big they are."
+},
+{
+"q": "Where can I find out what a tool was trained on?",
+"a": "In the paper that describes the tool, often in a table of the data sets, and in the documentation or model card of the software. If you cannot find it, ask the authors. For a public challenge, the challenge paper lists the sites, scanners and sequences."
+},
+{
+"q": "Why do the three VALDO sites differ so much?",
+"a": "They come from different studies: two population studies (London and Rotterdam) and a study of relatives of Alzheimer patients. They used different scanners (1.5 or 3 tesla), 2D or 3D sequences, and slices from 0.8 mm to 4 mm thick. Even one challenge mixes very different images."
+},
+{
+"q": "What does it mean that three scans hold most microbleeds at one site?",
+"a": "At the SABRE site, 91 of the 106 microbleeds lie in only 3 of the 11 scans. A tool trained there mostly learned from a few patients with many microbleeds. Counts per site can hide this; always look at how lesions are spread over the scans."
+},
+{
+"q": "Why do you count 106 microbleeds for SABRE when the paper lists 123?",
+"a": "We counted connected clusters of marked voxels in the public reference masks (26 neighbours). The challenge paper counted in its own way. Both are fine as long as you say how you counted; the point of the slide is the uneven spread, not the exact number."
+},
+{
+"q": "Is a Dice of 0.66 on new scanners bad?",
+"a": "Not much worse than 0.70 on the scanners BIANCA knew, and one of the two new scanners was even as good as the known ones. The gap is small here. But you only know that after testing on scans from the new scanner, and another tool or scanner can drop much more."
+},
+{
+"q": "Why are small microbleeds missed more often?",
+"a": "A small microbleed covers only a few voxels, has less contrast and looks more like noise or a small vessel. Thick slices blur it further. So a detector finds 6 of 8 large ones but only 4 of 10 under 2 mm. The same is true for small white matter lesions with BIANCA."
+},
+{
+"q": "How was 'found' decided for the detector?",
+"a": "With the rule of the microbleed exercise: the centre of a detection must lie at most 2 mm from a microbleed within the slice and at most one slice above or below. Each microbleed counts once. Each scan was judged by a model that had not been trained on it."
+},
+{
+"q": "What is the diameter of a ball with the same volume?",
+"a": "Microbleeds are not perfect balls, so we take their volume and ask how wide a ball of that volume would be: d = (6 V / pi) to the power of one third. It is a fair size measure for any shape and is called the equivalent-sphere diameter."
+}
+],
+"two_ways": [
+{
+"q": "When do I need to adapt a tool at all?",
+"a": "Only when testing shows a drop. First mark a few of your own scans by hand and score the tool on them. If the score is close to the published one, use the tool and keep checking by eye. Adapting costs time and marked scans."
+},
+{
+"q": "What does mixing mean?",
+"a": "You put a few of your own hand-marked scans into the training pool, together with the public training data, and train the tool again from the start. The tool then learns both the old and the new scanner at the same time."
+},
+{
+"q": "What does fine-tuning mean?",
+"a": "You take the trained model, its weights, and go on training it for a while on your own marked scans, with a small learning rate. It keeps most of what it knew and adjusts to your scanner. You do not need the original training data."
+},
+{
+"q": "Why can I not always mix?",
+"a": "Mixing needs the original training data. Many models are shared only as weights; the training scans may not be allowed to leave the hospital or the study. Then fine-tuning is the only way. For BIANCA you always have the training data, because you train BIANCA yourself."
+},
+{
+"q": "What is forgetting?",
+"a": "When a network is trained further on new data only, its weights move towards the new task and it can get worse on the old one. This is called catastrophic forgetting. Mixing avoids it, because the old data stay in the training."
+},
+{
+"q": "Does forgetting matter for me?",
+"a": "Only if the model must still work on the old scanners. If you only want to use it on your own scanner, a fine-tuned model that forgot a little about the old scanners is fine. If you share it with other centres, mixing is safer."
+},
+{
+"q": "Which way gives better results?",
+"a": "It depends on the data and the tool; there is no general winner. Mixing needs more computing because the whole pool is trained again. Fine-tuning is quick. Both must be tested on your own scans that were not used for adapting."
+},
+{
+"q": "How does your microbleed detector use both ways?",
+"a": "It has two stages. The first stage, a U-Net that finds candidates, is fine-tuned from the model trained on the public data. The second stage, a classifier that rejects mimics, is retrained on public and local candidates together, so nothing learned from the public data is overwritten there."
+},
+{
+"q": "How many of my own scans do I need to mark?",
+"a": "Fewer for fine-tuning than for training from scratch, but how many depends on your data. Measure it with a learning curve on your own scans; the next slide shows how. In one study on white matter lesions, two scans of the new scanner already helped a lot."
+},
+{
+"q": "Can I adapt a tool without marking anything?",
+"a": "Partly. Some tools have settings you can choose on your own data, such as the threshold. With scans that you know contain no lesions, you can set the threshold so that the tool makes few false alarms. To check how many lesions it finds, you need marked scans."
+}
+],
+"finetune": [
+{
+"q": "What are the weights of a network?",
+"a": "The numbers inside the network that are learned during training: how strongly each part reacts to each pattern. A trained model is just the network plus its weights. Fine-tuning changes these numbers a little; training from scratch starts with random numbers."
+},
+{
+"q": "What is the learning rate?",
+"a": "How big each step is when the weights are changed during training. A small learning rate in fine-tuning means small steps, so the model keeps what it already knows and only adjusts it to your scans."
+},
+{
+"q": "Why does starting from a trained model help?",
+"a": "The model already knows what a microbleed looks like in general: a small dark round dot. It only needs to learn how your scanner shows it, for example another contrast or more noise. That needs far fewer examples than learning everything from random weights."
+},
+{
+"q": "Why is choosing a new threshold the cheapest step?",
+"a": "The network gives each voxel a probability; the threshold decides what counts as a detection. On a new scanner, the probabilities can be higher or lower overall. Moving the threshold costs no training, and scans without microbleeds are enough to set it so that false alarms stay low."
+},
+{
+"q": "What are normalisation layers?",
+"a": "Layers inside the network that rescale the values passing through, so that the next layer gets numbers in a familiar range. Adapting only them, and leaving the rest fixed, can absorb a change in brightness and contrast with very few scans."
+},
+{
+"q": "Why test on scans that were not used for training?",
+"a": "A model always looks good on the scans it was adapted on; it may simply have learned them. Only scans it has never seen tell you how it will do on the next patient. Keep a few marked scans aside for testing."
+},
+{
+"q": "What is a learning curve?",
+"a": "A plot of how good the model is against how many marked scans it was trained with. Train with 3, 5, 10, 20 scans, and each time test on the rest. Where the curve stops rising, more marking does not pay."
+},
+{
+"q": "Why does the slide show question marks instead of a curve?",
+"a": "Because the curve depends on your data, your scanner and your tool. Any curve we drew would look like data from somewhere. You have to measure your own."
+},
+{
+"q": "Which scans should I mark for fine-tuning?",
+"a": "Typical patients from your own scanner, with a usual number of lesions, are the best use of your time. Scans without any lesions teach the model nothing about what to find, and a few patients with very many lesions cost a lot of marking."
+},
+{
+"q": "Is fine-tuning the same as training from scratch with fewer scans?",
+"a": "No. Training from scratch starts from random weights and must learn everything from your scans, so it needs many more of them. Fine-tuning starts from a model that already works on other data. With many marked scans the two can end up similar."
+}
+],
 "wrap": [
 {
 "q": "What does 'checked' mean in practice? Must I look at every scan?",
@@ -2018,44 +2144,44 @@ window.QA = {
 ],
 "exam": [
 {
-"q": "Do I have to know the formulas by heart?",
-"a": "Plan for it: the slide says compute, and there are only three. Dice is 2 TP divided by 2 TP plus FP plus FN. Precision is TP divided by TP plus FP. Recall is TP divided by TP plus FN. F1 combines precision and recall."
+"q": "Which tool was trained on which data?",
+"a": "FreeSurfer's atlas: about 40 hand-labelled brains. SynthSeg: label maps of about 1,000 brains, young and old, with simulated white-matter-like lesions. CAT12: an average of healthy adults (IXI). BIANCA: your own marked patients. The WMH challenge U-Nets: 60 patients from 3 scanners. VALDO microbleed models: 72 older people."
 },
 {
-"q": "Can you show one Dice calculation step by step?",
-"a": "Take TP 8, FP 2, FN 2. Two times TP is 16. Below the line: 16 plus 2 plus 2 is 20. 16 divided by 20 is 0.80. Count first, then put the numbers in. This is the check question on this slide."
+"q": "Why fill or mask a stroke lesion?",
+"a": "None of these tools was trained on brains with large stroke lesions. A lesion looks like nothing the tool knows, so it labels it wrongly and disturbs the regions next to it. Filling paints it with normal-looking tissue; masking leaves it out of the measurement."
 },
 {
-"q": "What does 'read a QC score' mean? What could I be asked?",
-"a": "You see quality scores for the regions of one segmentation, each between 0 and 1. You say which regions pass and which need a second look. For SynthSeg the limit from the paper is 0.65. In the lecture: 0.722 passed, 0.636 failed. Failed means: open the scan and look."
+"q": "What do I do with a new scanner?",
+"a": "Mark a few of your own scans and score the tool on them. If the score is close to the published one, use it and keep checking by eye. If it drops, mix your marked scans into the training, or fine-tune the model if you only have its weights."
 },
 {
-"q": "And one example for precision, recall and F1?",
-"a": "Take TP 3, FP 3, FN 0. Precision: 3 of 6 marks are real, 0.5. Recall: 3 of 3 microbleeds found, 1.0. F1: two times 0.5 times 1.0 is 1.0, divided by 1.5, gives 0.67. All were found, but half of the marks were false alarms."
+"q": "Does SynthSeg need fine-tuning on a new scanner?",
+"a": "It was designed not to: it was trained on synthetic images with random contrast and resolution, so a new scanner is just one more variation. You still check the result with the QC scores and by eye."
 },
 {
-"q": "Is Dice the same as F1?",
-"a": "The formula is the same: 2 TP divided by 2 TP plus FP plus FN. The difference is what you count. For Dice, TP, FP and FN are voxels. For F1 in this lecture they are objects, the clusters. So one result can have a high Dice and still a low F1."
+"q": "Is BIANCA fine-tuned?",
+"a": "No. BIANCA has no pretrained model: you train it on your own hand-marked scans. To adapt it, you add marked scans from the new scanner to its training set and train again, which takes minutes."
 },
 {
-"q": "How do I count clusters by hand?",
-"a": "Take one marked voxel and collect every marked voxel that touches it by a face, an edge or a corner, then the neighbours of those, until nothing is added. That is one cluster. Start again with a voxel that is still free. On a single flat slice, touching means the 8 voxels around."
+"q": "Why check with my own eyes if there are QC scores?",
+"a": "Scores catch many failures, but not all: the stroke scan passed every SynthSeg QC value, yet the labels near the lesion were wrong. A quick look at each scan finds what the numbers miss."
 },
 {
-"q": "Which numbers from today are worth remembering?",
-"a": "The slide lists skills, not numbers. A few anchors still help: a SynthSeg quality score below 0.65 means failed. A Dice of about 0.8 was the level of a second expert. The best microbleed program had an F1 of about 0.7. And more than 4 microbleeds is the limit in the drug recommendations."
+"q": "Why are small lesions always the problem?",
+"a": "A small lesion has few voxels, little contrast and many lookalikes. One voxel of disagreement costs a small lesion much of its Dice. BIANCA found 24 % of lesions under 10 voxels, our microbleed detector 4 of 10 microbleeds under 2 mm."
 },
 {
-"q": "How well do I need to know how the tools work inside?",
-"a": "The three skills on the slide come first. For the tools, aim for one sentence each. FreeSurfer: the cortex as a folded sheet. SynthSeg: a network trained on artificial images. BIANCA: the nearest stored examples vote. U-Net: shrink for context, enlarge for detail."
+"q": "Why several raters?",
+"a": "Even experts disagree: a second expert reached a Dice of only about 0.77 to 0.79 against the reference. With several raters you can see where the reference itself is uncertain, and a program cannot be expected to beat that agreement."
 },
 {
-"q": "How can I practise these three skills?",
-"a": "With the same material as today. Each of the three skills has a check question on its slide, the 'Try it' slides let you play with clusters, Dice and F1, and the lesion and microbleed exercises give you your own Dice and F1. You can repeat all of them."
+"q": "Which numbers are worth remembering?",
+"a": "A SynthSeg QC score below 0.65 means failed. A Dice of about 0.8 is the level of a second expert. The best microbleed program reached an F1 of about 0.7. More than 4 microbleeds is the limit in the drug recommendations."
 },
 {
-"q": "What if there are no hits at all, TP is zero?",
-"a": "If there are real microbleeds but no hit, Dice and F1 are 0. Precision without any mark would be zero divided by zero, which is not defined. If there is nothing to find and nothing is marked, the formula has no answer either; then say in words that program and reference agree."
+"q": "What is the one rule behind all five points?",
+"a": "Never trust a segmentation you have not checked: know what the tool learned from, test it on your own scans, look at the result, and expect trouble with small lesions."
 }
 ],
 "more": [

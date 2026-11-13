@@ -889,6 +889,9 @@ function renderSummary(){
     ...["Size class", "In the reference", "Found by you", "Recall"].map(h => el("th", {text: h})))), tb2)));
   panel.append(el("p", {class: "note", text: "Size = diameter of a sphere with the same volume as the microbleed, d = (6·V/π)^(1/3)."}));
   if (CLINICAL_NOTE !== null) panel.append(el("div", {id: "clinical"}, el("b", {text: "Clinical note: "}), String(CLINICAL_NOTE)));
+  panel.append(el("p", {class: "note", id: "trainerLink"}, el("b", {text: "More practice at home: "}),
+    "the full microbleed trainer, 57 public VALDO scans, F1 against the expert and against a 3D U-Net, works on phones: ",
+    el("a", {href: "https://mendeltem.github.io/cmb_detection_trainer/", target: "_blank", rel: "noopener", text: "mendeltem.github.io/cmb_detection_trainer"})));
   panel.append(el("div", {class: "row"},
     ...MAN.cases.map(c => el("button", {onclick: () => openTab(c.id)}, "Look at " + c.label.toLowerCase() + " again")),
     el("button", {onclick: askStartOver}, "Start over")));

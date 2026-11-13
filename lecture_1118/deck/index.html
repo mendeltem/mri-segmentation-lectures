@@ -99,13 +99,20 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <input type="checkbox" id="ptsmode" hidden>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button><button id="brestart" title="back to slide 1, lecture clock and exercise timers to 0">⟲ Restart</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v32 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck v33 (13.11.) · 53 slides<span id="clipsN"></span></span><span id="privTag" hidden style="color:var(--r);font-weight:600" title="the internal layer deck/private is loaded: some slides show internal clinical data (never online)"> · internal data loaded</span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
 <script src="qa.js"></script>
 <script src="steps.js"></script>
 <script src="step_audio.js"></script>
+<script>/* 13.11.2026: internal layer (deck/private, never published). Loaded only outside github.io; when the folder is
+   missing the deck stays public. It replaces clip, voice, points, step texts and notes of single slides. */
+if(!/\.github\.io$/i.test(location.hostname))document.write('<script src="private/private.js"><\/script>')</script>
+<script>(function(){const P=window.PRIVATE;if(!P||!P.slides)return;
+ for(const s of window.SLIDES){const o=P.slides[s.key];if(o)Object.assign(s,o)}
+ Object.assign(window.MEDIA,P.media||{});if(window.STEPS)Object.assign(window.STEPS,P.steps||{});if(window.STEP_AUDIO)Object.assign(window.STEP_AUDIO,P.step_audio||{});
+ window.PRIVATE_ON=true;const tag=document.getElementById("privTag");if(tag){tag.hidden=false;if(P.label)tag.textContent=" · "+P.label}})()</script>
 <script src="data/try_cutoff.js"></script><script src="data/try_qc.js"></script><script src="data/try_f1.js"></script>
 <script src="interactive.js"></script>
 <script>
