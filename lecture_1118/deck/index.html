@@ -97,7 +97,7 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label title="clicker and arrow keys show the points of a slide one by one, then go to the next slide"><input type="checkbox" id="ptsmode"> Point by point</label>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v20 (13.11.) · 45 slides<span id="clipsN"></span></span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck v21 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -185,7 +185,10 @@ let ptSlide=-1;
 function pointMode(){return ptsmode.checked&&!PRESENTER}
 function ptTimes(){const e=el();return e?[...e.querySelectorAll(".pt[data-t]")].map(p=>+p.dataset.t):[]}
 function curPoint(){const ts=ptTimes();let k=-1;ts.forEach((t,i)=>{if(t<=clock+1e-3)k=i});return{k,n:ts.length}}
-function showPoint(t){stopAll();clock=t;render(t);if(hasClip[cur]){const v=el().querySelector("video");v.pause();try{v.currentTime=t}catch(e){}}send()}
+// a clip draws a point only after its time mark; show the finished state of this point: the frame just before the
+// next point starts (last point: the end of the clip), so projector and presenter view show the same point
+function showPoint(t){stopAll();clock=t;render(t);if(hasClip[cur]){const v=el().querySelector("video"),ts=ptTimes(),k=ts.findIndex(x=>x>t+1e-3);
+ const end=(v.duration||M[S[cur].key].seconds)-0.05,vt=k>=0?Math.min(ts[k]-0.12,end):end;v.pause();try{v.currentTime=Math.max(0,vt)}catch(e){}}send()}
 function stepPoint(d){const s=S[cur];
  if(!pointMode()||s.exercise||s.kind==="try"){step(d);return}
  const ts=ptTimes();let k=curPoint().k;
