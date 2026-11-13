@@ -1193,7 +1193,8 @@ function renderSummary(){
   const refLines = referenceLines();
   $("summary").innerHTML =
     `<div class="sumgrid"><div class="card">${left}` +
-    `<div class="stack" style="margin-top:12px"><button type="button" data-act="back">Back to the cases</button></div></div>` +
+    `<div class="stack" style="margin-top:12px"><button type="button" data-act="back">Back to the cases</button></div>` +
+    `<p class="hint" id="trainerLink" style="margin-top:12px"><b>More practice at home:</b> the full WMH trainer, 110 public challenge scans, Dice against the expert and against BIANCA, works on phones: <a href="https://mendeltem.github.io/wmh_trainer/" target="_blank" rel="noopener">mendeltem.github.io/wmh_trainer</a></p>` + `</div>` +
     `<div class="card"><h3>Your three cases (${mode === "home" ? "all 8 slices" : "class mode, 3 slices"} per case)</h3>` +
     `<div class="bars">${bars}</div>` +
     `<p class="barkey"><i style="width:22px;height:10px;background:var(--accent);border-radius:5px"></i>your Dice ` +
