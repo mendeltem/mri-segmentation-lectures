@@ -97,7 +97,7 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label title="clicker and arrow keys show the points of a slide one by one, then go to the next slide"><input type="checkbox" id="ptsmode"> Point by point</label>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v21 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck v22 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -189,7 +189,8 @@ function curPoint(){const ts=ptTimes();let k=-1;ts.forEach((t,i)=>{if(t<=clock+1
 // next point starts (last point: the end of the clip), so projector and presenter view show the same point
 function showPoint(t){stopAll();clock=t;render(t);if(hasClip[cur]){const v=el().querySelector("video"),ts=ptTimes(),k=ts.findIndex(x=>x>t+1e-3);
  const end=(v.duration||M[S[cur].key].seconds)-0.05,vt=k>=0?Math.min(ts[k]-0.12,end):end;v.pause();try{v.currentTime=Math.max(0,vt)}catch(e){}}send()}
-function stepPoint(d){const s=S[cur];
+// the lecture clock starts by itself with the first click forward (clicker, arrow key or Next in the presenter view)
+function stepPoint(d){if(d>0&&!t0){t0=Date.now();send()}const s=S[cur];
  if(!pointMode()||s.exercise||s.kind==="try"){step(d);return}
  const ts=ptTimes();let k=curPoint().k;
  if(d>0){if(k>=ts.length-1){step(1);return}k++}
@@ -334,7 +335,7 @@ function presenterView(){
    <button data-c="voice" id="pvoice">Voice</button><span id="pskip" hidden></span></div>
    <div style="margin-top:10px"><select id="pjump"></select></div></div>
   <div class="card"><h3>Next</h3><h2 id="nt" style="font-size:24px"></h2><img id="nimg" alt=""><ul class="pts" id="npts"></ul></div>
-  <div class="card" style="grid-column:1/3;font-size:15px;color:var(--dim)">Keys work here too: → next point (after the last point: next slide), ← back, Space or P pause / play, S exercise timer, V voice.
+  <div class="card" style="grid-column:1/3;font-size:15px;color:var(--dim)">The clock starts with the first click forward ("Start clock" restarts it). Keys work here too: → next point (after the last point: next slide), ← back, Space or P pause / play, S exercise timer, V voice.
    Put the other window on the projector and press F there for fullscreen.</div></div>`);
  const op=window.opener;const cmd=(d,x)=>{if(op&&!op.closed)op.postMessage(Object.assign({deck:"cmd",do:d},x||{}),"*")};
  if(!op){$("#pnotes").textContent="Open this view from the slides with the N key, so the two windows are linked."}
