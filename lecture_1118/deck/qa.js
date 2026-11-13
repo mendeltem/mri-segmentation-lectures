@@ -252,48 +252,6 @@ window.QA = {
 "a": "For this slide, keep the idea: inflate, match the folds, give names. And keep the number: 34 regions per hemisphere. The atlas quiz after this part trains the names of a few important structures."
 }
 ],
-"fs_steps": [
-{
-"q": "What happens to the scan before the skull is removed?",
-"a": "It is resampled to a standard grid: 256 voxels in each direction, each 1 mm wide. And the brightness is evened out across the image, so that white matter has about the same grey value everywhere."
-},
-{
-"q": "Why must the skull be removed?",
-"a": "Skull, skin and the brain membranes have grey values that overlap with brain tissue. If pieces are left, later steps can take them for brain. A classic error: the pial surface is pulled outwards into a leftover piece of membrane."
-},
-{
-"q": "What is a mesh?",
-"a": "A surface made of many small triangles. The corner points are called vertices. Each vertex has a position in space and can carry a number, for example the thickness at that place."
-},
-{
-"q": "What does 'holes are repaired' mean?",
-"a": "The cortex of one hemisphere is one closed sheet, like the skin of a ball. Noise can create small holes or bridges in the first surface, which a real cortex cannot have. FreeSurfer finds these defects and repairs them. This is called topology correction."
-},
-{
-"q": "Why is the white surface built first?",
-"a": "On a T1 scan the border between white and grey matter is the clearest one. The outer border, towards fluid and membranes, is harder to find. So FreeSurfer starts at the safe border and grows outwards from it."
-},
-{
-"q": "What happens if an early step fails?",
-"a": "All later steps inherit the mistake, because each one works on the result of the step before. You repair the early result and run the later steps again. You do not start a different chain."
-},
-{
-"q": "Can errors be corrected by hand?",
-"a": "Yes. The documentation describes manual edits, for example editing the white matter volume when a lesion makes the white surface wrong. After the edit, the following steps are run again."
-},
-{
-"q": "Where are the deep structures, such as the hippocampus?",
-"a": "They come from a second branch of the same command. There, every voxel gets one of about 40 labels with the help of an atlas built from hand-labelled brains. The surfaces are only for the cortex."
-},
-{
-"q": "Why does all this take hours?",
-"a": "There are many steps, and the surfaces are fitted and repaired point by point for both hemispheres. The documentation gives run times from about 3 hours (version 6, parallel, new computer) to 20 to 40 hours on old pages."
-},
-{
-"q": "Do I have to start each step myself?",
-"a": "No. One command, recon-all, runs the whole chain in a fixed order. But you can run parts of it again, for example after a manual correction."
-}
-],
 "fs_run": [
 {
 "q": "How many hours does one scan take?",
@@ -1050,18 +1008,10 @@ window.QA = {
 "a": "For this patient it is close: over the whole scan, 0.95 was the best of the values we tried. But the Dice there is only 0.70, not 0.82, because this slice has large, clear lesions. One slice is not enough to choose a cut-off."
 }
 ],
-"bianca_settings": [
+"bianca_matters": [
 {
-"q": "What do the numbers on the bars mean, for example +0.03?",
-"a": "They are changes of the Dice score. Dice measures how well BIANCA's mask matches the expert mask, from 0 to 1; we explain it in a few slides. Plus 0.03 means: with this setting switched on, the mean Dice was 0.03 higher. All four numbers come from our own runs on public scans."
-},
-{
-"q": "The lesions are seen on FLAIR. Why does adding T1 help at all?",
-"a": "With FLAIR alone, a voxel is one number. A lesion and another bright tissue can have the same number. T1 gives each voxel a second number, and the two tissues often differ there. So the points separate a little better. The gain was small: 0.03."
-},
-{
-"q": "Why store more healthy examples than lesion examples?",
-"a": "Healthy tissue is many things: white matter, cortex, deep nuclei, borders to the fluid. Lesions look much more alike. To cover all healthy kinds you need more examples. With 10,000 instead of 2,000 healthy points per scan, Dice rose by 0.04. The original paper chose the same numbers."
+"q": "What do the numbers on the bars mean, for example +0.14?",
+"a": "They are changes of the Dice score. Dice measures how well BIANCA's mask matches the expert mask, from 0 to 1; it comes a few slides later. Plus 0.14 means: with position switched on, the mean Dice was 0.14 higher. All numbers come from our own runs on public scans."
 },
 {
 "q": "How does BIANCA know where a voxel lies in the brain?",
@@ -1076,38 +1026,8 @@ window.QA = {
 "a": "That is the risk. A lesion in a place where the training scans had none finds few lesion neighbours and gets a low vote. Position is one feature among several, so a very bright lesion can still win. But check patients with unusual patterns by eye."
 },
 {
-"q": "What if the alignment to the standard brain goes wrong, for example with very wide ventricles?",
-"a": "Then the position numbers are wrong, and the strongest feature misleads. BIANCA's alignment only moves, turns, scales and shears the whole brain; it cannot follow each ventricle. In old patients with brain shrinkage, lay the aligned scan over the standard brain and look at the ventricles before you trust the result."
-},
-{
-"q": "What is a patch, and why did it make the result worse?",
-"a": "A patch is the 3 by 3 neighbourhood of a voxel within the slice. BIANCA can store its average brightness as an extra number. Averaging calms noise, but it also washes out a lesion that is only a few voxels wide. In our runs Dice fell by 0.03."
-},
-{
-"q": "Can I add the four numbers up to get the total gain?",
-"a": "No. Each number is the change from one setting alone, measured against a fixed setup. Settings overlap in what they fix, so together they give less than the sum. The size of an effect also depends on the data: for position we measured between 0.11 and 0.14 at different slice thicknesses."
-},
-{
-"q": "Are these the best settings for every study?",
-"a": "They are the best for our runs on one public set of scans. The original paper also preferred FLAIR plus T1 and 10,000 healthy points, which supports them. But patches, for example, might help on noisier scans. Take our numbers as a starting point and test on your own data."
-}
-],
-"bianca_after": [
-{
 "q": "On which scans should I choose the cut-off?",
 "a": "On scans with expert masks that BIANCA did not learn from. And never on the scans you use for the final score. If you pick the cut-off on the test scans, the reported Dice is too good, because the cut-off has been fitted to exactly those scans."
-},
-{
-"q": "What is a white matter mask, and where does it come from?",
-"a": "It is a map that says where white matter is. Every lesion mark outside it is deleted. The BIANCA tools build it from two parts: a map in the standard brain that excludes the cortex and other grey areas, and the ventricles from a tissue segmentation of the patient's own scan."
-},
-{
-"q": "How much did the white matter mask help?",
-"a": "In one of our setups, on the 110 public test scans, the mean Dice rose from 0.586 to 0.665, so by 0.08. Per scan, the mask removed 3.23 ml of marks. Only 0.46 ml of that was true lesion by the expert mask. Most of what it removes is false."
-},
-{
-"q": "Does the white matter mask ever delete a real lesion?",
-"a": "Yes, a little: 0.46 ml per scan in our runs. Lesions close to the cortex or right at the ventricle wall are at risk, because the mask is cut generously there. If such lesions matter for your question, look at these border zones yourself."
 },
 {
 "q": "The brain is the same. Why does a new scanner disturb BIANCA?",
@@ -1122,16 +1042,12 @@ window.QA = {
 "a": "A voxel shows the average of all tissue inside it. This is called partial volume. A small lesion fills a thin voxel well, but only part of a thick one. The rest is healthy tissue, so the voxel is only a little brighter than normal and gets too few lesion votes."
 },
 {
-"q": "How do you know that 5 mm slices cost 0.11? Did you scan people twice?",
-"a": "No, it is a simulation. We took scans with 3 mm slices and averaged them to 5 mm slices by computer. Then we ran BIANCA on both. The loss was between 0.09 and 0.11 in three models, and all 15 of 15 test scans got worse. Real thick scans may behave a little differently."
-},
-{
 "q": "If my study has thick slices, does it help to train BIANCA on thick slices too?",
 "a": "Less than you would hope. In our simulation, a model trained on 5 mm slices scored 0.589 on 5 mm scans; the model trained on 3 mm slices scored 0.595. The small lesions are missing in the picture itself. Training cannot bring back what the scan did not record."
 },
 {
-"q": "Should I also delete very small marks as noise?",
-"a": "We tried it: marks of fewer than 3 connected voxels were removed. The mean Dice did not change; it stayed at 0.665 in that setup. So it does no harm to the score, but it brings nothing either. And be careful with a higher limit: real small lesions are only a few voxels large."
+"q": "Are these the best settings for every study?",
+"a": "They are the best for our runs on one public set of scans. The original paper also preferred FLAIR plus T1 and 10,000 healthy points, which supports them. But patches, for example, might help on noisier scans. Take our numbers as a starting point and test on your own data."
 }
 ],
 "bianca_small": [
@@ -1384,48 +1300,6 @@ window.QA = {
 {
 "q": "Does the voxel size of the scan play a role in this?",
 "a": "Yes. Small is always meant relative to the voxel. The same lesion covers many voxels in a fine scan and only a few in a coarse scan with thick slices. So on coarse scans more lesions fall into the range where one voxel decides the score."
-}
-],
-"try_dice": [
-{
-"q": "What am I supposed to do here?",
-"a": "Press an arrow once. The program's mask, the dashed blue frames, moves by one voxel. The expert's mask, the solid frames, stays. Compare the two Dice numbers on the right, then press again. The demo button does three steps to the right for you and then goes back."
-},
-{
-"q": "What do the colours in the grid mean?",
-"a": "Orange voxels are hits: expert and program both marked them. Yellow voxels are extra: only the program marked them. Red voxels are missed: only the expert marked them. The bar in each card shows the same three parts as shares."
-},
-{
-"q": "Why is the small lesion at zero after two steps?",
-"a": "It is only two voxels wide. Moved by two voxels, the program's mask lies beside it and no voxel overlaps: 0 hits, so Dice is 0. The big lesion is ten voxels wide. After the same two steps, 80 of its 100 voxels still overlap: Dice 0.80."
-},
-{
-"q": "Why are 'extra' and 'missed' always the same number?",
-"a": "Because here the program's mask is an exact copy of the expert's mask, only moved. Both have the same size. For every voxel that slides out on one side and is missed, one new voxel on the other side is extra. In real data the two numbers differ."
-},
-{
-"q": "The program's mask lies right next to the small lesion. Why does it score zero, as if it had found nothing?",
-"a": "Dice knows only overlap, not distance. A mask one voxel beside the lesion and no mask at all get the same score, zero. That is one reason why small things are better counted as objects: a mark that is near enough counts as found. Part three does this."
-},
-{
-"q": "What happens if I move the mask diagonally, one step right and one step down?",
-"a": "Both lesions lose on two sides. The big one keeps 9 by 9, so 81 of 100 voxels: Dice 0.81. The small one keeps 1 of 4 voxels: Dice 0.25. The widget calls this 'shifted by 2 voxels', because it adds the steps sideways and the steps down."
-},
-{
-"q": "The widget shows two numbers. What is the Dice of the whole picture after one step?",
-"a": "Not the average of 0.90 and 0.50. Dice counts all voxels together: 92 hits, 12 extra, 12 missed. Two times 92 is 184, divided by 208, gives 0.88. The big lesion decides the number. The trouble with the small one is almost hidden."
-},
-{
-"q": "How far must I move the big lesion until it is as bad as the small one after one step?",
-"a": "Five voxels. Then 50 of its 100 voxels overlap and Dice is 0.50. The small lesion is there after one voxel. In both cases the mask has moved by half the width of the lesion. What counts is the shift compared with the size."
-},
-{
-"q": "Are lesions of only four voxels realistic?",
-"a": "Yes. In the public test scans a voxel is about 1 by 1 millimetre within the slice and 3 millimetres thick. Four voxels are a spot of about 2 millimetres on one slice. Of 8,980 expert lesions in the 110 test scans, 3,470 were smaller than 10 voxels."
-},
-{
-"q": "Does the direction of the shift matter?",
-"a": "Not here. Both lesions are squares, so left, right, up and down cost the same. Real lesions are not squares. A long, thin lesion loses little when the mask slides along it, and a lot when it slides across it."
 }
 ],
 "ex2": [
@@ -1762,48 +1636,6 @@ window.QA = {
 {
 "q": "Can a program have a high precision and still be poor?",
 "a": "Yes. A careful program that marks only the single clearest microbleed here has a precision of 1.0, but it finds 1 of 5, a recall of 0.2. Its F1 is only 0.33. F1 is pulled towards the weaker of the two values, so both must be good."
-}
-],
-"try_f1": [
-{
-"q": "What am I supposed to do here?",
-"a": "Look for small dark dots that you think are microbleeds and click on each one. A yellow ring appears. Click on a ring again to remove it. When you are done, press 'show answer' and compare your marks with the expert's."
-},
-{
-"q": "Why do all the numbers show a question mark?",
-"a": "They stay hidden until you press 'show answer'. So you have to decide without help, like a reader in the clinic. After that, the counts, precision, recall and F1 are shown, and they change with every further click."
-},
-{
-"q": "What do the rings mean after 'show answer'?",
-"a": "Your rings turn green for a hit and red for a false alarm. The dashed circles are the expert's microbleeds: green if you found it, orange if you missed it. An orange circle is a false negative, a miss."
-},
-{
-"q": "How many microbleeds are on this picture?",
-"a": "Try first, then press 'show answer'. The expert marked three on this slice, and two of them lie close together. So recall can only be 0, 0.33, 0.67 or 1 here."
-},
-{
-"q": "I clicked just beside the dot. Why is it a false alarm?",
-"a": "A mark counts as a hit only if it lies within a small fixed distance of the centre of an expert's microbleed, about the size of the dashed circle. Outside, it is a false alarm, and the microbleed also counts as missed. One careless click gives two errors."
-},
-{
-"q": "I clicked a dark dot that looks just like the others. Why is it not a microbleed?",
-"a": "On one slice you cannot always tell. A vessel that crosses the slice is also a small dark dot. The expert could scroll through the slices above and below: a microbleed is a small ball, a vessel goes on like a tube. A later slide shows this."
-},
-{
-"q": "One wrong click and my F1 dropped a lot. Why is it so jumpy?",
-"a": "Because there are only three microbleeds. All three found and one false alarm: precision 0.75, recall 1, F1 0.86. Two found and no false alarm: precision 1, recall 0.67, F1 0.80. With so few objects, every click moves the score in big steps."
-},
-{
-"q": "I put two rings on the same dot. Why is one of them red?",
-"a": "Each microbleed of the expert can be matched only once. The first ring takes it and is a hit. The second ring finds no free microbleed and counts as a false alarm. The public benchmark for microbleed programs used the same idea."
-},
-{
-"q": "What if I simply click on every dark dot I can see?",
-"a": "Then recall is high, because you miss nothing. But every wrong ring is a false alarm and pulls precision down. Three hits with seven false alarms give precision 0.3, recall 1 and F1 0.46. F1 does not reward clicking a lot."
-},
-{
-"q": "My F1 is 0.8. Am I better than the best program, with about 0.68?",
-"a": "That comparison is not fair. You had one slice with three microbleeds, and you knew that something was there. The programs searched whole scans, and 0.68 is the middle value over 147 test scans. On a quarter of those scans the best team stayed below about 0.37."
 }
 ],
 "count4": [

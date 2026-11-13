@@ -26,10 +26,11 @@
 const SECONDS_PER_QUESTION = 40;
 
 const QUIZ = [
-  { atlas:'aal', region:99, group:[91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116], view:'sagittal', answer:'Cerebellum',
-    options:['Cerebral cortex', 'Cerebellum', 'Brain stem', 'Thalamus'] },
-  { atlas:'ho',  region:63, view:'sagittal', answer:'Brain stem',
-    options:['Thalamus', 'Cerebellum', 'Brain stem', 'Corpus callosum'] },
+  // 13.11.2026 (shorter lecture, 7 questions): cerebellum, brain stem and nucleus accumbens set aside below, not deleted
+  //   { atlas:'aal', region:99, group:[91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116], view:'sagittal', answer:'Cerebellum',
+  //     options:['Cerebral cortex', 'Cerebellum', 'Brain stem', 'Thalamus'] },
+  //   { atlas:'ho',  region:63, view:'sagittal', answer:'Brain stem',
+  //     options:['Thalamus', 'Cerebellum', 'Brain stem', 'Corpus callosum'] },
   { atlas:'ho',  region:49, view:'axial',    answer:'Thalamus',
     options:['Thalamus', 'Caudate', 'Putamen', 'Lateral ventricle'] },
   { atlas:'ho',  region:51, view:'sagittal', answer:'Caudate',
@@ -44,8 +45,8 @@ const QUIZ = [
     options:['Putamen', 'Thalamus', 'Caudate', 'Pallidum (globus pallidus)'] },
   { atlas:'ho',  region:59, view:'coronal',  answer:'Amygdala',
     options:['Hippocampus', 'Amygdala', 'Putamen', 'Nucleus accumbens'] },
-  { atlas:'ho',  region:61, view:'coronal',  answer:'Nucleus accumbens',
-    options:['Caudate', 'Pallidum (globus pallidus)', 'Nucleus accumbens', 'Putamen'] },
+  //   { atlas:'ho',  region:61, view:'coronal',  answer:'Nucleus accumbens',
+  //     options:['Caudate', 'Pallidum (globus pallidus)', 'Nucleus accumbens', 'Putamen'] },
 ];
 /* Link on the end screen ("Practise more"). */
 const TRAINER_URL = 'https://mendeltem.github.io/mrt-atlas-trainer/';
@@ -268,7 +269,7 @@ const TRAINER_URL = 'https://mendeltem.github.io/mrt-atlas-trainer/';
     <div id="startPanel" class="hidden">
       <div class="card">
         <div class="kicker">Atlas quiz</div>
-        <div class="startLine" id="startCount">10 questions.</div>
+        <div class="startLine" id="startCount">7 questions.</div>
         <div class="startLine q">Which structure is coloured?</div>
         <div class="hint hidden" id="startTime"></div>
         <button class="btn primary" id="startBtn" type="button">Start</button>
