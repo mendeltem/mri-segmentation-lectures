@@ -1145,6 +1145,11 @@ window.SLIDES = [
     "label": "Griffanti et al. 2016, NeuroImage (BIANCA)",
     "url": "https://doi.org/10.1016/j.neuroimage.2016.07.018",
     "about": "BIANCA: k-nearest-neighbour WMH segmentation in FSL; Dice 0.76 in one cohort, 0.52 in another."
+   },
+   {
+    "label": "WMH trainer: paint lesions on 110 challenge scans, Dice against the expert and BIANCA",
+    "url": "https://mendeltem.github.io/wmh_trainer/",
+    "about": "Practice at home: paint the WMH on 6 FLAIR slices of each of the 110 public WMH Challenge test scans, then see your Dice against the expert and against BIANCA. Works on phones."
    }
   ],
   "optional": false,
@@ -1565,6 +1570,11 @@ window.SLIDES = [
     "label": "MRT atlas trainer: more practice after the atlas quiz",
     "url": "https://mendeltem.github.io/mrt-atlas-trainer/",
     "about": "The full atlas trainer for home: explore, quiz and study modes with many more brain regions (interface in German)."
+   },
+   {
+    "label": "WMH trainer: paint lesions on 110 challenge scans, Dice against the expert and BIANCA",
+    "url": "https://mendeltem.github.io/wmh_trainer/",
+    "about": "Practice at home: paint the WMH on 6 FLAIR slices of each of the 110 public WMH Challenge test scans, then see your Dice against the expert and against BIANCA. Works on phones."
    }
   ],
   "optional": false,

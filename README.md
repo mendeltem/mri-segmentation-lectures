@@ -12,6 +12,7 @@ clips and voice, interactive slides, a presenter view (key N) and the sources pe
 | Exercise 1 | Atlas quiz: which structure is coloured? | [atlas-quiz](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/exercises/atlas-quiz/) |
 | Exercise 2 | Paint white matter lesions and get your Dice score | [wmh-dice](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/exercises/wmh-dice/) |
 | Exercise 3 | Click the microbleeds and get your F1 score | [cmb-f1](https://mendeltem.github.io/mri-segmentation-lectures/lecture_1118/exercises/cmb-f1/) |
+| More practice | WMH trainer: paint lesions on 110 public challenge scans, Dice against the expert and BIANCA | [wmh_trainer](https://mendeltem.github.io/wmh_trainer/) |
 
 ## Data and licence
 
