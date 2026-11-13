@@ -97,7 +97,7 @@ Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops
 <label title="clicker and arrow keys show the points of a slide one by one, then go to the next slide"><input type="checkbox" id="ptsmode"> Point by point</label>
 <input type="checkbox" id="skip" hidden>
 <input type="number" id="qsec" value="30" hidden><span id="bq" hidden></span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="bn">N presenter view</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v26 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
+<span class="grow"></span><span style="color:var(--dim)">deck v27 (13.11.) · 50 slides<span id="clipsN"></span></span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
@@ -110,7 +110,7 @@ const $=s=>document.querySelector(s), S=window.SLIDES, M=window.MEDIA, PAGES="ht
 const PRESENTER=location.hash==="#presenter";
 S.forEach(s=>{s.check=null;s.key_q=false});   // 10.11.2026, lecturer: no check questions on the slides (kept in slides_data.py)
 const store={get(k,d){try{const v=localStorage.getItem("deck1118."+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("deck1118."+k,JSON.stringify(v))}catch(e){}}};
-const auto=$("#auto"),voice=$("#voice"),adv=$("#adv"),qsec=$("#qsec"),skip=$("#skip"),ptsmode=$("#ptsmode");skip.checked=false;ptsmode.checked=store.get("ptsmode",false);   // students: off (normal autoplay); the lecturer ticks it once
+const auto=$("#auto"),voice=$("#voice"),adv=$("#adv"),qsec=$("#qsec"),skip=$("#skip"),ptsmode=$("#ptsmode");skip.checked=false;ptsmode.checked=store.get("ptsmode",true);   // default: one click = one point with its piece of voice (untick for autoplay)
 auto.checked=store.get("auto",true);voice.checked=store.get("voice",true);adv.checked=store.get("adv",false);qsec.value=store.get("qsec",30);
 const audio=new Audio();audio.preload="auto";
 let cur=0,playing=false,clock=0,last=0,raf=0,hasClip={};
