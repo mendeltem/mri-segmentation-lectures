@@ -23,7 +23,7 @@ window.SLIDES = [
   "optional": false,
   "key_q": false,
   "notes": "Three tasks today. Grey matter: how big is each brain region? White matter lesions: how much is there? And micro-bleeds: how many are there? And one lesson at the end: new data, new scanner.",
-  "background": "CUT LIST if you are behind (lecture clock in the presenter view; minute marks in PLAN.md): at minute 45 not yet at the lesion exercise -> skip fs_steps, bianca_settings and the try pages try_dice and try_f1 (all marked SKIP IF LATE). At minute 60 not yet at the microbleed part -> lesion exercise 4 instead of 6 minutes; keep the key questions off (K). At minute 75 not yet at the microbleed exercise -> microbleed exercise: only the easy and the medium scan, the hard scan as homework (microbleed trainer: mendeltem.github.io/cmb_detection_trainer); part 4 with the voice only, without your own additions. Opening: three tasks (grey matter, white matter lesions, microbleeds) and one lesson at the end (part 4: new data, new scanner). In this lecture we cover three segmentation targets in brain M R I. Each target is small or subtle, and each needs its own tool and its own check. Part one is grey matter. We use Free Surfer and Synth Seg. We check the result with Q C, a quality score. Part two is W M H, white matter hyperintensities. We use Bianka and a U net. We check the result with the Dice score. Part three is micro-bleeds. We use a 3D U net again. We check the result with the F one score. Notice the pattern: a target, a method, a score. After each part you will try a short task yourself. Quick question to the room: which of the three targets is the smallest? Cortex, white matter lesions, or micro-bleeds? Keep your answer. We will come back to it.",
+  "background": "CUT LIST if you are behind (lecture clock in the presenter view; minute marks in PLAN.md, voice-led with key questions): minute 20 and not yet at the atlas quiz (planned 15) -> skip fs_steps. Minute 45 and not yet at the lesion exercise (planned 36) -> skip bianca_settings and the try page try_dice; lesion exercise 4 instead of 6 minutes. Minute 60 and not yet at the microbleed exercise (planned 54) -> skip try_f1; microbleed exercise with the easy and the medium scan only, the hard scan as homework (microbleed trainer: mendeltem.github.io/cmb_detection_trainer). Minute 75 and not yet at part 4 (planned 65) -> part 4 with the voice only, no key questions there, then the conclusion. Check questions: off by default; K switches on the 10 key questions (C shows the question of the slide). Opening: three tasks (grey matter, white matter lesions, microbleeds) and one lesson at the end (part 4: new data, new scanner). In this lecture we cover three segmentation targets in brain M R I. Each target is small or subtle, and each needs its own tool and its own check. Part one is grey matter. We use Free Surfer and Synth Seg. We check the result with Q C, a quality score. Part two is W M H, white matter hyperintensities. We use Bianka and a U net. We check the result with the Dice score. Part three is micro-bleeds. We use a 3D U net again. We check the result with the F one score. Notice the pattern: a target, a method, a score. After each part you will try a short task yourself. Quick question to the room: which of the three targets is the smallest? Cortex, white matter lesions, or micro-bleeds? Keep your answer. We will come back to it.",
   "qr": null
  },
  {
@@ -144,7 +144,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/05_fs_thick.mp4",
   "poster": "poster/05_fs_thick.jpg",
-  "text": "How thick is the cortex at one point? Free Surfer has two surfaces. The white surface is the inner border. The pial surface is the outer border. From every point of one surface, it measures the shortest way to the other surface. A short way means thin cortex. A long way means thick cortex. Colour every point by its distance, and you get a thickness map. The surfaces run between the voxels. So the map can show differences smaller than one voxel. You see where the cortex gets thinner, not only that it shrinks. Now the same on a whole brain: Free Surfer's average brain. The white surface grows outwards, to the pial surface. Then every point gets its colour. Purple is thin cortex. Yellow is thick cortex.",
+  "text": "How thick is the cortex at one point? From every point of one surface, Free Surfer measures the shortest way to the other surface. A short way means thin cortex. A long way means thick cortex. Colour every point by its distance, and you get a thickness map. The surfaces run between the voxels. So the map can show differences smaller than one voxel. You see where the cortex gets thinner, not only that it shrinks. Now the same on a whole brain: Free Surfer's average brain. The white surface grows outwards, to the pial surface. Then every point gets its colour. Purple is thin cortex. Yellow is thick cortex.",
   "check": null,
   "exercise": null,
   "sources": [
@@ -161,7 +161,7 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "How thick is the cortex at one point? Free Surfer has two surfaces. The white surface is the inner border. The pial surface is the outer border. From every point of one surface, it measures the shortest way to the other surface. A short way means thin cortex. A long way means thick cortex. Colour every point by its distance, and you get a thickness map. The surfaces run between the voxels. So the map can show differences smaller than one voxel. You see where the cortex gets thinner, not only that it shrinks. Now the same on a whole brain: Free Surfer's average brain. The white surface grows outwards, to the pial surface. Then every point gets its colour. Purple is thin cortex. Yellow is thick cortex.",
+  "notes": "How thick is the cortex at one point? From every point of one surface, Free Surfer measures the shortest way to the other surface. A short way means thin cortex. A long way means thick cortex. Colour every point by its distance, and you get a thickness map. The surfaces run between the voxels. So the map can show differences smaller than one voxel. You see where the cortex gets thinner, not only that it shrinks. Now the same on a whole brain: Free Surfer's average brain. The white surface grows outwards, to the pial surface. Then every point gets its colour. Purple is thin cortex. Yellow is thick cortex.",
   "background": "This slide is a sketch, not data: a cut through the cortex. The blue line is the white surface, the border between white and grey matter. The orange line is the pial surface, the border between grey matter and brain fluid. FreeSurfer measures, at every point of the surface, the closest distance to the other surface (FreeSurfer documentation). That number is the thickness at this point, and every point gets its own colour: a thickness map. Why not count voxels? A voxel is about 1 mm, the cortex only a few millimetres thin. The surfaces are placed between the voxels, from the grey values of several neighbours, so the documentation says the maps can detect submillimetre differences. Fischl and Dale (2000) reported differences between people of less than 0.5 mm. Point out: volume is roughly thickness times area, so thickness tells you something that volume alone hides. The last part is real: FreeSurfer's average brain (the template called fsaverage, shipped with the software), left hemisphere. You see the white surface grow into the pial surface, and then the average thickness at every point. Thin along the central sulcus and at the back, thicker at the front and at the temporal pole. It is an average of many adults, not one person.",
   "qr": null
  },
@@ -520,7 +520,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/16_fail_lesion.mp4",
   "poster": "poster/16_fail_lesion.jpg",
-  "text": "The tools learned from healthy brains. A large lesion is something they have never seen. This brain has a stroke lesion. Where the lesion touches a structure, the program gets its volume wrong. In our test, the pallidum came out about a fifth too small. Structures far from the lesion are fine.",
+  "text": "None of these tools saw a large stroke lesion in training. For them, it is something new. This brain has a stroke lesion. Where the lesion touches a structure, the program gets its volume wrong. In our test, the pallidum came out about a fifth too small. Structures far from the lesion are fine.",
   "check": {
    "q": "A lesion covers the left putamen. Which volume can you trust most?",
    "options": [
@@ -546,46 +546,61 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": true,
-  "notes": "The tools learned from healthy brains. A large lesion is something they have never seen. This brain has a stroke lesion. Where the lesion touches a structure, the program gets its volume wrong. In our test, the pallidum came out about a fifth too small. Structures far from the lesion are fine.",
+  "notes": "None of these tools saw a large stroke lesion in training. For them, it is something new. This brain has a stroke lesion. Where the lesion touches a structure, the program gets its volume wrong. In our test, the pallidum came out about a fifth too small. Structures far from the lesion are fine.",
   "background": "So far we have looked at tools that work well on healthy brains. Now we ask the hard question: what happens when the brain is not healthy? Stroke lesions are a common problem in clinical M R I. The tools we use, like Free Surfer and Synth Seg, were trained on scans without large lesions. So we tested them. We took healthy public scans and painted in stroke lesions. Then we ran the tools again. The result is clear. If the lesion touches a structure, the volume changes a lot. The putamen dropped by minus fourteen percent. The pallidum dropped by minus twenty two percent. These are median values. Structures far from the lesion stayed almost the same, under one percent change. So the message is simple: check where the lesion is before you trust a volume. A question for you: if a patient has a left putamen stroke, which volumes would you report with caution?",
   "qr": null
  },
  {
   "n": 18,
   "key": "fail_fix",
-  "title": "What to do about lesions",
+  "title": "What to do about stroke lesions",
   "part": "1  Grey matter",
   "kind": "clip",
   "clip": "clips/17_fail_fix.mp4",
   "poster": "poster/17_fail_fix.jpg",
-  "text": "So: first find the lesion. An example with white matter lesions: on T one, they look grey. Then there are several ways to deal with it. One: fill it. Zoom in. Each lesion voxel gets a new grey value, taken from the healthy white matter around it. The lesion disappears from the picture. Before filling, the tissue step calls seventy one percent of the lesion voxels grey matter. After filling, twenty percent. Two: null it. The lesion voxels are set to zero, so they count as no tissue at all. Three: ignore the grey matter where it touches the lesion. Leave a small margin around the lesion out of the count, and the mistakes there do not matter. This is the most pragmatic way. Four: if the lesion is too big, leave the whole affected half of the brain out of the statistics, and use only the healthy hemisphere.",
+  "text": "There are several ways to deal with these lesions, for Synth Seg and for Free Surfer. One: fill it. For a stroke, copy the grey values from the mirror image of the healthy hemisphere. White matter values would not fit, because a stroke often includes cortex. Two: null it. The lesion voxels are set to zero. Three: leave the lesion and a margin around it out of the count. In our test, right next to the lesion, two in five labels changed. Ten millimetres away, fewer than one in ten. With a five millimetre margin, eighty five percent of the structures on the stroke side stayed within five percent, as good as mirror filling. This is the most pragmatic way. Four: if the lesion is very large, use only the healthy hemisphere. All of these ways need the lesion first: someone, or something, has to find it. How does a program find lesions? That is part two.",
   "check": {
-   "q": "Why can white matter lesions inflate the grey matter volume on T1?",
+   "q": "All ways to handle a lesion need one thing first. Which?",
    "options": [
-    "They look grey on T1",
-    "They push the cortex outwards",
-    "They are grey matter"
+    "A second scanner",
+    "The lesion mask",
+    "A larger margin"
    ],
-   "answer": 0,
-   "why": ""
+   "answer": 1,
+   "why": "Filling, nulling, the margin and the hemisphere all start from the lesion mask."
   },
   "exercise": null,
   "sources": [
    {
-    "label": "Battaglini et al. 2012, Hum Brain Mapp (lesion filling)",
-    "url": "https://doi.org/10.1002/hbm.21344",
-    "about": "Lesions bias tissue segmentation; filling them with normal-looking intensities removes most of the bias."
+    "label": "Data: Aphasia Recovery Cohort, CC0",
+    "url": "https://openneuro.org/datasets/ds004884",
+    "about": "Aphasia Recovery Cohort: public stroke MRI with expert lesion masks (CC0)."
    },
    {
-    "label": "Data: WMH Segmentation Challenge, CC BY-NC 4.0",
-    "url": "https://doi.org/10.34894/AECRSD",
-    "about": "The public WMH Challenge data (DataverseNL), licence CC BY-NC 4.0; used in the lesion exercise."
+    "label": "Billot et al. 2023, Med Image Anal (SynthSeg)",
+    "url": "https://doi.org/10.1016/j.media.2023.102789",
+    "about": "SynthSeg: a network trained only on synthetic images; segments scans of any contrast and resolution."
+   },
+   {
+    "label": "FreeSurfer: recon-all",
+    "url": "https://surfer.nmr.mgh.harvard.edu/fswiki/recon-all",
+    "about": "FreeSurfer documentation of recon-all, the command that runs the whole pipeline."
+   },
+   {
+    "label": "Nachev et al. 2008, NeuroImage (enantiomorphic: mirror the healthy hemisphere)",
+    "url": "https://doi.org/10.1016/j.neuroimage.2007.10.002",
+    "about": "Lesions distort the normalisation of brain scans. The enantiomorphic method replaces the lesion with the mirror image of the healthy homologous region; tested on healthy brains with artificial lesions, it beat cost-function masking."
+   },
+   {
+    "label": "Data: Dallas Lifespan Brain Study, CC0",
+    "url": "https://doi.org/10.18112/openneuro.ds004856.v1.3.0",
+    "about": "Dallas Lifespan Brain Study: public MRI data (CC0), used for our grey-matter pictures."
    }
   ],
   "optional": false,
   "key_q": false,
-  "notes": "So: first find the lesion. An example with white matter lesions: on T one, they look grey. Then there are several ways to deal with it. One: fill it. Zoom in. Each lesion voxel gets a new grey value, taken from the healthy white matter around it. The lesion disappears from the picture. Before filling, the tissue step calls seventy one percent of the lesion voxels grey matter. After filling, twenty percent. Two: null it. The lesion voxels are set to zero, so they count as no tissue at all. Three: ignore the grey matter where it touches the lesion. Leave a small margin around the lesion out of the count, and the mistakes there do not matter. This is the most pragmatic way. Four: if the lesion is too big, leave the whole affected half of the brain out of the statistics, and use only the healthy hemisphere.",
-  "background": "What to do about lesions. First find the lesion: a separate tool or an expert marks it. Then there are several ways. (1) Fill it: FSL lesion_filling gives each lesion voxel a grey value from the healthy white matter around it; on the WMH challenge case the share of lesion voxels that FAST calls grey matter falls from 71.1 % to 20.1 %. (2) Null it: set the lesion voxels to zero so they count as no tissue. (3) Ignore the grey matter where it touches the lesion: leave a small margin around the lesion out of the grey matter count, so mislabelled voxels there do not matter. This is the most pragmatic way: no new image, no assumption about what the tissue would look like. (4) If the lesion is too big, leave the whole affected hemisphere out of the statistics and use only the healthy one. In any case look at cases with large lesions yourself.",
+  "notes": "There are several ways to deal with these lesions, for Synth Seg and for Free Surfer. One: fill it. For a stroke, copy the grey values from the mirror image of the healthy hemisphere. White matter values would not fit, because a stroke often includes cortex. Two: null it. The lesion voxels are set to zero. Three: leave the lesion and a margin around it out of the count. In our test, right next to the lesion, two in five labels changed. Ten millimetres away, fewer than one in ten. With a five millimetre margin, eighty five percent of the structures on the stroke side stayed within five percent, as good as mirror filling. This is the most pragmatic way. Four: if the lesion is very large, use only the healthy hemisphere. All of these ways need the lesion first: someone, or something, has to find it. How does a program find lesions? That is part two.",
+  "background": "Several ways to deal with a stroke lesion, the same for SynthSeg and FreeSurfer (rebuilt 13.11.2026). Same public stroke scan as the slide before (ARC sub-M2104, CC0). (1) Fill it: for strokes the usual way is mirror filling from the healthy hemisphere (enantiomorphic filling, the idea of Nachev et al. 2008, NeuroImage, proposed for spatial normalisation); filling with white-matter values (FSL lesion_filling, Battaglini 2012) was made for white matter lesions and does not fit a lesion that includes cortex. The picture shows a plain left-right flip of the slice as an illustration; real tools register the flipped brain first. (2) Null it: lesion voxels set to zero. (3) Leave the lesion + a margin out of the count (most pragmatic). (4) Very large lesion: healthy hemisphere only. Our test: stroke masks from public data (ARC) pasted as unfilled cavities into 8 healthy public scans (DLBS), 222 pairs, SynthSeg --robust with and without the lesion. Labels changed: 38.8 % at 1-2 mm, 15.8 % at 4-5 mm, 6.7 % at 8-10 mm, 1.0 % beyond 15 mm (the tool's own scatter). Stroke-side structures (thalamus, caudate, putamen, pallidum, hippocampus, amygdala, cortex, white matter) within 5 % of the lesion-free volume: untreated 66.5 %, mirror-filled 82.0 % (221 pairs), lesion + 5 mm left out 84.9 % (remaining part). No margin removes all errors; bigger margins cost healthy tissue. Last beat = bridge to part 2: every way needs the lesion mask first (an expert or a program has to find the lesion) - 'How does a program find lesions? That is part two.' Part 2 opens with exactly this question.",
   "qr": null
  },
  {
@@ -625,7 +640,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/19_wmh_what.mp4",
   "poster": "poster/19_wmh_what.jpg",
-  "text": "Part two. FLAIR is a scan that makes the brain fluid dark. So damaged white matter stands out as bright spots: white matter hyper-intensities. They are a sign of small vessel disease. People with many of them have a higher risk of stroke and dementia.",
+  "text": "Part two: how do we find lesions? FLAIR is a scan that makes the brain fluid dark. So damaged white matter stands out as bright spots: white matter hyper-intensities. They are a sign of small vessel disease. People with many of them have a higher risk of stroke and dementia.",
   "check": {
    "q": "On which image are these lesions bright?",
    "options": [
@@ -656,7 +671,7 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "Part two. FLAIR is a scan that makes the brain fluid dark. So damaged white matter stands out as bright spots: white matter hyper-intensities. They are a sign of small vessel disease. People with many of them have a higher risk of stroke and dementia.",
+  "notes": "Part two: how do we find lesions? FLAIR is a scan that makes the brain fluid dark. So damaged white matter stands out as bright spots: white matter hyper-intensities. They are a sign of small vessel disease. People with many of them have a higher risk of stroke and dementia.",
   "background": "Part two is about white matter lesions. On a FLAIR image, fluid is dark. So bright patches in the white matter stand out clearly. We call them white matter hyper-intensities, or W M H. They are a sign of small vessel disease. They are common in old age. The numbers come from large studies. People with many W M H have about three times the risk of stroke. They have about twice the risk of dementia. These are group-level risks. They do not tell us what will happen to one person. Ask the room: why is FLAIR good for W M H? Answer: it suppresses the dark fluid signal, so small bright lesions become visible. In the next slides we will see how to segment them. We will look at Bianka and at U net. We will also look at how we score the results with the Dice score.",
   "qr": null
  },
@@ -778,7 +793,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/23_bianca_thr.mp4",
   "poster": "poster/23_bianca_thr.jpg",
-  "text": "This gives a probability map: every voxel has a value between zero and one. A cut off turns it into a mask: above the cut off counts as lesion. A low cut off also marks tissue that only looks a little like a lesion. A high one keeps the clear lesions. Zero point nine five was best, chosen on the training scans.",
+  "text": "This gives a probability map: every voxel has a value between zero and one. A cut off turns it into a mask: above the cut off counts as lesion. A low cut off also marks tissue that only looks a little like a lesion. A high one keeps the clear lesions. About zero point nine to zero point nine five was best, chosen on the training scans.",
   "check": {
    "q": "You raise the cut-off from 0.5 to 0.95. The mask ...",
    "options": [
@@ -804,8 +819,8 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": true,
-  "notes": "This gives a probability map: every voxel has a value between zero and one. A cut off turns it into a mask: above the cut off counts as lesion. A low cut off also marks tissue that only looks a little like a lesion. A high one keeps the clear lesions. Zero point nine five was best, chosen on the training scans.",
-  "background": "So Bianka gives us a probability for each voxel. A probability is not yet a mask. We need a cut off. Think of a dimmer switch on a lamp. A low cut off lets almost everything through. The mask grows too big. A high cut off lets only the brightest voxels through. The mask shrinks to the lesions. On the training data, zero point nine five was best. That number is not a law of nature. It comes from the data the model saw. On your own data, you should check it again. Here is a question for the room. If you lower the cut off to zero point five, what happens to false positives? Take a moment. They go up. More voxels pass the test. Some of them are not lesions. So the choice of cut off is a trade off. It is a trade off between missing lesions and marking healthy tissue. Always report the cut off you used. Always look at the mask with your own eyes.",
+  "notes": "This gives a probability map: every voxel has a value between zero and one. A cut off turns it into a mask: above the cut off counts as lesion. A low cut off also marks tissue that only looks a little like a lesion. A high one keeps the clear lesions. About zero point nine to zero point nine five was best, chosen on the training scans.",
+  "background": "So Bianka gives us a probability for each voxel. A probability is not yet a mask. We need a cut off. Think of a dimmer switch on a lamp. A low cut off lets almost everything through. The mask grows too big. A high cut off lets only the brightest voxels through. The mask shrinks to the lesions. On the training data, zero point nine five was best. That number is not a law of nature. It comes from the data the model saw. On your own data, you should check it again. Here is a question for the room. If you lower the cut off to zero point five, what happens to false positives? Take a moment. They go up. More voxels pass the test. Some of them are not lesions. So the choice of cut off is a trade off. It is a trade off between missing lesions and marking healthy tissue. Always report the cut off you used. Always look at the mask with your own eyes. Cut-off, two setups (13.11.2026): the film's reference setup chose 0.95 on the training scans (the settings slides measure 0.5 -> 0.95 there); the best grid setup behind the Dice of 0.70 on the 110 test scans (and the WMH trainer) uses 0.90, also chosen on the training scans. So the slide says 'about 0.9 to 0.95'.",
   "qr": null
  },
  {
@@ -816,8 +831,8 @@ window.SLIDES = [
   "widget": "cutoff",
   "clip": null,
   "poster": null,
-  "text": "Move the slider. Low cut-off: the mask floods the white matter and Dice drops. High cut-off: only the lesions stay. Find the best Dice on this slice; BIANCA's chosen cut-off was 0.95.",
-  "notes": "Move the slider. Low cut-off: the mask floods the white matter and Dice drops. High cut-off: only the lesions stay. Find the best Dice on this slice; BIANCA's chosen cut-off was 0.95.",
+  "text": "Move the slider. Low cut-off: the mask floods the white matter and Dice drops. High cut-off: only the lesions stay. Find the best Dice on this slice; the cut-off chosen on the training scans was about 0.9 to 0.95.",
+  "notes": "Move the slider. Low cut-off: the mask floods the white matter and Dice drops. High cut-off: only the lesions stay. Find the best Dice on this slice; the cut-off chosen on the training scans was about 0.9 to 0.95.",
   "background": "",
   "check": null,
   "exercise": null,
@@ -880,7 +895,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/25_bianca_after.mp4",
   "poster": "poster/25_bianca_after.jpg",
-  "text": "After training, Bianka gives a probability for every voxel. The cut off decides what counts as lesion. At zero point five, too much is marked. A high cut off, zero point nine five, was much better. Some marks are still wrong: they lie outside the white matter, for example in the cortex. A white matter mask removes them. The true lesions stay. Now your data. Bianka learned on scans from certain scanners. A new scanner gives another brightness and another contrast. The stored examples fit less well, and the score drops. And slice thickness. A thick slice averages more tissue in every voxel. Big lesions stay. Small lesions fade away. That cost the most. So train Bianka on scans like the ones in your study.",
+  "text": "After training, Bianka gives a probability for every voxel. The cut off decides what counts as lesion. At zero point five, too much is marked. A high cut off, about zero point nine to zero point nine five, was much better. Some marks are still wrong: they lie outside the white matter, for example in the cortex. A white matter mask removes them. The true lesions stay. Now your data. Bianka learned on scans from certain scanners. A new scanner gives another brightness and another contrast. The stored examples fit less well, and the score drops. And slice thickness. A thick slice averages more tissue in every voxel. Big lesions stay. Small lesions fade away. That cost the most. So train Bianka on scans like the ones in your study.",
   "check": null,
   "exercise": null,
   "sources": [
@@ -897,8 +912,8 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "After training, Bianka gives a probability for every voxel. The cut off decides what counts as lesion. At zero point five, too much is marked. A high cut off, zero point nine five, was much better. Some marks are still wrong: they lie outside the white matter, for example in the cortex. A white matter mask removes them. The true lesions stay. Now your data. Bianka learned on scans from certain scanners. A new scanner gives another brightness and another contrast. The stored examples fit less well, and the score drops. And slice thickness. A thick slice averages more tissue in every voxel. Big lesions stay. Small lesions fade away. That cost the most. So train Bianka on scans like the ones in your study.",
-  "background": "Settings after training, and the data. 1 Cut-off: BIANCA gives a probability per voxel; at 0.5 too much is marked, 0.95 was better by +0.13 (internal split; choose the cut-off on scans not used for training, never on the test set). 2 White matter mask: marks outside the white matter (cortex, ventricle edge) are removed: +0.08 on the 110 test scans (0.586 -> 0.665). 3 New scanner: scans from scanners that were not in the training scored 0.621, scans from known scanners 0.675: -0.05. 4 Slice thickness: 5 mm instead of 3 mm slices cost about -0.11 (simulation); a thick slice averages a small lesion with its surroundings (partial volume). Take-home: the training scans should come from the same scanner and protocol as the study.",
+  "notes": "After training, Bianka gives a probability for every voxel. The cut off decides what counts as lesion. At zero point five, too much is marked. A high cut off, about zero point nine to zero point nine five, was much better. Some marks are still wrong: they lie outside the white matter, for example in the cortex. A white matter mask removes them. The true lesions stay. Now your data. Bianka learned on scans from certain scanners. A new scanner gives another brightness and another contrast. The stored examples fit less well, and the score drops. And slice thickness. A thick slice averages more tissue in every voxel. Big lesions stay. Small lesions fade away. That cost the most. So train Bianka on scans like the ones in your study.",
+  "background": "Settings after training, and the data. 1 Cut-off: BIANCA gives a probability per voxel; at 0.5 too much is marked, 0.95 was better by +0.13 (internal split; choose the cut-off on scans not used for training, never on the test set). 2 White matter mask: marks outside the white matter (cortex, ventricle edge) are removed: +0.08 on the 110 test scans (0.586 -> 0.665). 3 New scanner: scans from scanners that were not in the training scored 0.621, scans from known scanners 0.675: -0.05. 4 Slice thickness: 5 mm instead of 3 mm slices cost about -0.11 (simulation); a thick slice averages a small lesion with its surroundings (partial volume). Take-home: the training scans should come from the same scanner and protocol as the study. Cut-off, two setups (13.11.2026): the film's reference setup chose 0.95 on the training scans (the settings slides measure 0.5 -> 0.95 there); the best grid setup behind the Dice of 0.70 on the 110 test scans (and the WMH trainer) uses 0.90, also chosen on the training scans. So the slide says 'about 0.9 to 0.95'.",
   "qr": null
  },
  {
@@ -1038,7 +1053,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/30_raters.mp4",
   "poster": "poster/30_raters.jpg",
-  "text": "Even experts do not agree. A second expert, on the same scans, reached only zero point seven seven to zero point seven nine against the reference. So about zero point eight is the ceiling. The best program, a U net, reached it.",
+  "text": "Even experts do not agree. A second expert reached only zero point seven seven to zero point seven nine against the reference, on the training scans. The best program, a U net, reached zero point eight on the test scans: about the same level. So that is the ceiling.",
   "check": null,
   "exercise": null,
   "sources": [
@@ -1050,8 +1065,8 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "Even experts do not agree. A second expert, on the same scans, reached only zero point seven seven to zero point seven nine against the reference. So about zero point eight is the ceiling. The best program, a U net, reached it.",
-  "background": "Kuijf et al. 2019 (WMH Challenge): two further observers segmented the 60 training scans; against the reference standard they reached Dice 0.77 (0.74-0.80) and 0.79 (0.76-0.81). The challenge winner (sysu_media, a fully convolutional network similar to U-Net, ensemble of three) reached 0.80 on the 110 test scans: as good as a second expert. Lesson: a Dice of 1.0 is impossible in practice; the disagreement between experts sets the ceiling, largest at lesion edges and for small lesions.",
+  "notes": "Even experts do not agree. A second expert reached only zero point seven seven to zero point seven nine against the reference, on the training scans. The best program, a U net, reached zero point eight on the test scans: about the same level. So that is the ceiling.",
+  "background": "Kuijf et al. 2019 (WMH Challenge): two further observers segmented the 60 training scans; against the reference standard they reached Dice 0.77 (0.74-0.80) and 0.79 (0.76-0.81). The challenge winner (sysu_media, a fully convolutional network similar to U-Net, ensemble of three) reached 0.80 on the 110 test scans: as good as a second expert. Lesson: a Dice of 1.0 is impossible in practice; the disagreement between experts sets the ceiling, largest at lesion edges and for small lesions. Note: the second experts' 0.77-0.79 were measured on the 60 training scans; the winner's 0.80 on the 110 test scans (Kuijf 2019) - different scan sets, about the same level.",
   "qr": null
  },
  {
@@ -1397,7 +1412,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/39_count4.mp4",
   "poster": "poster/39_count4.jpg",
-  "text": "Why count so carefully? New Alzheimer drugs remove amyloid, but they can cause swelling and new bleeds in the brain. The risk is higher in people who already have micro-bleeds. So with more than four, the drug is not given. Four or five: one dot decides.",
+  "text": "Why count so carefully? New Alzheimer drugs remove amyloid, but they can cause swelling and new bleeds in the brain. The risk is higher in people who already have micro-bleeds. In Europe, with more than four, the drug is not given. Four or five: one dot decides.",
   "check": {
    "q": "A patient has 5 microbleeds. By the appropriate use recommendations ...",
    "options": [
@@ -1423,8 +1438,8 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": true,
-  "notes": "Why count so carefully? New Alzheimer drugs remove amyloid, but they can cause swelling and new bleeds in the brain. The risk is higher in people who already have micro-bleeds. So with more than four, the drug is not given. Four or five: one dot decides.",
-  "background": "New antibody drugs against amyloid (lecanemab, donanemab) can slow early Alzheimer's disease. Their main side effect is ARIA: amyloid related imaging abnormalities, swelling (ARIA-E) and new bleeds (ARIA-H) on MRI. The risk is higher in people who already have microbleeds; the US label names 2 or more microhaemorrhages as a risk factor. So the appropriate use recommendations exclude treatment with more than 4 microbleeds on the baseline scan (Cummings 2023, Rabinovici 2025); for donanemab any superficial siderosis also excludes. In the EU more than 4 microhaemorrhages is a formal contraindication for both drugs. One dot more or less on the scan decides about a therapy. Question to the room: who should count, the radiologist, the program, or both?",
+  "notes": "Why count so carefully? New Alzheimer drugs remove amyloid, but they can cause swelling and new bleeds in the brain. The risk is higher in people who already have micro-bleeds. In Europe, with more than four, the drug is not given. Four or five: one dot decides.",
+  "background": "New antibody drugs against amyloid (lecanemab, donanemab) can slow early Alzheimer's disease. Their main side effect is ARIA: amyloid related imaging abnormalities, swelling (ARIA-E) and new bleeds (ARIA-H) on MRI. The risk is higher in people who already have microbleeds; the US label names 2 or more microhaemorrhages as a risk factor. So the appropriate use recommendations exclude treatment with more than 4 microbleeds on the baseline scan (Cummings 2023, Rabinovici 2025); for donanemab any superficial siderosis also excludes. In the EU more than 4 microhaemorrhages is a formal contraindication for both drugs. One dot more or less on the scan decides about a therapy. Question to the room: who should count, the radiologist, the program, or both? The 'more than 4' limit is a contraindication in the EU label; the US label does not make it a contraindication (facts_checked item 1(d)); the slide says 'in Europe'.",
   "qr": null
  },
  {
@@ -1631,12 +1646,41 @@ window.SLIDES = [
  },
  {
   "n": 50,
+  "key": "bianca_mix",
+  "title": "BIANCA: just add your scans to the pool",
+  "part": "4  New data, new scanner",
+  "kind": "clip",
+  "clip": "clips/45_bianca_mix.mp4",
+  "poster": "poster/45_bianca_mix.jpg",
+  "text": "For Bianka, mixing is the natural way. Its model is nothing but the stored example points. On a new scanner, the brightness shifts, so a lesion voxel can land among healthy points, and its neighbours vote wrong. Add marked points from the new scanner, and the vote is right again. Retraining takes less than a minute. A small test on the two new scanners of the challenge, ten scans each. Without local scans, the Dice was zero point six two and zero point seven one. Adding one, three or five marked scans helped only a little, and no scan got worse. A scanner Bianka already knew gained about the same. Trained on the five local scans alone, single scans jumped up and down, and fewer small lesions were found. So: test first. If you adapt, mix your scans into the pool. Do not replace it.",
+  "check": null,
+  "exercise": null,
+  "sources": [
+   {
+    "label": "Griffanti et al. 2016, NeuroImage (BIANCA)",
+    "url": "https://doi.org/10.1016/j.neuroimage.2016.07.018",
+    "about": "BIANCA: k-nearest-neighbour WMH segmentation in FSL; Dice 0.76 in one cohort, 0.52 in another."
+   },
+   {
+    "label": "Data: WMH Segmentation Challenge, CC BY-NC 4.0",
+    "url": "https://doi.org/10.34894/AECRSD",
+    "about": "The public WMH Challenge data (DataverseNL), licence CC BY-NC 4.0; used in the lesion exercise."
+   }
+  ],
+  "optional": false,
+  "key_q": false,
+  "notes": "For Bianka, mixing is the natural way. Its model is nothing but the stored example points. On a new scanner, the brightness shifts, so a lesion voxel can land among healthy points, and its neighbours vote wrong. Add marked points from the new scanner, and the vote is right again. Retraining takes less than a minute. A small test on the two new scanners of the challenge, ten scans each. Without local scans, the Dice was zero point six two and zero point seven one. Adding one, three or five marked scans helped only a little, and no scan got worse. A scanner Bianka already knew gained about the same. Trained on the five local scans alone, single scans jumped up and down, and fewer small lesions were found. So: test first. If you adapt, mix your scans into the pool. Do not replace it.",
+  "background": "BIANCA is k-nearest-neighbour: training = storing labelled example voxels, so its model IS the stored points; adapting = add your marked scans to the pool and train again (about half a minute on a normal processor in our runs; each new scan about 15 s). The point cloud is the real one of the bianca_knn slide; the shift of the new scanner is DRAWN (illustration), not measured. Experiment on public data (WMH Challenge, our best setup, cut-off 0.90): 60 training scans + k = 0, 1, 3, 5 marked scans of a new scanner, tested on 5 held-out scans of that scanner, 3 random 5/5 splits x 2 directions (each scan held out 3 times). Results (small test: 10 scans per scanner, one site): GE 1.5 T (new) 0.621 -> 0.626 -> 0.639 -> 0.642 with 0/1/3/5 added scans, most of the gain from two scans with under 1 ml of lesions, no scan worse; Philips Ingenuity 3 T (new) 0.706 -> 0.712; control GE 3 T (known) 0.679 -> 0.684, about the same small gain. Adding local scans makes BIANCA slightly stricter on that scanner (false-positive clusters GE 1.5 T 7.6 -> 5.2 per scan). 5 local scans ALONE: similar mean but unpredictable (single evaluations -0.14 to +0.27 Dice on GE 1.5 T) and fewer small lesions found (15-17 % instead of about 27 %). Message: BIANCA already carried over well here; adding a few local scans helped a little and never hurt; your few scans alone are risky. Test first; if you adapt, MIX your scans into the pool, do not replace it.",
+  "qr": null
+ },
+ {
+  "n": 51,
   "key": "finetune",
   "title": "Fine-tuning: when you only have the model",
   "part": "4  New data, new scanner",
   "kind": "clip",
-  "clip": "clips/45_finetune.mp4",
-  "poster": "poster/45_finetune.jpg",
+  "clip": "clips/46_finetune.mp4",
+  "poster": "poster/46_finetune.jpg",
   "text": "Fine-tuning, step by step. A trained model already knows what a micro-bleed looks like. Fine-tuning keeps this knowledge: it starts from the model's weights, and trains a little more, in small steps, on a few of your own marked scans. So it learns your scanner's contrast and noise. Training from scratch starts from random weights, and needs many more marked scans. The options, cheapest first. One: choose a new threshold on your own scans. For this you only need scans without micro-bleeds. Two: adapt only the normalisation layers. Three: fine-tune the whole model. Four: train from scratch. And always test on your own scans that were not used for training. How many marked scans do you need? Measure it, with a learning curve. Train with three, five, ten, twenty scans, and each time test on the rest. Where the curve stops rising, more marking does not pay.",
   "check": {
    "q": "A public microbleed model marks many false microbleeds on your new scanner. What do you try first?",
@@ -1673,24 +1717,6 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 51,
-  "key": "wrap",
-  "title": "Three tasks, one rule",
-  "part": "Wrap-up",
-  "kind": "clip",
-  "clip": "clips/46_wrap.mp4",
-  "poster": "poster/46_wrap.jpg",
-  "text": "Grey matter: check the quality score. Lesions: Dice, and small ones are hard. Micro-bleeds: F one, and beware lookalikes. One rule for all: never trust a segmentation you have not checked.",
-  "check": null,
-  "exercise": null,
-  "sources": [],
-  "optional": false,
-  "key_q": false,
-  "notes": "Grey matter: check the quality score. Lesions: Dice, and small ones are hard. Micro-bleeds: F one, and beware lookalikes. One rule for all: never trust a segmentation you have not checked.",
-  "background": "So, three tasks, one rule. First, grey matter. You can use Free Surfer or Synth Seg. Always check the result by eye and with quality scores. Remember the Euler number: it summarises how complex the reconstructed surface is. It flags unusable images very well. But there is no fixed cut-off. And be careful: these tools fail at large lesions, for example a big stroke. Second, white matter lesions. Bianka or a U net can do the job. Check with Dice. Small lesions are hard. In the WMH challenge, the top eleven methods all used deep learning. Third, micro-bleeds. A U net finds them, then we group them into clusters. Check with F one. The lookalikes are the real problem. One example: a small vessel cross-section can look like a micro-bleed. Question for the room: which check would you trust most for a scan with many small white matter lesions? And the one rule for all three tasks: never trust a segmentation you have not checked.",
-  "qr": null
- },
- {
   "n": 52,
   "key": "exam",
   "title": "Conclusion",
@@ -1698,7 +1724,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/47_exam.mp4",
   "poster": "poster/47_exam.jpg",
-  "text": "To conclude. First, know your tool's training data: which patients, which scanners, which lesion sizes? None of these tools was trained on large stroke lesions, so fill or mask the lesion. Second, a new scanner changes the image. Test the tool on your own scans first. If it drops, mix your scans into the training, or fine-tune. Third, check with your own eyes: quality control really matters. Fourth, small lesions are the problem. Large lesions are found, the small ones are often missed. And fifth, if you can, use several raters, because even experts do not agree.",
+  "text": "To conclude. First, know your tool's training data: which patients, which scanners, which lesion sizes? None of these tools was trained on large stroke lesions, so fill or mask the lesion. Second, a new scanner changes the image. Test the tool on your own scans first. If it drops, mix your scans into the training, or fine-tune. Third, check with your own eyes: quality control really matters. Fourth, small lesions are the problem. Large lesions are found, the small ones are often missed. And fifth, if you can, use several raters, because even experts do not agree. And one rule for all: never trust a segmentation you have not checked.",
   "check": null,
   "exercise": null,
   "sources": [
@@ -1735,8 +1761,8 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "To conclude. First, know your tool's training data: which patients, which scanners, which lesion sizes? None of these tools was trained on large stroke lesions, so fill or mask the lesion. Second, a new scanner changes the image. Test the tool on your own scans first. If it drops, mix your scans into the training, or fine-tune. Third, check with your own eyes: quality control really matters. Fourth, small lesions are the problem. Large lesions are found, the small ones are often missed. And fifth, if you can, use several raters, because even experts do not agree.",
-  "background": "Conclusion, five lessons. (1) Know your tool's training data. FreeSurfer's aseg atlas: 40 manually labelled scans (young, middle-aged and elderly people; Desikan 2006 also lists some with Alzheimer's disease, the atlas README calls them nondemented - the sources disagree). SynthSeg: trained on label maps only, 20 manual + 500 young (HCP) + 500 ageing (ADNI, including MCI and AD), with simulated white-matter-like lesions (Billot 2023). CAT12: average template from the public IXI data of healthy adults. BIANCA: no pretrained model - you train it on your own hand-marked patients. WMH challenge U-Nets: 60 patients with WMH from 3 scanners. VALDO microbleed models: 72 older people from population cohorts and relatives of Alzheimer patients, 3 scanners. None was trained on large stroke lesions: fill or mask the lesion. (2) A new scanner changes contrast and brightness: test the tool on a few of your own hand-marked scans first; if it drops, mix your scans into the training (BIANCA: just add them, retraining takes minutes) or fine-tune the model (U-Net, when only the weights are available). SynthSeg was designed not to need it. (3) Check with your own eyes: QC scores and Euler numbers help, but look at the picture. (4) Small lesions are the hard part: large lesions are found, small WMH and small microbleeds are often missed (BIANCA under 10 voxels 24 %; our microbleed detector under 2 mm 4 of 10). (5) Use several raters where possible: even experts disagree (second expert Dice 0.77-0.79). In the clinic, radiologists mostly use visual rating scales (for example the Fazekas scale for white matter lesions) or certified volumetry software that compares a patient with age norms.",
+  "notes": "To conclude. First, know your tool's training data: which patients, which scanners, which lesion sizes? None of these tools was trained on large stroke lesions, so fill or mask the lesion. Second, a new scanner changes the image. Test the tool on your own scans first. If it drops, mix your scans into the training, or fine-tune. Third, check with your own eyes: quality control really matters. Fourth, small lesions are the problem. Large lesions are found, the small ones are often missed. And fifth, if you can, use several raters, because even experts do not agree. And one rule for all: never trust a segmentation you have not checked.",
+  "background": "Conclusion, five lessons. (1) Know your tool's training data. FreeSurfer's aseg atlas: 40 manually labelled scans (young, middle-aged and elderly people; Desikan 2006 also lists some with Alzheimer's disease, the atlas README calls them nondemented - the sources disagree). SynthSeg: trained on label maps only, 20 manual + 500 young (HCP) + 500 ageing (ADNI, including MCI and AD), with simulated white-matter-like lesions (Billot 2023). CAT12: average template from the public IXI data of healthy adults. BIANCA: no pretrained model - you train it on your own hand-marked patients. WMH challenge U-Nets: 60 patients with WMH from 3 scanners. VALDO microbleed models: 72 older people from population cohorts and relatives of Alzheimer patients, 3 scanners. None was trained on large stroke lesions: fill or mask the lesion. (2) A new scanner changes contrast and brightness: test the tool on a few of your own hand-marked scans first; if it drops, mix your scans into the training (BIANCA: just add them, retraining takes minutes) or fine-tune the model (U-Net, when only the weights are available). SynthSeg was designed not to need it. (3) Check with your own eyes: QC scores and Euler numbers help, but look at the picture. (4) Small lesions are the hard part: large lesions are found, small WMH and small microbleeds are often missed (BIANCA under 10 voxels 24 %; our microbleed detector under 2 mm 4 of 10). (5) Use several raters where possible: even experts disagree (second expert Dice 0.77-0.79). In the clinic, radiologists mostly use visual rating scales (for example the Fazekas scale for white matter lesions) or certified volumetry software that compares a patient with age norms. The one rule (from the former slide 'Three tasks, one rule', now set aside): never trust a segmentation you have not checked. Summary of the three tasks: grey matter - FreeSurfer or SynthSeg, checked by eye and with the QC score, fails at large lesions; white matter lesions - BIANCA or a U-Net, checked with Dice, small lesions are hard; microbleeds - a 3D U-Net and clusters, checked with F1, the lookalikes are the problem.",
   "qr": null
  },
  {

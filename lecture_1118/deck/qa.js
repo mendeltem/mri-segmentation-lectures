@@ -661,7 +661,7 @@ window.QA = {
 },
 {
 "q": "Why is the sick brain part of robustness?",
-"a": "Most tools have learned from healthy brains. Disease changes the anatomy: lesions appear, the ventricles grow, tissue shrinks. The tool then meets something it has never seen, and it can fail without any warning. The next slide shows an example."
+"a": "Most tools never saw large lesions in training. Disease changes the anatomy: lesions appear, the ventricles grow, tissue shrinks. The tool then meets something it has never seen, and it can fail without any warning. The next slide shows an example."
 },
 {
 "q": "Who runs these tests? Do I have to do them myself?",
@@ -679,7 +679,7 @@ window.QA = {
 },
 {
 "q": "Why does the tool get the volume wrong near the lesion?",
-"a": "It has learned how healthy brains look. Where the stroke destroyed tissue, the T1 image is dark, where the tool expects normal tissue. It still has to give those voxels one of its normal labels, so the borders nearby shift."
+"a": "It never saw a large stroke lesion in training. Where the stroke destroyed tissue, the T1 image is dark, where the tool expects normal tissue. It still has to give those voxels one of its normal labels, so the borders nearby shift."
 },
 {
 "q": "Where do minus 14.4 and minus 22.5 percent come from?",
@@ -716,44 +716,44 @@ window.QA = {
 ],
 "fail_fix": [
 {
-"q": "What does filling a lesion mean?",
-"a": "Every lesion voxel gets a new grey value, drawn from the healthy white matter around it. The lesion disappears from the T1 image, which now looks as if normal white matter were there. In FSL the command is called lesion_filling."
+"q": "Why do I first need the lesion mask?",
+"a": "Every option needs to know where the lesion is: filling, nulling, the margin and the hemisphere choice all start from it. An expert paints it, or a lesion tool marks it and an expert checks it."
 },
 {
-"q": "What is a mask?",
-"a": "A mask is an image of the same size as the scan. It has a one in every lesion voxel and a zero everywhere else. An expert paints it by hand, or a program makes it. Part two shows such programs."
+"q": "What does mirror filling mean?",
+"a": "The lesion voxels get the grey values of the same place in the other, healthy hemisphere, as in a mirror. The idea comes from Nachev and colleagues, 2008, who used it so that brains with lesions can be aligned to a standard brain. Real tools align the flipped brain first; the slide shows a plain flip."
 },
 {
-"q": "Why are lesion voxels called grey matter at all?",
-"a": "On a T1 image, white matter lesions are darker than healthy white matter. Their brightness is close to that of grey matter. A tissue step that sorts voxels by brightness puts them into the grey class. That makes the grey matter volume too large."
+"q": "Why not fill with white matter values, as for small white matter lesions?",
+"a": "Filling with white-matter values was made for white matter lesions, which lie inside the white matter. A stroke often destroys cortex and deep grey matter too. Painting it as white matter would put white matter where cortex belongs."
 },
 {
-"q": "What do 71.1 percent and 20.1 percent mean?",
-"a": "It is our demo on one public scan with 24 millilitres of white matter lesions. Before filling, 71.1 percent of the lesion voxels were called grey matter. After filling, 20.1 percent. The grey matter volume fell from 585 to 577 millilitres."
+"q": "What does nulling do?",
+"a": "The lesion voxels are set to zero, so the scan has a black hole there. The tool then sees no tissue in the lesion. It is simple, but the hole itself is something the tool never saw in training, so the labels next to it can still change."
 },
 {
-"q": "Why are 20 percent still wrong after filling?",
-"a": "We did not analyse this in detail, so this is an honest open point. Filling reduces the error, it does not remove it. This is one reason for step three: look at the result yourself."
+"q": "What was the test behind the numbers?",
+"a": "Stroke masks from public data were pasted into healthy public scans, and SynthSeg ran on each scan with and without the lesion: 222 pairs on 8 healthy scans. Every change is caused by the lesion, because the healthy scan is the truth."
 },
 {
-"q": "Is filling not a way of faking the data?",
-"a": "The filled image is only a helper for the tissue step. The original scan stays as it is, and the lesion is still measured from its mask. You write in your methods that you filled the lesions and with which tool."
+"q": "What do 39 % and 7 % mean?",
+"a": "The share of brain voxels whose SynthSeg label changed because of the lesion: 39 % of the voxels 1 to 2 mm from the lesion, 16 % at 4 to 5 mm, 7 % at 8 to 10 mm, and about 1 % far away, which is the tool's own scatter."
 },
 {
-"q": "Why not just leave the lesion voxels out instead of filling them?",
-"a": "That was tested. In the study by Battaglini and colleagues from 2012, the wrong tissue classes were still there when the lesions were masked out. Only refilling with values of the surrounding normal white matter gave accurate tissue measurements."
+"q": "Why is the margin the most pragmatic way?",
+"a": "It needs no new image and no extra tool: you leave the lesion and a few millimetres around it out of the count. With 5 mm, 85 % of the structures on the stroke side stayed within 5 % of their true volume, as many as with mirror filling (82 %); untreated, only 67 %."
 },
 {
-"q": "What is the tissue step?",
-"a": "It is the step that sorts every voxel into grey matter, white matter or fluid, mainly by its brightness. In our demo it was the FSL tool FAST. You fill before this step, so that it never sees the lesion."
+"q": "How big should the margin be?",
+"a": "A trade-off. A larger margin removes more errors but also more healthy tissue that you wanted to measure. In our test the errors fell quickly over the first millimetres; 5 mm was a reasonable compromise, but no margin removes them all."
 },
 {
-"q": "Does filling also solve a large stroke, as on the slide before?",
-"a": "Not fully. Filling was developed and tested for white matter lesions, with lesions simulated in healthy brains. A large stroke also destroys cortex and deep grey matter. White matter values cannot give that anatomy back. So look at these cases yourself."
+"q": "When do I use only the healthy hemisphere?",
+"a": "When the lesion is so large that much of one hemisphere is affected. Then you measure the healthy side and compare it with healthy people of the same age, or with the patient's later scans."
 },
 {
-"q": "Are there other remedies besides filling?",
-"a": "Yes, for the step that aligns a brain to a standard brain. You can leave the lesion out of the calculation, or replace it with the mirrored healthy side. The second needs an intact other side. The evidence comes mostly from simulated lesions."
+"q": "Does the QC score tell me which option worked?",
+"a": "No. The QC score looks only at the label map and passed on the stroke scan even with wrong labels near the lesion. Look at the result next to the lesion with your own eyes."
 }
 ],
 "ex1": [
@@ -2058,6 +2058,48 @@ window.QA = {
 "a": "Partly. Some tools have settings you can choose on your own data, such as the threshold. With scans that you know contain no lesions, you can set the threshold so that the tool makes few false alarms. To check how many lesions it finds, you need marked scans."
 }
 ],
+"bianca_mix": [
+{
+"q": "Why is BIANCA's model just a set of points?",
+"a": "BIANCA is a k-nearest-neighbour method. Training means storing example voxels from the marked training scans, each with its features (FLAIR and T1 brightness, position). A new voxel is judged by a vote of the 40 stored points nearest to it. There are no weights to learn."
+},
+{
+"q": "Why can a new scanner make the neighbours vote wrong?",
+"a": "Another scanner gives other brightness values for the same tissue. A lesion voxel can then fall where the stored points are mostly healthy tissue, and the 40 nearest neighbours vote 'healthy'. The picture on the slide draws such a shift as an illustration; it is not measured."
+},
+{
+"q": "Why does adding marked scans from the new scanner help?",
+"a": "Their voxels are stored as new example points with the new brightness. A lesion voxel from the new scanner then finds lesion examples from the same scanner among its nearest neighbours, and the vote can be right again."
+},
+{
+"q": "Is this mixing or fine-tuning?",
+"a": "Mixing. For BIANCA you always have the training data, because you train it yourself: you add your marked scans to the stored examples and train again. There are no weights that could be fine-tuned."
+},
+{
+"q": "How long does retraining BIANCA take?",
+"a": "In our runs, training BIANCA on the 60 challenge scans plus up to five local scans took about half a minute on a normal processor, and each new scan about 15 seconds. Most of the work is marking the scans by hand."
+},
+{
+"q": "Why were five scans of each new scanner kept aside?",
+"a": "To test fairly: the scans used for training must not be the scans used for scoring. Each scanner's 10 test scans were split into 5 local scans that could be added and 5 held-out scans for the score, in several random splits."
+},
+{
+"q": "Why compare with a model trained on the local scans only?",
+"a": "It shows whether the 60 public scans still help. Five local scans alone gave about the same mean, 0.68, but 7 of 20 scans got worse and small lesions were found less often. The mix was the safer choice."
+},
+{
+"q": "Should I always add local scans to BIANCA?",
+"a": "Check first. In our test on the two new scanners of the challenge, adding five marked scans raised the Dice only from 0.66 to 0.68; five scans got better, none worse. Here BIANCA carried over well. On another scanner the drop can be larger; then adding scans is cheap."
+},
+{
+"q": "Does adding scans change BIANCA's best threshold?",
+"a": "It can. The probability map changes when the stored examples change, so the cut-off that gave the best Dice may move. In the lecture the cut-off stayed fixed at 0.90, the value chosen on the training split."
+},
+{
+"q": "Why are there small differences between splits?",
+"a": "With only five test scans per split, one patient with many or very few lesions changes the mean. That is why the experiment repeats random splits and reports the mean over them; with so few scans, small differences are not reliable."
+}
+],
 "finetune": [
 {
 "q": "What are the weights of a network?",
@@ -2098,48 +2140,6 @@ window.QA = {
 {
 "q": "Is fine-tuning the same as training from scratch with fewer scans?",
 "a": "No. Training from scratch starts from random weights and must learn everything from your scans, so it needs many more of them. Fine-tuning starts from a model that already works on other data. With many marked scans the two can end up similar."
-}
-],
-"wrap": [
-{
-"q": "What does 'checked' mean in practice? Must I look at every scan?",
-"a": "With ten scans: yes, open each result and look at it on top of the image. With thousands this is not possible. Then let quality scores find the suspicious results, look at those, and also look at a sample of the ones that passed. A passing score alone is not proof."
-},
-{
-"q": "Why do we need three different measures? Why not one for all?",
-"a": "Because the questions differ. For grey matter there is no expert mask for your scan, so a quality score estimates how good the result is. For lesions we ask whether the right voxels are marked: Dice. For microbleeds we ask whether the right number of objects is found: F1."
-},
-{
-"q": "If the quality score says 'pass', can I trust the segmentation?",
-"a": "Not blindly. In the stroke example of this lecture all scores passed, although the labels around the lesion were wrong. The authors of the tool have also published no test on large lesions such as stroke or tumour. So a pass is necessary, but not enough."
-},
-{
-"q": "Which tool should I take for my own project?",
-"a": "It depends on the question and the scans. From today: SynthSeg for volumes, also on clinical scans, in about a minute. FreeSurfer when you need the cortical surface and thickness and have good T1 scans. For white matter lesions BIANCA without a graphics card, or a U-Net, which is usually more accurate. And check the result."
-},
-{
-"q": "Why are small things so hard for every method?",
-"a": "A small object has few voxels, so one voxel wrong is a large share: in our toy example the same shift gave a Dice of 0.90 for the big lesion and 0.50 for the tiny one. In our runs BIANCA found 99 percent of the largest lesions, but only about one in four of the smallest."
-},
-{
-"q": "Does the rule mean that automatic tools are bad?",
-"a": "No. They are fast, they do not get tired, and they give the same answer every time. For large studies there is no other way: nobody paints ten thousand scans by hand. The rule only says: use them, but look before you believe the numbers."
-},
-{
-"q": "What can go wrong if I do not check?",
-"a": "Two examples from today. Where a stroke lesion touched a structure, its measured volume was wrong: the pallidum by about a fifth in our test with simulated lesions. And a vessel counted as a microbleed can turn four into five, which crosses a treatment limit."
-},
-{
-"q": "What do I do if I have no expert mask for my own data?",
-"a": "Then you cannot compute Dice or F1. Ask an expert to mark a small sample of your scans and test the program on it, and look at the rest by eye. Results from public data do not carry over by themselves: in our runs a new scanner lowered BIANCA's Dice by 0.05."
-},
-{
-"q": "Which of the three tasks is the hardest?",
-"a": "By today's numbers, the microbleeds. For white matter lesions the best program reached a Dice of 0.80, the level of a second expert. For microbleeds the best program reached a median F1 of about 0.7. The two measures are not the same, but the direction is clear: the smaller the target, the harder."
-},
-{
-"q": "Do these checks also work for other organs or other diseases?",
-"a": "The ideas do. Overlap measures such as Dice fit things with a clear area or volume. Counting found, missed and false objects fits small things. The international recommendations on validation say just this: first decide what kind of problem you have, then choose the measure."
 }
 ],
 "exam": [
