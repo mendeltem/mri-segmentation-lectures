@@ -30,9 +30,9 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 .slide.clip .pts{display:none}
 .slide.nomedia .media{display:none}
 .slide.clip.nomedia .media{display:block}.slide.clip.nomedia .pts{display:none}
-#hud{position:fixed;left:14px;bottom:58px;z-index:7;background:rgba(20,24,33,.92);border:1px solid var(--line);border-radius:10px;
+#hud{position:fixed;right:14px;top:10px;z-index:7;background:rgba(20,24,33,.92);border:1px solid var(--line);border-radius:10px;
  padding:8px 14px;font-size:16px;color:var(--ink);display:flex;gap:12px;align-items:center;transition:opacity .4s;pointer-events:none}
-#hud.hide{opacity:0}#hud b{color:var(--y);font-variant-numeric:tabular-nums}#hud .st{color:var(--dim)}
+#hud.hide{opacity:0}#hud #htitle{display:none}#hud b{color:var(--y);font-variant-numeric:tabular-nums}#hud .st{color:var(--dim)}
 .slide.nomedia .pts{margin:0 auto;max-width:1100px}
 .pts{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:18px}
 .pt{font-size:31px;line-height:1.25;padding:16px 22px;border-radius:12px;border:3px solid color-mix(in srgb,var(--c) 45%,transparent);
@@ -54,7 +54,9 @@ background:color-mix(in srgb,var(--c) 6%,transparent);color:var(--ink);opacity:.
 .laptop{display:flex;flex-direction:column;gap:6px;padding:16px 22px;border-radius:12px;border:3px solid var(--b);background:color-mix(in srgb,var(--b) 10%,transparent)}
 .laptop span{font-size:20px;color:var(--dim)}.laptop a{font-size:27px;color:var(--ink);word-break:break-all;text-decoration:none;font-family:ui-monospace,Consolas,monospace}
 .qr div{font-size:24px;color:var(--dim);text-align:center;word-break:break-all;max-width:600px}
+.cliplink{position:absolute;z-index:2;cursor:pointer;border-radius:8px;outline-offset:2px}.cliplink:hover,.cliplink:focus-visible{background:rgba(255,225,77,.12);outline:2px solid var(--y)}
 .src{position:absolute;left:56px;right:56px;bottom:22px;font-size:17px;color:var(--dim);display:flex;gap:18px;flex-wrap:wrap}
+.slide .src{display:none}   /* 16.11.2026 lecturer: sources only in the Sources panel (button / key), in the presenter view and in the PDF */
 .src a{color:var(--dim)}
 #bar{position:fixed;left:0;right:0;bottom:0;display:flex;gap:14px;align-items:center;padding:6px 14px;background:rgba(11,13,18,.92);
 border-top:1px solid var(--line);font-size:15px;flex-wrap:wrap;color:var(--dim);transition:opacity .4s;z-index:5}
@@ -99,31 +101,32 @@ kbd{background:#000;border:1px solid var(--line);border-radius:4px;padding:0 6px
 <div id="qapanel" hidden style="position:absolute;right:40px;bottom:70px;width:900px;max-height:800px;overflow:auto;z-index:5;background:rgba(20,24,33,.97);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:21px;line-height:1.45"></div>
 <div id="quiz" hidden></div><div id="text" hidden></div>
 <div id="help" hidden><b>Keys</b><br>
-<kbd>→</kbd> next point · <kbd>←</kbd> back (clicker: PageDown / PageUp) · after the last point the next slide · <kbd>↓</kbd> / <kbd>↑</kbd> whole slide<br>Button "Clicker / Auto" or <kbd>A</kbd>: Clicker = one click one point; Auto = the lecture plays by itself, slide after slide<br>
-<kbd>Space</kbd> or <kbd>P</kbd> pause / play the voice and the clip · <kbd>R</kbd> replay slide (interactive page: fresh picture) · <kbd>V</kbd> voice on / off · <kbd>A</kbd> autoplay on / off<br>
-<kbd>N</kbd> presenter view (second window: notes, next slide, clock)<br><kbd>K</kbd> key check questions on / off (about 10 slides marked "? question"; off by default) · <kbd>C</kbd> show the check question of this slide (Enter: answer)<br><kbd>I</kbd> contents: jump to any slide (arrows + Enter, Esc closes) · <kbd>Q</kbd> questions and answers for this slide (click a question to open the answer) · <kbd>T</kbd> spoken text · <kbd>F</kbd> fullscreen · <kbd>H</kbd> this help<br>
+<kbd>→</kbd> next point · <kbd>←</kbd> back (clicker: PageDown / PageUp) · after the last point the next slide · <kbd>↓</kbd> / <kbd>↑</kbd> whole slide<br>Clicker only: one click = one point (its short animation), after the last point the next slide<br>
+<kbd>Space</kbd> or <kbd>P</kbd> pause / play the clip · <kbd>R</kbd> replay slide (interactive page: fresh picture)<br>
+<kbd>N</kbd> presenter view (second window: notes, next slide, clock)<br><kbd>K</kbd> key check questions on / off (8 slides marked "? question"; off by default) · <kbd>C</kbd> show the check question of this slide (Enter: answer)<br><kbd>I</kbd> contents: jump to any slide (arrows + Enter, Esc closes) · <kbd>Q</kbd> questions and answers for this slide (click a question to open the answer) · <kbd>F</kbd> fullscreen · <kbd>H</kbd> this help<br>
 Clicker: next / back work as usual. Exercise slides: <kbd>S</kbd> starts / stops the countdown, "reset" sets it back.</div>
 </div></div>
 <div id="bar">
-<button id="bmode" title="Clicker: one click = one point (lecture). Auto: the whole lecture plays by itself, slide after slide (key A)"></button>
+<button id="bmode" hidden></button>
 <input type="checkbox" id="auto" checked hidden>
-<label><input type="checkbox" id="voice" checked> Voice</label>
+<input type="checkbox" id="voice" hidden>
 <input type="checkbox" id="adv" hidden>
 <input type="checkbox" id="ptsmode" hidden>
 <input type="checkbox" id="skip" hidden>
-<input type="number" id="qsec" value="30" hidden><span id="bq" hidden style="cursor:pointer;color:var(--b)" title="key check questions are on (K): C shows the question of this slide">? C check question</span><button id="bt">T text</button><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="btoc" title="contents: all slides by part; click one to jump there (key I)">☰ Contents</button><button id="bn">N presenter view</button><button id="brestart" title="back to slide 1, lecture clock and exercise timers to 0">⟲ Restart</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
-<span class="grow"></span><span style="color:var(--dim)">deck v38 (16.11., adapt in one slide) · 48 slides<span id="clipsN"></span></span><span id="privTag" hidden style="color:var(--r);font-weight:600" title="the internal layer deck/private is loaded: some slides show internal clinical data (never online)"> · internal data loaded</span><span id="num"></span>
+<input type="number" id="qsec" value="30" hidden><span id="bq" hidden style="cursor:pointer;color:var(--b)" title="key check questions are on (K): C shows the question of this slide">? C check question</span><button id="bf">F fullscreen</button><button id="bh">H help</button><button id="bsrc">Sources</button><button id="bqa">Q&amp;A</button><button id="btoc" title="contents: all slides by part; click one to jump there (key I)">☰ Contents</button><button id="bn">N presenter view</button><button id="brestart" title="back to slide 1, lecture clock and exercise timers to 0">⟲ Restart</button><button id="bpdf" title="the whole lecture as one PDF: contents, every slide with its points, spoken text and sources">PDF</button>
+<span class="grow"></span><span style="color:var(--dim)">deck v39 (16.11., clicker only + new outlook) · 41 slides<span id="clipsN"></span></span><span id="privTag" hidden style="color:var(--r);font-weight:600" title="the internal layer deck/private is loaded: some slides show internal clinical data (never online)"> · internal data loaded</span><span id="num"></span>
 </div>
 <script src="slides.js"></script>
 <script src="media.js"></script>
 <script src="qa.js"></script>
 <script src="steps.js"></script>
+<script src="anim.js"></script>
 <script src="step_audio.js"></script>
 <script>/* 13.11.2026: internal layer (deck/private, never published). Loaded only outside github.io; when the folder is
    missing the deck stays public. It replaces clip, voice, points, step texts and notes of single slides. */
 if(!/\.github\.io$/i.test(location.hostname))document.write('<script src="private/private.js"><\/script>')</script>
 <script>(function(){const P=window.PRIVATE;if(!P||!P.slides)return;
- for(const s of window.SLIDES){const o=P.slides[s.key];if(o)Object.assign(s,o)}
+ for(const s of window.SLIDES){const o=P.slides[s.key];if(o){Object.assign(s,o);if(window.ANIM){delete window.ANIM[s.key];if(P.anim&&P.anim[s.key])window.ANIM[s.key]=P.anim[s.key]}}}   // 16.11.2026: the internal clip has its own timeline and its own click spans
  Object.assign(window.MEDIA,P.media||{});if(window.STEPS)Object.assign(window.STEPS,P.steps||{});if(window.STEP_AUDIO)Object.assign(window.STEP_AUDIO,P.step_audio||{});
  window.PRIVATE_ON=true;const tag=document.getElementById("privTag");if(tag){tag.hidden=false;if(P.label)tag.textContent=" · "+P.label}})()</script>
 <script src="data/try_cutoff.js"></script><script src="data/try_qc.js"></script><script src="data/try_f1.js"></script>
@@ -134,8 +137,9 @@ const PRESENTER=location.hash==="#presenter";
 const KEYQ=(()=>{try{return JSON.parse(localStorage.getItem("deck1118.keyq"))===true}catch(e){return false}})();   // 13.11.2026: K switches the key check questions on (about 10; off by default)
 S.forEach(s=>{if(!(KEYQ&&s.key_q&&s.check)){s.check=null;s.key_q=false}});   // 10.11.2026, lecturer: no check questions on the slides (kept in slides_data.py); with K only the key ones
 const store={get(k,d){try{const v=localStorage.getItem("deck1118."+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("deck1118."+k,JSON.stringify(v))}catch(e){}}};
-const auto=$("#auto"),voice=$("#voice"),adv=$("#adv"),qsec=$("#qsec"),skip=$("#skip"),ptsmode=$("#ptsmode");skip.checked=false;ptsmode.checked=store.get("ptsmode",true);if(!ptsmode.checked){auto.checked=true;adv.checked=true}   // auto mode: autoplay and auto-advance together   // default: one click = one point with its piece of voice (untick for autoplay)
-auto.checked=store.get("auto",true);voice.checked=store.get("voice",true);adv.checked=store.get("adv",false);qsec.value=store.get("qsec",30);
+const auto=$("#auto"),voice=$("#voice"),adv=$("#adv"),qsec=$("#qsec"),skip=$("#skip"),ptsmode=$("#ptsmode");skip.checked=false;ptsmode.checked=true;   // 16.11.2026 lecturer: Clicker (point by point) is the only mode on the projector; stored "auto"/"ptsmode" values are ignored   // auto mode: autoplay and auto-advance together   // default: one click = one point with its piece of voice (untick for autoplay)
+auto.checked=true;   /* only plays an exercise slide's short clip on entry */ voice.checked=false;   // 16.11.2026 lecturer: the voice is only for rehearsal - off at every start, not stored (old key "voice" ignored); V or the presenter button "Voice (rehearsal)" switches it
+adv.checked=false;qsec.value=store.get("qsec",30);
 const audio=new Audio();audio.preload="auto";
 let cur=0,playing=false,clock=0,last=0,raf=0,hasClip={};
 const track=$("#track");
@@ -156,7 +160,7 @@ S.forEach((s,i)=>{if(s.kind==="try")M[s.key]=NOM;const m=M[s.key];const el=docum
  const step={"1  Grey matter":0,"2  White matter lesions":1,"3  Microbleeds":2}[s.part];
  const lad=["QC score · volume","Dice · overlap","F1 · count"].map((t,j)=>`<span class="${step===j||(step===undefined&&s.part==="Wrap-up")?"on":""}">${t}</span>`).join("");
  el.innerHTML=`<div class="head"><h1>${esc(s.title)}${s.optional?'<span class="opt-tag">optional</span>':""}${s.key_q?'<span class="opt-tag" style="color:var(--b);border-color:var(--b)">? question</span>':""}</h1><div class="hr"><span class="part">${esc(s.part)}</span>${s.part==="Opening"?"":`<div class="ladder">${lad}</div>`}</div></div>
- <div class="body"><div class="media">${firstImg?`<img alt="" src="img/${firstImg}.jpg">`:""}${s.qr?`<div class="qr"><img alt="QR code" src="${s.qr}"><div>phones: scan with the camera</div></div>`:""}<video playsinline preload="none" hidden></video></div>
+ <div class="body"><div class="media">${firstImg?`<img alt="" src="img/${firstImg}.jpg">`:""}${s.qr?`<div class="qr"><img alt="QR code" src="${s.qr}"><div>phones: scan with the camera</div></div>`:""}<video playsinline preload="none" hidden></video>${(s.links||[]).map((l,li)=>`<a class="cliplink" hidden data-pt="${l.pt}" href="${esc(l.url)}" target="_blank" rel="noopener" title="${esc(l.label)}" aria-label="${esc(l.label)}" style="left:${l.rect[0]*100}%;top:${l.rect[1]*100}%;width:${(l.rect[2]-l.rect[0])*100}%;height:${(l.rect[3]-l.rect[1])*100}%"></a>`).join("")}</div>
  <div class="pts">${pts}${ex}</div></div>
  <div class="src">${(s.sources||[]).map(x=>`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join("")}</div>`;
  track.appendChild(el);
@@ -165,6 +169,7 @@ S.forEach((s,i)=>{if(s.kind==="try")M[s.key]=NOM;const m=M[s.key];const el=docum
  // only if the clip cannot be loaded does the still version come back. The presenter window loads no clips.
  const v=el.querySelector("video");
  if(!PRESENTER&&s.clip){v.src=s.clip;v.preload=i<3?"auto":"metadata";el.classList.add("clip");v.hidden=false}
+ v.addEventListener("timeupdate",()=>{if(i===cur)updateLinks(clock)});
  v.addEventListener("loadedmetadata",()=>{hasClip[i]=true;const im=el.querySelector(".media img");if(im)im.remove();if(i===cur)start()});
  let retried=false;   // a clip on the network drive can be busy for a moment (e.g. being replaced): try once more
  v.addEventListener("error",()=>{if(!s.clip)return;if(!retried){retried=true;setTimeout(()=>{v.src=s.clip+"?r="+Date.now();v.load()},1500);return}hasClip[i]=false;el.classList.remove("clip");v.hidden=true;if(i===cur)start()});v.addEventListener("waiting",()=>{if(i===cur)hud("… loading clip",true)});v.addEventListener("playing",()=>{if(i===cur)hud("▶ playing")});
@@ -173,7 +178,7 @@ S.forEach((s,i)=>{if(s.kind==="try")M[s.key]=NOM;const m=M[s.key];const el=docum
 function fit(){if(PRESENTER)return;const k=Math.min(innerWidth/1600,innerHeight/900);$("#stage").style.transform=`scale(${k})`}
 addEventListener("resize",fit);fit();
 function el(){return $("#s"+cur)}
-function render(t){const e=el(),m=M[S[cur].key];
+function render(t){const e=el(),m=M[S[cur].key];updateLinks(t);
  let img=null;for(const b of m.beats){if(b.t<=t+.01&&b.img)img=b.img}
  const im=e.querySelector(".media img");if(im&&img&&img!=="-"&&!im.src.endsWith("img/"+img+".jpg"))im.src="img/"+img+".jpg";
  const all=[...e.querySelectorAll(".pt[data-t]")];let lastOn=-1;all.forEach((p,i)=>{if(+p.dataset.t<=t)lastOn=i});
@@ -186,7 +191,13 @@ function tickF(now){if(!playing)return;
 // helper overlay: where am I, and is the slide playing? shows on mouse move, when paused, at the end of a slide and after a slide change
 let hudT;
 function hud(state,stay){if(PRESENTER)return;const s=S[cur];$("#hnum").textContent=`${cur+1} / ${S.length}`;$("#htitle").textContent=s.title;
- $("#hst").textContent=state||"";$("#hud").classList.remove("hide");clearTimeout(hudT);if(!stay)hudT=setTimeout(()=>$("#hud").classList.add("hide"),2500)}
+ $("#hst").textContent=state||"";$("#hud").classList.remove("hide");placeHud();clearTimeout(hudT);if(!stay)hudT=setTimeout(()=>$("#hud").classList.add("hide"),2500)}
+// 16.11.2026 (lecturer, 110 % zoom): the HUD sat on the source links and on lines drawn at the bottom of the clips. It now
+// sits at the top right, over the part label only (sources are no longer shown on the projector), and fades after 2.5 s.
+function placeHud(){}
+// 16.11.2026: links over boxes drawn in a clip (slides_data.py "links"): visible from their point on, on the last state too
+function updateLinks(t){const e=el();if(!e)return;const v=e.querySelector("video"),ts=ptTimes(),now=Math.max(t||0,v&&hasClip[cur]?v.currentTime:0);
+ e.querySelectorAll(".cliplink").forEach(a=>{const pt=ts[+a.dataset.pt];a.hidden=!(hasClip[cur]&&pt!==undefined&&now>=pt-0.15)})}
 function stopAll(){playing=false;cancelAnimationFrame(raf);cancelAnimationFrame(segRaf);clearTimeout(voiceT);if(animUntil){animUntil=0;send()}audio.pause();document.querySelectorAll("video").forEach(v=>v.pause())}
 function start(){const keep=clock;stopAll();const s=S[cur],m=M[s.key];clock=0;render(0);
  if(s.kind==="try"){hud("✋ interactive: use the mouse",true);return}
@@ -229,9 +240,19 @@ function showPoint(t,animate){stopAll();clock=t;render(t);
   else{v.pause();try{v.currentTime=Math.max(0,to)}catch(e){}}}
  send()}
 // the "Voice" box decides: ticked, the piece plays with the voice; unticked, it plays silently
-function playSegment(v,from,to){const voiceUntil=animUntil;v.muted=!!window.STEP_AUDIO||!voice.checked;try{v.currentTime=from}catch(e){}   // the voice comes from the step file (stepVoice)
- animUntil=Math.max(voiceUntil,Date.now()+(to-from)*1000);send();v.play().catch(()=>{});
- const tick=()=>{if(v.currentTime>=to-0.03||v.ended||v.paused&&v.currentTime>from+0.1){v.pause();try{v.currentTime=to}catch(e){}if(animUntil<=Date.now()+50)animUntil=0;send();return}
+function playSegment(v,from,to){const voiceUntil=animUntil;v.muted=!!window.STEP_AUDIO||!voice.checked;   // the voice comes from the step file (stepVoice)
+ // 16.11.2026 (lecturer: "ich will durch Klicken vorankommen"): with the voice off a click plays only the animation of its
+ // point - the spans where the clip moves (deck/anim.js from the render audits, code/26_anim_spans.py) - and jumps over
+ // the still frames between them, where the clip only waited for the voice. With the voice on: the whole piece, as before.
+ const A=(window.ANIM||{})[S[cur].key];let spans=[[from,to]];
+ if(!voice.checked&&A){spans=A.filter(([a,b])=>b>from+0.02&&a<to-0.02).map(([a,b])=>[Math.max(a,from),Math.min(b+0.08,to)]);
+  if(!spans.length){v.pause();try{v.currentTime=to}catch(e){}send();return}}
+ let si=0;try{v.currentTime=spans[0][0]}catch(e){}
+ animUntil=Math.max(voiceUntil,Date.now()+spans.reduce((t,[a,b])=>t+b-a,0)*1000);send();v.play().catch(()=>{});
+ const tick=()=>{const end=spans[si][1];
+  if(v.currentTime>=end-0.03||v.ended||v.paused&&v.currentTime>spans[si][0]+0.1){
+   if(si<spans.length-1&&!v.ended){si++;try{v.currentTime=spans[si][0]}catch(e){}if(v.paused)v.play().catch(()=>{});segRaf=requestAnimationFrame(tick);return}
+   v.pause();try{v.currentTime=to}catch(e){}if(animUntil<=Date.now()+50)animUntil=0;send();return}
   segRaf=requestAnimationFrame(tick)};segRaf=requestAnimationFrame(tick)}
 // the lecture clock starts by itself with the first click forward (clicker, arrow key or Next in the presenter view);
 // that first click only starts it and stays on the point that is showing, where the lecture begins
@@ -260,7 +281,7 @@ function rebuildTry(i,from){if(PRESENTER||!window.BUILD_WIDGET)return;const s=S[
  if(from!==i&&S[from]&&S[from].kind==="try"&&WIDGETS[S[from].widget])setTimeout(()=>{if(cur!==from)BUILD_WIDGET(S[from].widget,document.querySelector("#s"+from+" .widget"),false)},900)}
 function go(i){i=Math.max(0,Math.min(S.length-1,i));setTimeout(()=>{if(!$("#srcpanel").hidden)showSources();if(!$("#qapanel").hidden)showQA()},0);preloadNext(i);if(exRun){clearInterval(et);exRun=false}closeQuiz();$("#text").hidden=true;const leaving=cur;cur=i;useBlob(leaving);rebuildTry(i,leaving);
  showSlide(prevCur,i);prevCur=i;$("#num").textContent=`${i+1} / ${S.length}`;
- try{history.replaceState(null,"","#"+S[i].key)}catch(e){}start();send();if(S[i].kind!=="try")hud(pointMode()&&!S[i].exercise?"● point by point · → next point · Space voice":auto.checked?"▶ playing":"⏸ Space to play")}
+ try{history.replaceState(null,"","#"+S[i].key)}catch(e){}start();send();if(S[i].kind!=="try")hud(pointMode()&&!S[i].exercise?"● point by point · → next point":auto.checked?"▶ playing":"⏸ Space to play")}
 // check question with countdown
 let qt=0;
 function openQuiz(){const c=S[cur].check;const q=$("#quiz");if(!c){q.innerHTML=`<h2>No check question on this slide.</h2><div class="hint">C or Esc to close</div>`;q.hidden=false;return}
@@ -295,13 +316,13 @@ function toggleSources(){const p=$("#srcpanel");if(p.hidden){showSources();p.hid
 function qaHtml(key,open){const q=(window.QA||{})[key]||[];return q.length?q.map((x,i)=>`<details${open?" open":""} style="margin:0 0 10px"><summary style="cursor:pointer;color:var(--y)">${i+1}. ${esc(x.q)}</summary><div style="margin:6px 0 6px 26px">${esc(x.a)}</div></details>`).join(""):"<div style='color:var(--dim)'>No questions stored for this slide.</div>"}
 function showQA(){$("#qapanel").innerHTML=`<div style="color:var(--dim);font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Questions and answers · slide ${cur+1} · ${esc(S[cur].title)}</div>`+qaHtml(S[cur].key,false)+`<div style="margin-top:12px;border-top:1px solid var(--line);padding-top:10px"><a href="questions.mp4" target="_blank" style="color:var(--y)">Film: twelve hard questions, answered (6 min)</a></div>`}
 function toggleQA(){const p=$("#qapanel");if(p.hidden){showQA();p.hidden=false;$("#srcpanel").hidden=true}else p.hidden=true}
-function toggleText(){const t=$("#text");if(t.hidden){t.textContent=S[cur].text;t.hidden=false}else t.hidden=true}
+function toggleText(){$("#text").hidden=true}   // 16.11.2026 lecturer: the spoken text is never shown on the projector (only in the presenter view)
 function fs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
 // Space on a focused tick box must pause the slide, not flip the box (the box flips on keyup)
 const isBox=t=>t&&t.tagName==="INPUT"&&t.type==="checkbox";
 addEventListener("keyup",e=>{if(e.key===" "&&isBox(e.target)){e.preventDefault()}},true);
 addEventListener("keydown",e=>{if(e.key===" "&&isBox(e.target)){e.preventDefault();e.target.blur()}},true);
-addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox(e.target)))return;const k=e.key;
+addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox(e.target)))return;const k=e.key;if(e.target.tagName==="A"&&(k==="Enter"||k===" "))return;   // a focused link opens itself
  if(k===" "){e.preventDefault();togglePlay()}
  else if(["ArrowRight","PageDown"].includes(k)){e.preventDefault();stepPoint(1)}
  else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();stepPoint(-1)}
@@ -310,7 +331,7 @@ addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox
  else if(k==="Home")go(0);else if(k==="End")go(S.length-1);
  else if(k==="p"||k==="P")togglePlay();else if(k==="r"||k==="R"){start();rebuildTry(cur,cur)}
  else if(k==="v"||k==="V"){voice.checked=!voice.checked;voice.onchange()}
- else if(k==="a"||k==="A"){setMode(ptsmode.checked?"auto":"clicker")}
+ // 16.11.2026 lecturer ("das sollte Standard sein, also kein Auto"): key A no longer switches to Auto
  
  else if(k==="Enter"&&!$("#quiz").hidden)reveal();
  else if(k==="q"||k==="Q")toggleQA();
@@ -318,23 +339,24 @@ addEventListener("keydown",e=>{if(PRESENTER||(e.target.tagName==="INPUT"&&!isBox
  else if(k==="k"||k==="K"){store.set("keyq",!KEYQ);location.reload()}
  else if(k==="c"||k==="C"){$("#quiz").hidden?openQuiz():closeQuiz()}
  else if(k==="Escape"){closeQuiz();$("#srcpanel").hidden=true;$("#qapanel").hidden=true;$("#help").hidden=true;$("#text").hidden=true}
- else if(k==="t"||k==="T")toggleText();else if(k==="f"||k==="F")fs();
+ else if(k==="f"||k==="F")fs();
  else if(k==="h"||k==="H"||k==="?")$("#help").hidden=!$("#help").hidden;
  else if(k==="s"||k==="S")exStart()});
-voice.onchange=()=>{store.set("voice",voice.checked);if(hasClip[cur]){el().querySelector("video").muted=!voice.checked}else if(playing){if(voice.checked){audio.currentTime=clock;audio.play().catch(()=>{})}else audio.pause()}};
-auto.onchange=()=>{store.set("auto",auto.checked);if(auto.checked)start();else stopAll()};
-adv.onchange=()=>store.set("adv",adv.checked);ptsmode.onchange=()=>{store.set("ptsmode",ptsmode.checked);start()};
+voice.onchange=()=>{if(!voice.checked){clearTimeout(voiceT);audio.pause()}   // 16.11.2026: switching the rehearsal voice off silences the step voice at once
+ if(hasClip[cur]){el().querySelector("video").muted=!voice.checked}else if(playing){if(voice.checked){audio.currentTime=clock;audio.play().catch(()=>{})}else audio.pause()}};
+auto.onchange=()=>{store.set("auto2",auto.checked);if(auto.checked)start();else stopAll()};
+adv.onchange=()=>store.set("adv2",adv.checked);ptsmode.onchange=()=>{store.set("ptsmode2",ptsmode.checked);start()};
 // 13.11.2026: one button for the two ways to run the deck (the three boxes Autoplay / Auto-advance / Point by point were
 // confusing and point by point silently overrode the other two). Clicker = point by point; Auto = play every slide in
 // full and go on by itself (pauses at interactive pages and exercises).
 function setMode(m){const clk=m!=="auto";ptsmode.checked=clk;auto.checked=!clk;adv.checked=!clk;
- store.set("ptsmode",clk);store.set("auto",!clk);store.set("adv",!clk);
+ store.set("ptsmode2",clk);store.set("auto2",!clk);store.set("adv2",!clk);
  $("#bmode").textContent=clk?"☝ Clicker: point by point":"▶ Auto: plays by itself";$("#bmode").classList.toggle("on",!clk);
  ptSlide=-1;playedKey="";start();hud(clk?"☝ clicker mode · → next point":"▶ auto mode · the lecture plays by itself",false)}
-$("#bmode").onclick=()=>setMode(ptsmode.checked?"auto":"clicker");
+
 setTimeout(()=>{if(PRESENTER)return;$("#bmode").textContent=ptsmode.checked?"☝ Clicker: point by point":"▶ Auto: plays by itself";$("#bmode").classList.toggle("on",!ptsmode.checked)},0);skip.onchange=()=>{store.set("skip",skip.checked);send()};$("#bn").onclick=openPresenter;qsec.onchange=()=>store.set("qsec",+qsec.value);if(KEYQ)$("#bq").hidden=false;
 document.querySelectorAll("#bar input,#bar button").forEach(x=>x.addEventListener("click",()=>setTimeout(()=>x.blur(),0)));
-$("#brestart").onclick=()=>{if(confirm("Restart the lecture from slide 1? The lecture clock and the exercise timers go back to 0."))restartAll()};$("#bpdf").onclick=()=>window.open("lecture_1118_slides.pdf","_blank");$("#bq").onclick=openQuiz;$("#bsrc").onclick=toggleSources;$("#bqa").onclick=toggleQA;$("#btoc").onclick=()=>tocOpen(cur,i=>go(i));$("#bt").onclick=toggleText;$("#bf").onclick=fs;$("#bh").onclick=()=>$("#help").hidden=!$("#help").hidden;
+$("#brestart").onclick=()=>{if(confirm("Restart the lecture from slide 1? The lecture clock and the exercise timers go back to 0."))restartAll()};$("#bpdf").onclick=()=>window.open("lecture_1118_slides.pdf","_blank");$("#bq").onclick=openQuiz;$("#bsrc").onclick=toggleSources;$("#bqa").onclick=toggleQA;$("#btoc").onclick=()=>tocOpen(cur,i=>go(i));$("#bf").onclick=fs;$("#bh").onclick=()=>$("#help").hidden=!$("#help").hidden;
 // swipe for tablets
 let sx=null;addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});
 addEventListener("touchend",e=>{if(sx===null||PRESENTER)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60)step(dx<0?1:-1);sx=null});
@@ -415,7 +437,7 @@ function presenterView(){
   <div class="card"><div class="row"><div><h3>Lecture clock</h3><div class="clock" id="pclock">0:00</div></div><div><h3>Plan</h3><div class="pace" id="ppace">press Start</div></div></div>
    <div class="row" style="margin-top:10px"><button id="pstart">Start clock</button><button data-c="prev">◀ Back</button><button data-c="next">Next ▶</button><button data-c="play">Play / pause</button>
    <button data-c="exstart">Exercise timer start / stop</button><button data-c="exreset">reset</button><button id="prestart">⟲ Restart from 0</button>
-   <button data-c="voice" id="pvoice">Voice</button><button id="ptoc" title="contents: jump to any slide (key I)">☰ Contents</button><span id="pskip" hidden></span></div>
+   <button data-c="voice" id="pvoice" title="the voice is for rehearsal only: off by default, also on the projector">Voice (rehearsal)</button><button id="ptoc" title="contents: jump to any slide (key I)">☰ Contents</button><span id="pskip" hidden></span></div>
    <div style="margin-top:10px"><select id="pjump"></select></div></div>
   <div class="card"><h3>Next</h3><h2 id="nt" style="font-size:24px"></h2><img id="nimg" alt=""><ul class="pts" id="npts"></ul></div>
   <div class="card" style="grid-column:1/3;font-size:15px;color:var(--dim)">The clock starts with the first click forward; that click stays on the current point ("Start clock" restarts the clock). Keys work here too: → next point (after the last point: next slide), ← back, Space or P pause / play, S exercise timer, V voice, I contents (jump to any slide).
@@ -443,7 +465,7 @@ function presenterView(){
   const g=S.slice(0,st.cur).reduce((a,x)=>a+nSteps(x),0)+k+1;
   $("#pnum").textContent=(pm?`step ${g} / ${stepTotal()} · `:"")+`slide ${st.cur+1} / ${S.length}`+(pm&&pts.length>1?` · point ${k+1} / ${pts.length}`:"")+` · ${s.part}${s.optional?" · optional":""}`;
   $("#pstep").innerHTML=pm&&pts[k]?head(pts[k].text):"";$("#psay").textContent=pm?(say[k]||say[0]||""):"";
-  $("#ptitle").textContent=s.title;$("#pnotes").classList.toggle("more",!!pm);$("#pnotes").innerHTML=(pm?`<details><summary>whole slide text</summary>${esc(s.notes||s.text)}</details>`:esc(s.notes||s.text))+(s.background?`<details style="margin-top:14px;font-size:17px;color:var(--dim)"><summary>background</summary>${esc(s.background)}</details>`:"")+(((window.QA||{})[s.key]||[]).length?`<details style="margin-top:14px;font-size:18px"><summary style="color:var(--dim)">questions and answers (${window.QA[s.key].length})</summary>${qaHtml(s.key,false)}</details>`:"");
+  $("#ptitle").textContent=s.title;$("#pnotes").classList.toggle("more",!!pm);$("#pnotes").innerHTML=(pm?`<details><summary>whole slide text</summary>${esc(s.notes||s.text)}</details>`:esc(s.notes||s.text))+(s.background?`<details style="margin-top:14px;font-size:17px;color:var(--dim)"><summary>background</summary>${esc(s.background)}</details>`:"")+(((window.QA||{})[s.key]||[]).length?`<details style="margin-top:14px;font-size:18px"><summary style="color:var(--dim)">questions and answers (${window.QA[s.key].length})</summary>${qaHtml(s.key,false)}</details>`:"")+((s.sources||[]).length?`<div style="margin-top:14px;font-size:15px;color:var(--dim)">sources: ${(s.sources||[]).map(x=>`<a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--dim)">${esc(x.label)}</a>`).join(" · ")}</div>`:"");+((s.links||[]).length?`<div style="margin-top:10px;font-size:18px">${s.links.map(l=>`<a href="${esc(l.url)}" target="_blank" rel="noopener" style="color:var(--y)">▶ ${esc(l.label)}</a>`).join("<br>")}</div>`:"");   // 16.11.2026: sources small under the notes; clip links clickable here too
   P=plan(st.skip);starts=P.map((_,i)=>P.slice(0,i).reduce((a,b)=>a+b,0));
   $("#pcheck").textContent=s.check?`${s.key_q?"★ KEY QUESTION (press Q) · ":"(spare question) "}${s.check.q}  →  ${s.check.options[s.check.answer]}`:(s.exercise?`Exercise: ${s.exercise.minutes} min · S starts the countdown`:"");
   let j=st.cur+1;while(st.skip&&j<S.length-1&&S[j].optional)j++;const n=S[j];
@@ -451,7 +473,7 @@ function presenterView(){
   else if(n){const nm=M[n.key],im=nm.beats.map(b=>b.img).find(b=>b&&b!=="-");$("#nt").textContent=n.title+(n.optional?" (optional)":"");
    $("#nimg").hidden=!im;if(im)$("#nimg").src="img/"+im+".jpg";$("#npts").innerHTML=nm.beats.flatMap(b=>b.pts).map(p=>`<li>${esc(p.text)}</li>`).join("")}
   else{$("#nt").textContent="(end)";$("#nimg").hidden=true;$("#npts").innerHTML=""}
-  $("#pvoice").textContent="Voice: "+(st.voice?"on":"off");$("#pskip").textContent="Skip optional: "+(st.skip?"on":"off");$("#pjump").value=st.cur}
+  $("#pvoice").textContent="Voice (rehearsal): "+(st.voice?"on":"off");$("#pskip").textContent="Skip optional: "+(st.skip?"on":"off");$("#pjump").value=st.cur}
  function clock(){if(!st.t0){$("#pclock").textContent="0:00";$("#ppace").textContent="first click starts the clock";return}const el=(Date.now()-st.t0)/1000;$("#pclock").textContent=fmt(el);
   // 13.11.2026: plan per step, to the second. A slide's planned time is split over its points by where each point
   // falls in the voice; one-step slides (exercise, interactive) keep the slide start.

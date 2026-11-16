@@ -252,48 +252,6 @@ window.QA = {
 "a": "For this slide, keep the idea: inflate, match the folds, give names. And keep the number: 34 regions per hemisphere. The atlas quiz after this part trains the names of a few important structures."
 }
 ],
-"fs_run": [
-{
-"q": "How many hours does one scan take?",
-"a": "There is no single official number. The FreeSurfer documentation gives just under 3 hours for version 6 on a newer workstation with parallel processing, and 20 to 40 hours on older pages. It depends on the version and on the computer."
-},
-{
-"q": "What does recon-all mean?",
-"a": "It is the one FreeSurfer command that runs the cortical reconstruction. The documentation says it performs all, or any part of, this process, from the raw T1 image to the named regions."
-},
-{
-"q": "Why does it need a T1 image?",
-"a": "On a T1 image, white matter is bright, grey matter is darker and fluid is dark. The method uses exactly this contrast to find the two borders of the cortex. Research T1 images also have small voxels of about 1 millimetre."
-},
-{
-"q": "What does the program do in all those hours?",
-"a": "It runs many steps in a row. It removes the skull, evens out the brightness, labels the deep structures, finds the white matter, builds the white and the pial surface, inflates them, maps them to a sphere and names the regions."
-},
-{
-"q": "What is a clinical scan, and why does recon-all struggle with it?",
-"a": "A clinical scan is made in hospital routine, where time is short. It often has thick slices, for example 5 millimetres, or another contrast than T1. The cortex is only a few millimetres thick, so with thick slices its borders cannot be placed well."
-},
-{
-"q": "How do I notice that a run went wrong?",
-"a": "Sometimes it stops with an error. Worse, it can finish with wrong surfaces. So look at the result. FreeSurfer also gives a warning number, the Euler number. It flags unusable scans very well, but there is no cut-off that fits every study."
-},
-{
-"q": "Can I repair a wrong result by hand?",
-"a": "Yes. FreeSurfer lets you edit intermediate images and run the later steps again. For brain lesions, the documentation says to edit the white matter volume and not to use control points. Editing takes time and training."
-},
-{
-"q": "What do I get at the end of a run?",
-"a": "One folder per person. It holds the two surfaces per hemisphere, the thickness at every point, the named cortical regions, the labels of the deep structures, and tables with thickness and volume per region."
-},
-{
-"q": "Do I need a special computer, and does it cost money?",
-"a": "No graphics card is needed. It runs on a normal processor under Linux or macOS. FreeSurfer is free for research; you only register for a licence file. The real cost is computing time."
-},
-{
-"q": "Is there a way to get surfaces from clinical scans anyway?",
-"a": "There is a newer route. FreeSurfer 8.2 ships a command called recon-all-clinical, which gives surfaces and thickness on clinical scans. It is described in a preprint by Gopinath and colleagues. We do not cover it today, and its results need the same checks."
-}
-],
 "ss_idea": [
 {
 "q": "What is a neural network?",
@@ -334,48 +292,6 @@ window.QA = {
 {
 "q": "Who made SynthSeg, and where do I get it?",
 "a": "Billot and colleagues published it in 2023 in the journal Medical Image Analysis. The code is public, and SynthSeg is also part of FreeSurfer. The paper is under the Sources button."
-}
-],
-"ss_make": [
-{
-"q": "Where do the label maps come from?",
-"a": "From segmented brains: 20 maps were drawn by hand, 1,000 more came from automatic segmentations of research scans that were checked by eye, half of them from young adults, half from older people, some with dementia. Automatic maps are allowed here, because the fake image is made from the map and fits it perfectly."
-},
-{
-"q": "Is the grey value the only thing that is random?",
-"a": "No. The slide shows only the painting step. The real generator also bends the label map (turn, stretch, warp), adds what a scanner adds (uneven brightness and noise), and makes the image coarse with thick slices. Without bending, the network lost 4.3 Dice points in the authors' test."
-},
-{
-"q": "Would realistic images not be better for training?",
-"a": "The authors tested this. Networks trained on images narrowed to the contrast or resolution of the target scans were worse, by 1.4 and 2.6 Dice points, although they were trained again for every target. Images beyond what is realistic force the network to rely on shape."
-},
-{
-"q": "What does 'uneven brightness' mean in the full generator?",
-"a": "Real scanners do not receive the signal equally well from all places, so the same tissue is brighter in one corner than in another. This is called the bias field. The generator adds a random one, so the network learns to ignore it."
-},
-{
-"q": "Why does the full generator also make the image coarse?",
-"a": "Clinical scans often have thick slices. The generator blurs the image, keeps only thick slices in a random direction, and brings it back to the 1 mm grid, while the target stays the sharp label map. So the network learns to give sharp labels from a coarse scan."
-},
-{
-"q": "How many fake images does the network see?",
-"a": "A new one at every training step, and there are 300,000 steps. Images are made on the fly and never stored, so the network practically never sees the same image twice."
-},
-{
-"q": "How long does the training take?",
-"a": "About seven days on one graphics card, the authors write. But it is done only once: the trained network is shipped with FreeSurfer, and nobody has to train it again for a new kind of scan."
-},
-{
-"q": "Does the network really never see a real scan?",
-"a": "Not in training. The paper states that the training data does not include any real scan. Real scans are used only to choose settings and to test."
-},
-{
-"q": "Does the generator know lesions?",
-"a": "Partly. With 50 % probability, labels of white matter lesions are pasted into the map, to make the network robust against them. Without this, results on scans of older people dropped by 3.9 Dice points. A large stroke is a different matter, as the next slides show."
-},
-{
-"q": "Are the pictures on the slide the real generator?",
-"a": "No, a simplified illustration: one slice of a public scan, painted three times with grey values we chose to show three clearly different contrasts. The real generator works in three dimensions, picks every grey value at random and adds the other steps."
 }
 ],
 "ss_fast": [
@@ -544,48 +460,6 @@ window.QA = {
 {
 "q": "The QC passes. How would I find such a scan among a thousand?",
 "a": "Not with the score. You need to know which people have a lesion: from the clinical data, from the radiology report or from a lesion mask. Look at those scans yourself. And look at a random sample of the others."
-}
-],
-"qc_euler": [
-{
-"q": "What is the Euler number in one sentence?",
-"a": "Count the corners of a surface, subtract the edges and add the faces. For a closed surface without holes the answer is always 2. FreeSurfer reports this number for the cortex surface it builds."
-},
-{
-"q": "Why is it 2 for a cube?",
-"a": "A cube has 8 corners, 12 edges and 6 faces. 8 minus 12 plus 6 is 2. Any other closed surface without holes gives the same answer, however finely you cut it into corners, edges and faces."
-},
-{
-"q": "What is a handle?",
-"a": "Think of the handle of a cup, or of a ring: a part of the surface that forms a loop with a hole through it. Each handle lowers the Euler number by 2. One handle gives 0, two handles give minus 2."
-},
-{
-"q": "Why must the cortex surface have no handles?",
-"a": "FreeSurfer treats each hemisphere's surface as a closed sheet that can be blown up to a ball. That only works without holes or handles. The documentation says the topology fixer makes sure there are none."
-},
-{
-"q": "Where do the numbers minus 38 and 26 come from?",
-"a": "From our own FreeSurfer 8.2.0 run on a public stroke scan (Aphasia Recovery Cohort, sub-M2104). The log of the left hemisphere reports 26 defects and an Euler number of minus 38 before the repair. The right hemisphere had minus 42."
-},
-{
-"q": "Why 26 defects but 20 handles?",
-"a": "They are two different counts, and the log gives both. A defect is a region that FreeSurfer cuts out and builds again. The number of handles follows from the Euler number: 2 minus 2 times 20 is minus 38."
-},
-{
-"q": "If FreeSurfer repairs the defects, why should I care?",
-"a": "The repair makes the surface closed, but it does not make the image better. Many defects are a sign that the image was hard to read. The repaired surface can still lie in the wrong place, so look at such a scan."
-},
-{
-"q": "Which value is too bad?",
-"a": "There is no fixed limit. In Rosen 2018 the threshold from the training data was right in only 76 % of scans from another dataset. Compare the number across your own scans and look at the ones far out."
-},
-{
-"q": "How well does it find bad scans?",
-"a": "In Rosen 2018 it separated scans that experts rated unusable from the others with an AUC of 0.98 to 0.99 in three samples. An AUC of 1 would be perfect, 0.5 is guessing. The samples were young people and adults."
-},
-{
-"q": "Does SynthSeg have an Euler number too?",
-"a": "No. SynthSeg builds no surface, it labels voxels. Its warning number is the QC score from the slide before. The idea is the same: an automatic number tells you which scans to open first."
 }
 ],
 "qc_test": [
@@ -924,48 +798,6 @@ window.QA = {
 "a": "Real. They are 640 stored training voxels from our own BIANCA run, 160 lesion and 480 healthy, plotted by FLAIR and T1 brightness. The vote of 35 of 40 is counted among these 640 points, with brightness only. The real BIANCA, with all stored points and the position too, gave this voxel 0.85."
 }
 ],
-"bianca_thr": [
-{
-"q": "What exactly is a probability map?",
-"a": "It is a new image with the same grid as the scan. Each voxel no longer holds a brightness. It holds the result of the vote, a value between 0 and 1. Shown as a picture, the clear lesions glow strongly and doubtful tissue glows weakly."
-},
-{
-"q": "What is a cut-off, and why do we need one?",
-"a": "A cut-off is a limit that turns a soft value into a yes or no. Every voxel at or above the limit counts as lesion, all others as healthy. We need it because a volume in millilitres or a lesion count can only be taken from a mask, not from a glow."
-},
-{
-"q": "More than half of the votes sounds like the natural limit. Why not simply 0.5?",
-"a": "It sounds natural, but the vote is not a true chance. It depends on how many lesion and healthy examples we stored. In our runs, 0.5 marked far too much: the mean Dice was 0.606. At 0.95 it was 0.738. So the limit has to be found by testing."
-},
-{
-"q": "How was 'best' decided?",
-"a": "We split the 60 training scans into two halves of 30. BIANCA learned on one half. On the other half we tried many cut-offs from 0.05 to 0.99 and compared each mask with the expert mask. The cut-off with the highest mean Dice won: 0.95. In our best setup, whose Dice of 0.70 you see later, the same test chose 0.90."
-},
-{
-"q": "Then why not go even higher, to 0.99?",
-"a": "Because then the mask starts to lose real lesion. In our runs the mean Dice fell again, from 0.738 at 0.95 to 0.706 at 0.99. At 0.99 all 40 neighbours must say lesion. Edges of lesions and faint small lesions do not reach that."
-},
-{
-"q": "Is 0.95 the right cut-off for my data too?",
-"a": "Do not assume so. The original BIANCA paper found 0.9 best on its data. In our own further runs the best value lay between 0.60 and 0.99, depending on the setup. The cut-off belongs to the data and the settings. Find it again for your study."
-},
-{
-"q": "How much does the measured lesion volume depend on the cut-off?",
-"a": "Very much. In our example scan the expert marked 21.88 ml. BIANCA's mask held 49.29 ml at a cut-off of 0.5 and 26.54 ml at 0.95. So the same patient has almost twice the lesion volume with the lower limit. Always report the cut-off with the volume."
-},
-{
-"q": "Which tissue gets marked wrongly at a low cut-off?",
-"a": "Tissue that is a little bright on FLAIR without being a lesion. Typical places are the cortex, the thin rim along the ventricles, and regions with image artefacts. A few of their 40 neighbours are lesion examples, and with a low limit a few votes are enough."
-},
-{
-"q": "Can I choose a different cut-off for each patient, so that each mask looks right?",
-"a": "Better not. Then the result depends on your eye again, and the method is no longer the same for everybody. In a study, fix one cut-off before you look at the results and use it for all scans. If a mask looks wrong, note the case; do not tune it."
-},
-{
-"q": "Is information lost when we make a mask out of the probabilities?",
-"a": "Yes. At a cut-off of 0.95, a voxel with 0.925 and a voxel with 0.10 both become zero. That is the price of a clear answer. Keep the probability map on disk. Then you can later test another cut-off without running BIANCA again."
-}
-],
 "try_cutoff": [
 {
 "q": "What am I supposed to do with the slider?",
@@ -1006,48 +838,6 @@ window.QA = {
 {
 "q": "Is the best cut-off on this slice also the best for the whole scan?",
 "a": "For this patient it is close: over the whole scan, 0.95 was the best of the values we tried. But the Dice there is only 0.70, not 0.82, because this slice has large, clear lesions. One slice is not enough to choose a cut-off."
-}
-],
-"bianca_matters": [
-{
-"q": "What do the numbers on the bars mean, for example +0.14?",
-"a": "They are changes of the Dice score. Dice measures how well BIANCA's mask matches the expert mask, from 0 to 1; it comes a few slides later. Plus 0.14 means: with position switched on, the mean Dice was 0.14 higher. All numbers come from our own runs on public scans."
-},
-{
-"q": "How does BIANCA know where a voxel lies in the brain?",
-"a": "Every scan is aligned to a standard brain, an average brain with a fixed coordinate system. After that, each voxel has three coordinates that mean the same place in every person. BIANCA stores these three numbers next to the brightness."
-},
-{
-"q": "Why does position help so much more than the other settings?",
-"a": "Because brightness alone is ambiguous. The cortex is bright on FLAIR too. Position settles it: lesions cluster around the ventricles, and the map of all training masks shows this. A bright voxel near a ventricle is likely a lesion; the same brightness at the brain surface is not. Gain: 0.14."
-},
-{
-"q": "If BIANCA expects lesions near the ventricles, does it miss lesions in unusual places?",
-"a": "That is the risk. A lesion in a place where the training scans had none finds few lesion neighbours and gets a low vote. Position is one feature among several, so a very bright lesion can still win. But check patients with unusual patterns by eye."
-},
-{
-"q": "On which scans should I choose the cut-off?",
-"a": "On scans with expert masks that BIANCA did not learn from. And never on the scans you use for the final score. If you pick the cut-off on the test scans, the reported Dice is too good, because the cut-off has been fitted to exactly those scans."
-},
-{
-"q": "The brain is the same. Why does a new scanner disturb BIANCA?",
-"a": "The brain is, the picture is not. Each scanner and each protocol gives its own contrast between lesion, white matter and cortex. The stored examples describe the pictures of the training scanners. In our best setup, scans from known scanners scored 0.702 and scans from new scanners 0.664."
-},
-{
-"q": "My scanner was not in the training. What can I do?",
-"a": "The clean way: paint masks on a number of your own scans and train BIANCA with them. Training is only storing examples, so it is quick. If that is not possible, at least paint a few scans and measure how well the old training works on your data before you use it."
-},
-{
-"q": "Why does a thick slice make small lesions disappear?",
-"a": "A voxel shows the average of all tissue inside it. This is called partial volume. A small lesion fills a thin voxel well, but only part of a thick one. The rest is healthy tissue, so the voxel is only a little brighter than normal and gets too few lesion votes."
-},
-{
-"q": "If my study has thick slices, does it help to train BIANCA on thick slices too?",
-"a": "Less than you would hope. In our simulation, a model trained on 5 mm slices scored 0.589 on 5 mm scans; the model trained on 3 mm slices scored 0.595. The small lesions are missing in the picture itself. Training cannot bring back what the scan did not record."
-},
-{
-"q": "Are these the best settings for every study?",
-"a": "They are the best for our runs on one public set of scans. The original paper also preferred FLAIR plus T1 and 10,000 healthy points, which supports them. But patches, for example, might help on noisier scans. Take our numbers as a starting point and test on your own data."
 }
 ],
 "bianca_small": [
@@ -1512,90 +1302,6 @@ window.QA = {
 "a": "Yes, the marked voxels of one object give its volume. In the public benchmark the best program outlined the microbleeds it had found quite well: the Dice overlap with the expert outline, averaged over the found microbleeds of a scan, had a median of about 0.84 over the scans. Its median F1 for finding them was only 0.68."
 }
 ],
-"cmb_26": [
-{
-"q": "What is a cluster?",
-"a": "A cluster is a group of marked voxels that hang together. From each voxel of the group you can reach every other one by stepping from neighbour to neighbour. Computer scientists call it a connected component. On this slide one cluster counts as one microbleed."
-},
-{
-"q": "Where does the number 26 come from?",
-"a": "Think of a block of 3 by 3 by 3 small cubes, 27 in total. The cube in the middle has 26 others around it. 6 share a whole face with it, 12 share only an edge, and 8 touch it only at a corner. 6 plus 12 plus 8 is 26."
-},
-{
-"q": "Why do voxels that touch only at a corner count as connected?",
-"a": "It is a choice. A microbleed is roughly a ball, and on a grid of cubes some of its voxels may touch the rest only diagonally. If we counted only the 6 face neighbours, such a microbleed could fall apart into pieces and be counted twice. With 26 neighbours it stays one."
-},
-{
-"q": "Does the rule, 6 or 26 neighbours, really change the count?",
-"a": "Yes. In one public VALDO scan, sub-101, two of the expert's microbleeds have voxels that touch only by an edge or a corner. Counted with only the 6 face neighbours they give 14 pieces, with 26 neighbours 12 microbleeds. The voxels are the same; only the rule differs. So always say which rule you used."
-},
-{
-"q": "Which rule is the correct one?",
-"a": "There is no single correct rule. The public benchmark for microbleed programs used 6 neighbours. This lecture and the exercise use 26. What matters is that the program and the reference are counted with the same rule, and that the rule is written down."
-},
-{
-"q": "What happens if two real microbleeds lie directly next to each other?",
-"a": "If their marked voxels touch, even at one corner, they become one cluster and are counted as one microbleed. The count is then one too low. The clustering rule cannot know that there were two. Close to a limit such as four, this can matter."
-},
-{
-"q": "And the opposite: can one microbleed be counted twice?",
-"a": "Yes. If the network marks a microbleed with a gap in the middle, the two parts do not touch and become two clusters. The count is then one too high. The rule with 26 neighbours makes this less likely than the rule with 6, but it cannot prevent it."
-},
-{
-"q": "How does the computer find the clusters?",
-"a": "It takes one marked voxel and gives it the number 1. Then it passes this number on to all marked neighbours, then to their neighbours, like water that spreads. When nothing new is reached, cluster 1 is complete, and the next free marked voxel starts cluster 2. This is called a flood fill."
-},
-{
-"q": "Is a single marked voxel also a microbleed?",
-"a": "By the counting rule, yes: one voxel alone is a cluster and counts as one object. But be careful. The consensus standards say that dark spots smaller than 2 millimetres, which may come from one single voxel, should be regarded as questionable on a 1.5 tesla scanner."
-},
-{
-"q": "On one flat slice I count only 8 neighbours. Where are the others?",
-"a": "In the slices above and below. On a flat slice a voxel has 8 neighbours: 4 share a side and 4 touch at a corner. The slice above adds 9 voxels and the slice below adds 9 more. 8 plus 9 plus 9 is 26. This is what the three small grids on the slide show."
-}
-],
-"try_26": [
-{
-"q": "What am I supposed to do here?",
-"a": "Click on squares to mark voxels, and click again to unmark them. The three grids are three slices that lie on top of each other. Watch the number of microbleeds. Then switch between rule 6 and rule 26 and see whether the number changes."
-},
-{
-"q": "Why are there three grids? Are these three different pictures?",
-"a": "No, it is one small block of the scan, cut into three slices: the slice above, this slice and the slice below. A square in the middle grid has the square at the same place in the left grid directly above it, and the one in the right grid directly below it."
-},
-{
-"q": "What do the colours of the marked squares mean?",
-"a": "One colour is one cluster, so one microbleed. Squares with the same colour belong together under the rule that is switched on. When you change the rule or add a voxel, the colours are given out again. The colour itself has no meaning, and with more than seven clusters the colours repeat."
-},
-{
-"q": "What do the blue frames show when I point at a square?",
-"a": "They show all places that count as touching this voxel under the current rule. With rule 6 these are the four side neighbours on the same slice, plus the square directly above and the one directly below. With rule 26 it is the whole block of 3 by 3 by 3 around it."
-},
-{
-"q": "The example has five marked voxels. Why two microbleeds with rule 26, but four with rule 6?",
-"a": "Three of the voxels touch only at an edge or a corner. Rule 26 accepts that and joins them into one microbleed. Rule 6 wants a shared face, so they stay three single ones. The other two voxels share a face and are one microbleed under both rules."
-},
-{
-"q": "I added one voxel and the count went down. How can that be?",
-"a": "Your new voxel was a bridge. It touches two clusters that were separate before, so they melt into one. The count is the number of clusters, not the number of voxels. In the same way, taking away a bridge voxel can raise the count."
-},
-{
-"q": "I marked the same square in the slice above and in the slice below. Why are these two microbleeds?",
-"a": "They do not touch. The middle slice lies between them, and its square is empty. Neighbours are only the voxels directly around a voxel, one step away. Mark the square between them, and the three become one cluster under both rules."
-},
-{
-"q": "Does rule 26 mean that a microbleed has 26 voxels?",
-"a": "No. 26 is the number of places around one voxel that count as touching it: 6 by a face, 12 by an edge, 8 by a corner. A microbleed can have one voxel or many. The rule only says which marked voxels belong to the same microbleed."
-},
-{
-"q": "Can rule 6 ever give fewer microbleeds than rule 26?",
-"a": "No. Every voxel that shares a face is also among the 26 neighbours. So everything that rule 6 joins, rule 26 joins as well. Rule 6 gives the same number or more, never fewer. Try to beat this in the widget; you will not manage."
-},
-{
-"q": "In a real scan the slices are thicker than the pixels. Does 'touching' still mean the same?",
-"a": "The rule counts steps in the grid, not millimetres. In one group of the public microbleed scans a voxel is 0.45 by 0.45 by 3.0 millimetres. There the neighbour in the slice above is 3 millimetres away, the neighbour on the same slice less than half a millimetre. Both count as touching."
-}
-],
 "f1": [
 {
 "q": "What do TP, FP and FN stand for?",
@@ -1844,8 +1550,8 @@ window.QA = {
 "a": "With the rule of the microbleed exercise: the centre of a detection must lie at most 2 mm, within the slice, from a voxel of the microbleed, and at most 2 mm worth of slices above or below, at least one slice. Each microbleed counts once. Each scan was judged by a model that had not been trained on it."
 },
 {
-"q": "Why do follow-up scans need the same scanner and protocol?",
-"a": "Real change is small: whole-brain volume falls by about 0.45 % per year in older people without dementia (Fotenos 2005). In our run on public scans, repeat measurements of the thalamus varied by about 3.4 % around the trend. A change of scanner or protocol can shift the measured volumes too, and that shift can look like change over time. So keep both fixed and use a longitudinal pipeline."
+"q": "What do I do if my scans differ from the training data?",
+"a": "Do not retrain right away. First mark a few of your own scans by hand and score the tool on them. If it works, use it and still check by eye. Only if the score drops: retrain with your scans added, or fine-tune (next slide)."
 }
 ],
 "adapt": [
@@ -1886,50 +1592,50 @@ window.QA = {
 "a": "A model always looks good on the scans it was adapted on; it may simply have learned them. Only scans it has never seen tell you how it will do on the next patient. Keep a few marked scans aside for testing."
 },
 {
-"q": "What is a learning curve, and why does the slide show question marks?",
-"a": "A plot of how good the model is against how many marked scans it was trained with: train with 3, 5, 10, 20 scans, test each time on the rest; where it stops rising, more marking does not pay. The slide shows question marks because the curve depends on your data, scanner and tool. You have to measure your own."
+"q": "Which scans should I mark for fine-tuning?",
+"a": "Typical patients from your own scanner, with a usual number of lesions, are the best use of your time. Scans without any lesions teach the model little about what to find, although they help to check and reduce false alarms, for example when you choose the threshold. A few patients with very many lesions cost a lot of marking."
 }
 ],
 "outlook_transformer": [
 {
+"q": "What does 'same direction = same meaning' mean?",
+"a": "In a language model each word is a vector, an arrow of numbers. In good word vectors the step from 'Germany' to 'Berlin' points about the same way as the step from 'France' to 'Paris': the direction means 'capital of'. So Berlin minus Germany plus France lands closest to Paris."
+},
+{
+"q": "Are the positions of the words on the slide real word vectors?",
+"a": "No, the graph is a schematic. Real word vectors have hundreds of dimensions. The paper shows a 2D projection of real vectors of countries and their capitals (Fig. 2), where the country-to-capital arrows are roughly parallel; our drawing only shows that idea."
+},
+{
 "q": "What is a token?",
-"a": "A token is one small piece of the input that the transformer handles as a unit. In text it is a word or part of a word. In an image it is a small patch, in a 3D scan a small cube of voxels, in DNA a short piece of letters. Each token is turned into a vector, a list of numbers."
+"a": "One small piece of the input that the model handles as a unit, turned into a vector. In text a word or part of a word; in a 3D scan a small cube of voxels; in DNA a short piece of letters, for example six letters in the Nucleotide Transformer."
 },
 {
-"q": "How big is one MRI token in the example?",
-"a": "A cube of 16 by 16 by 16 voxels, that is 4,096 voxels. UNETR, a transformer for 3D medical segmentation, uses exactly this patch size. At 1 mm resolution, one cube is 16 mm on each side."
+"q": "Why does 'one space' let one model read scans and English?",
+"a": "When scan pieces and words become vectors of the same kind, a language model can take both as input. In CT-CHAT the CT tokens are fed into the language model next to the word tokens, so it can answer a question about the scan in English."
 },
 {
-"q": "What does 'meaning is a direction' mean?",
-"a": "In a good embedding, a difference between two vectors can carry a meaning. The classic example from word vectors: king minus man plus woman lands closest to queen. So 'male to female' is roughly one direction in the vector space."
+"q": "Where does CT-CHAT's answer on the slide come from?",
+"a": "It is quoted from the paper (Hamamci et al. 2026, Nature Biomedical Engineering, Fig. 6b): asked to describe the lung parenchyma of a chest CT, CT-CHAT answered with ground glass densities in both lungs, more prominent in the lower lobes. The CT on our slide is a drawing, not that scan."
 },
 {
-"q": "Is the MRI arrow picture with FLAIR minus T1 a real result?",
-"a": "No. It is an illustration of the idea, drawn by us, and it says so on the slide. We did not train a model or measure these vectors. Whether a real MRI model learns one clean direction for contrast is an open question for each model."
+"q": "What did CT-CHAT learn from?",
+"a": "From CT-RATE: 25,692 chest CT scans of 21,304 patients, each with its radiology report. From these, more than 2.7 million question-answer pairs were generated for training. The reports were written in Turkish and translated to English, then corrected by medical students."
 },
 {
-"q": "Why must the position be added?",
-"a": "Attention by itself does not know the order or place of the tokens: it would treat the cubes like a bag. So a position vector is added to each token. Then the model knows where in the brain a cube sits, which matters a lot in anatomy."
+"q": "What is ChatNT, and can I ask it anything about DNA?",
+"a": "ChatNT joins a DNA transformer (the Nucleotide Transformer) to a frozen language model. You give it a sequence and an English question and it answers in English. But it only answers the kinds of questions of its 27 trained tasks, such as splice sites, and its makers say it is not a clinical tool."
 },
 {
-"q": "What does attention do?",
-"a": "Each token compares itself with every other token and takes in information from those that matter for it. A cube with a lesion can, for example, look at the same region in the other hemisphere. So the model can use context far away, not only the neighbours."
+"q": "Why is there no MRI model like CT-CHAT yet?",
+"a": "Such a model needs a large public set of scans with their reports. For CT this came first (CT-RATE). For MRI the first large public set, MR-RATE with 98,334 brain and spine studies, was released in March 2026; its model is announced but not yet out. Models trained on private hospital MRI with reports exist."
 },
 {
-"q": "Why is attention expensive for 3D MRI?",
-"a": "The cost grows with the square of the number of tokens. A 1 mm brain on the MNI152 grid, 182 by 218 by 182 voxels, gives 2,016 cubes of 16 cubed. That is about 4.1 million pairs per attention layer. A 224 by 224 photo has only 196 patches and 38,416 pairs."
+"q": "Is MRI harder than CT for such a model?",
+"a": "Often yes. One MRI study has several sequences (T1, T2, FLAIR, SWI), and MRI grey values are not standardised like CT units, and protocols differ between scanners. So the model must handle a set of different volumes, not one."
 },
 {
-"q": "Why are transformers so strong?",
-"a": "They can link information that is far apart, and they keep improving when they get more training data. This is the idea behind foundation models: train once on a lot of data, then adapt to many tasks."
-},
-{
-"q": "What already exists for CT that is still rare for MRI?",
-"a": "For CT there are public sets of about 25,000 3D scans with their radiology reports, for example CT-RATE with 25,692 chest CTs, and models that learn from images and text together. The brain MRI model BrainIAC learned from 48,965 MRIs, but from the images alone."
-},
-{
-"q": "Is a transformer always better than a U-Net?",
-"a": "No. Transformers need much data; with too little training data a Vision Transformer did worse than convolutional networks. Many strong medical segmentation tools are still convolutional, like the U-Nets in this lecture. Test on your own scans, as for every tool."
+"q": "Can these models replace a radiologist?",
+"a": "Not yet. In the same CT study, the sister model CT-CLIP reached a mean AUROC of 0.73 on its own hospital's scans, but only 0.57 to 0.63 on two other hospitals (0.5 is chance). Every answer must be checked by a doctor."
 }
 ],
 "exam": [
