@@ -222,7 +222,7 @@
   </div>
   <span class="spacer"></span>
   <div class="seg" id="modeSeg" role="group" aria-label="Number of slices per case" hidden>
-    <button type="button" data-mode="class" title="3 slices per case, about 3 minutes per case">Class: 3 slices</button>
+    <button type="button" data-mode="class" title="3 slices per case, about 6 minutes per case">Class: 3 slices</button>
     <button type="button" data-mode="home" title="All 8 prepared slices per case">All 8 slices (homework)</button>
   </div>
   <button type="button" id="tutBtn" class="quiet">Tutorial</button><button type="button" id="startOver" class="quiet">Start over</button>
@@ -413,14 +413,14 @@ const REFERENCE_POINTS = {
   // Literature values: to be filled by the lecturer's assistant after checking
   // the paper. While value is null nothing is shown.
   humanInterObserver: {
-    label: "Two human observers in the WMH Challenge (Dice)",
+    label: "Two additional human observers in the WMH Challenge, each against the reference on the 60 training scans (Dice 0.77 and 0.79)",
     value: null,
-    source: "TODO verify",
+    source: "Kuijf et al. 2019, IEEE TMI, Table II, https://doi.org/10.1109/TMI.2019.2905770 (checked 16.11.2026)",
   },
   bestChallengeMethod: {
-    label: "Best automatic method in the WMH Challenge (Dice, whole scan)",
+    label: "Best automatic method in the WMH Challenge (sysu_media, U-Net-like ensemble; Dice, 110 test scans)",
     value: null,
-    source: "TODO verify",
+    source: "Kuijf et al. 2019, IEEE TMI, Table II: 0.80, https://doi.org/10.1109/TMI.2019.2905770 (checked 16.11.2026)",
   },
 };
 
@@ -1181,21 +1181,21 @@ function renderSummary(){
       tendency = `<p id="tendency" data-ratio="${ratio}">${tendency} ` +
         `<span class="hint">(volume ratio ${ratio.toFixed(2)}: yours ${ml(sumOwn)}, reference ${ml(sumRef)})</span></p>`;
     }
-    left = `<h3>Mean Dice of the three cases</h3><div class="bigmean" id="meanDice" data-value="${mean}">${f3(mean)}</div>` +
+    left = `<h3>Mean Dice of your cases</h3><div class="bigmean" id="meanDice" data-value="${mean}">${f3(mean)}</div>` +
       `<div class="rating" id="rating">${band.label}</div><p>${band.text}</p>${tendency}` +
       (timeLimit ? `<p id="totalTime" data-value="${sumMs / 1000}"><b>Total time: ${clock(sumMs / 1000)}</b> ` +
         `<span class="hint">(planned: ${LEVELS.length} \u00d7 ${clock(timeLimit)} = ${clock(LEVELS.length * timeLimit)})</span></p>` : "") +
       `<p class="hint">The rating bands are a teaching convention of this exercise, not a published standard.</p>`;
   } else {
     left = `<h3>Final summary</h3><p id="notReady"><b>${done.length} of ${LEVELS.length} cases scored.</b> ` +
-      `Score all three cases to see your mean Dice and your rating.</p>`;
+      `Score every case to see your mean Dice and your rating.</p>`;
   }
   const refLines = referenceLines();
   $("summary").innerHTML =
     `<div class="sumgrid"><div class="card">${left}` +
     `<div class="stack" style="margin-top:12px"><button type="button" data-act="back">Back to the cases</button></div>` +
     `<p class="hint" id="trainerLink" style="margin-top:12px"><b>More practice at home:</b> the full WMH trainer, 110 public challenge scans, Dice against the expert and against BIANCA, works on phones: <a href="https://mendeltem.github.io/wmh_trainer/" target="_blank" rel="noopener">mendeltem.github.io/wmh_trainer</a></p>` + `</div>` +
-    `<div class="card"><h3>Your three cases (${mode === "home" ? "all 8 slices" : "class mode, 3 slices"} per case)</h3>` +
+    `<div class="card"><h3>Your cases (${mode === "home" ? "all 8 slices" : "class mode, 3 slices"} per case)</h3>` +
     `<div class="bars">${bars}</div>` +
     `<p class="barkey"><i style="width:22px;height:10px;background:var(--accent);border-radius:5px"></i>your Dice ` +
     `&nbsp; <i style="width:3px;height:16px;background:var(--warn);border-radius:2px"></i>${R.biancaSameSlices.label}</p>` +
@@ -1203,7 +1203,7 @@ function renderSummary(){
     `<th>Your volume</th><th>Reference volume</th><th>Volume ratio</th><th>BIANCA Dice, same slices</th><th>BIANCA Dice, whole scan</th>${timeLimit ? "<th>Time used</th>" : ""}</tr></thead>` +
     `<tbody>${rows}</tbody></table></div>` +
     `<p class="hint" style="margin-top:10px">Your Dice is computed over the slices shown in the exercise, not the whole brain. ` +
-    `With small lesions a few voxels change the Dice a lot, so expect a lower score on the hard case.</p>` +
+    `With small lesions a few voxels change the Dice a lot, so expect a lower score on a case with small lesions.</p>` +
     `<p class="hint">BIANCA is an automatic method (FSL), trained on 30 other scans of the same public data set. ` +
     `Sources: same slices: ${R.biancaSameSlices.source} Whole scan: ${R.biancaWholeScan.source}</p>` +
     (refLines.length ? `<h3 style="margin-top:12px">Other reference points</h3><ul class="refs" id="refLines">${refLines.join("")}</ul>` : "") +

@@ -1,7 +1,7 @@
 # Find the microbleeds - F1 exercise
 
 A single static web page for the lecture on brain segmentation (18.11.2026).
-Students scroll through three public T2*-weighted MRI stacks, click on every
+Students scroll through public T2*-weighted MRI stacks (in class since 13.11.2026: two, easy and medium; the hard stack stays in the data but is filtered out in `index.html`), click on every
 cerebral microbleed they see and get precision, recall and F1 against the
 expert reference.
 
@@ -68,7 +68,7 @@ change one line in `CASES` in `01_prepare_cases.py` and run steps 01 to 03 again
 - loads without console errors; no native `alert` / `confirm`
 - slice by arrow keys, wheel, slider, buttons; zoom by buttons and Ctrl + wheel; drag moves and places no marker
 - marker placed by click, removed by a second click and from the list
-- every centroid marked: TP = n, FP = 0, F1 = 1.000 (n = 1, 6, 12); no marker: F1 = 0.000
+- (test run of 10.11.2026, still with three subjects) every centroid marked: TP = n, FP = 0, F1 = 1.000 (n = 1, 6, 12); no marker: F1 = 0.000
 - half of the centroids plus two markers in empty brain: F1 = 0.500, 0.545, 0.600 as worked out by hand; pooled 20 / 35 = 0.571
 - a duplicate marker leaves the score unchanged and is reported as 1 duplicate
 - number of microbleeds in the page = independent flood fill in pure Python (`02_check_clusters.py`), same voxels:
@@ -88,7 +88,12 @@ sub-108 (6 vs 11) and sub-110 (73 vs 83).
 Where is VALDO? challenge, MICCAI 2021, Task 2 (microbleeds) - Sudre et al., Medical Image Analysis 2024,
 https://doi.org/10.1016/j.media.2023.103029; https://valdo.grand-challenge.org
 
-The terms of use of the challenge data were not checked while building this page. Please check them before
-the page with the image slices is put on a public host.
+Licence (checked 16.11.2026 in the journal article, section 2.4, and the challenge design document,
+https://doi.org/10.5281/zenodo.4600654): the training data are under CC BY-NC-SA (version not stated).
+So: non-commercial use only, credit, link to the licence, say what was changed (here: 8-bit PNG slices with a
+grey window), and the slices shown carry the same licence. The challenge Rules page
+(https://valdo.grand-challenge.org/Rules/) asks to acknowledge the cohorts (SABRE, Rotterdam Scan Study, ALFA)
+and the funders Wellcome Trust (082464/Z/07/Z) and British Heart Foundation (SP/07/001/23603, PG/08/103,
+PG/12/29/29497 and CS/13/1/30327); the page footer does so. The login-only data page was not seen.
 
 Built with Python 3.11.16, nibabel 5.4.2, NumPy 2.4.6, SciPy 1.17.1, Pillow 12.3.0.

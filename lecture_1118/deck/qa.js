@@ -19,7 +19,7 @@ window.QA = {
 },
 {
 "q": "Which of the three targets is the hardest for a program?",
-"a": "The smallest one. Microbleeds are only a few millimetres wide, so a few voxels decide, and vessels can look the same on one slice. On public data the best program reached an F1 score of about 0.7, where 1 would be perfect."
+"a": "The smallest one. Microbleeds are only a few millimetres wide, so a few voxels decide, and vessels can look the same on one slice. In the public VALDO challenge, the best team reached a median F1 of 0.68 per scan, where 1 would be perfect."
 },
 {
 "q": "What are FreeSurfer, SynthSeg, BIANCA and U-Net?",
@@ -39,7 +39,7 @@ window.QA = {
 },
 {
 "q": "What do I need to take home from the three parts for the exam?",
-"a": "Three practical skills. Read a quality score and decide when to look again. Compute a Dice score from hits, extra marks and misses. Count clusters and compute an F1 score. You practise all three in the exercises today."
+"a": "The conclusion slide names five points. Know your tool's training data. Test the tool on your own scans first, because a new scanner changes the image. Check the results with your own eyes. Small lesions are the hard part. And use several raters if you can, because even experts do not agree. In the exercises you name brain regions, compute a Dice score and compute an F1 score."
 }
 ],
 "intro": [
@@ -119,7 +119,7 @@ window.QA = {
 },
 {
 "q": "Are these programs approved for use in the clinic?",
-"a": "The two tools in this lecture are research tools; the licence of the first one says it was designed for research purposes only. Commercial volume reports with approval exist. A review found 17 such products, but only 4 had published proof that they help in dementia patients."
+"a": "FreeSurfer is a research tool: its licence says it was designed for research purposes only and was not approved by the FDA. Commercial volume reports with approval exist. A review found 17 such products, but only 4 had published a clinical validation in dementia patients."
 },
 {
 "q": "Do radiologists use these numbers today?",
@@ -165,7 +165,7 @@ window.QA = {
 },
 {
 "q": "How old is this method, and is it still used?",
-"a": "The surface method was published in 1999 by Dale, Fischl and Sereno, and was shown on more than 100 subjects. It is still the standard tool for cortical thickness today."
+"a": "The surface method was published in 1999 by Dale, Fischl and Sereno, and was shown on more than 100 subjects. It is still widely used for cortical thickness today."
 }
 ],
 "fs_thick": [
@@ -229,7 +229,7 @@ window.QA = {
 },
 {
 "q": "What are a gyrus and a sulcus?",
-"a": "A gyrus is the ridge of a fold, a sulcus is the groove between two ridges. The regions of this atlas follow the gyri. One region is one gyrus, and its borders run in the sulci."
+"a": "A gyrus is the ridge of a fold, a sulcus is the groove between two ridges. The regions of this atlas are based on the gyri, and their borders mostly run in the sulci."
 },
 {
 "q": "How good is the automatic naming compared with an expert?",
@@ -259,7 +259,7 @@ window.QA = {
 },
 {
 "q": "What does recon-all mean?",
-"a": "It is short for reconstruct all. It is the one FreeSurfer command that runs all steps of the cortical reconstruction in a row, from the raw T1 image to the named regions."
+"a": "It is the one FreeSurfer command that runs the cortical reconstruction. The documentation says it performs all, or any part of, this process, from the raw T1 image to the named regions."
 },
 {
 "q": "Why does it need a T1 image?",
@@ -423,7 +423,7 @@ window.QA = {
 "tool_choice": [
 {
 "q": "Can FreeSurfer be used on clinical scans at all?",
-"a": "The standard command needs a T1 scan with about 1 mm voxels. FreeSurfer 8.2.0 also ships a script for clinical scans, recon-all-clinical, which builds surfaces with the help of networks trained on synthetic images. We have not tested it."
+"a": "The standard command needs a T1 scan with about 1 mm voxels. FreeSurfer 8.2.0 also ships a script for clinical scans, recon-all-clinical. It uses a network trained with domain randomisation, the same idea as SynthSeg, to place the surfaces. We have not tested it."
 },
 {
 "q": "Is SynthSeg as accurate as a network trained on the same kind of scan?",
@@ -539,7 +539,7 @@ window.QA = {
 },
 {
 "q": "Are all volumes of this patient useless now?",
-"a": "No. In our test with lesions painted into healthy scans, structures that the lesion did not touch changed by less than 1 percent. Structures that it touched came out clearly too small. So check where the lesion lies before you use a volume. The slide after next shows this."
+"a": "No. In our test with lesions painted into healthy scans, structures far from the lesion, such as the thalamus on the other side, changed by less than 1 percent. Structures that the lesion touched came out clearly too small, and even nearby untouched ones could shift by a few percent. So check where the lesion lies before you use a volume. A slide later in this part shows this."
 },
 {
 "q": "The QC passes. How would I find such a scan among a thousand?",
@@ -553,7 +553,7 @@ window.QA = {
 },
 {
 "q": "Why is it 2 for a cube?",
-"a": "A cube has 8 corners, 12 edges and 6 faces. 8 minus 12 plus 6 is 2. Any other closed shape without holes gives the same answer, however many pieces it is made of."
+"a": "A cube has 8 corners, 12 edges and 6 faces. 8 minus 12 plus 6 is 2. Any other closed surface without holes gives the same answer, however finely you cut it into corners, edges and faces."
 },
 {
 "q": "What is a handle?",
@@ -599,7 +599,7 @@ window.QA = {
 },
 {
 "q": "Are the experts not wrong sometimes too?",
-"a": "Yes. In the public lesion data of part two, a second expert reached a Dice of only 0.77 to 0.79 against the reference. So expert labels are a reference, not the absolute truth. A program can hardly be shown to be better than that."
+"a": "Yes. In the public lesion data of part two, two additional observers each reached a Dice of only 0.77 and 0.79 against the reference, on the 60 training scans. So expert labels are a reference, not the absolute truth. A program can hardly be shown to be better than that."
 },
 {
 "q": "Which of the three properties matters most?",
@@ -611,7 +611,7 @@ window.QA = {
 },
 {
 "q": "How large is this noise for real structures?",
-"a": "It depends on the size of the structure. In our own test on public data, between two visits of the same people, the change scattered by about 0.8 percent for the cortex, 2.8 percent for the thalamus and 6.7 percent for the pallidum. Small structures are noisier."
+"a": "It depends on the size of the structure. In our own test on public data, between two visits of the same people, the change scattered by about 0.8 percent for the cortex, 2.8 percent for the thalamus and 6.7 percent for the pallidum. This spread also holds real change between the visits, so the pure noise is at most this large. Small structures are noisier."
 },
 {
 "q": "Why would another scanner give another result for the same brain?",
@@ -641,7 +641,7 @@ window.QA = {
 },
 {
 "q": "Where do minus 14.4 and minus 22.5 percent come from?",
-"a": "From our own test. We painted 48 real stroke shapes from public data into healthy public scans, and ran the tool before and after. The healthy scan gives the right volume, so we can measure the error. The numbers are medians, the middle values."
+"a": "From our own test. We pasted real stroke masks from public data into healthy public scans, 48 pairs, and ran the tool before and after. The healthy scan gives the right volume, so we can measure the error. The numbers are medians, the middle values."
 },
 {
 "q": "Why does the volume become smaller and not larger?",
@@ -661,7 +661,7 @@ window.QA = {
 },
 {
 "q": "Does the size of the lesion matter?",
-"a": "Our 48 test lesions ranged from 1.3 to 298 millilitres, with a median of 67. What mattered for a structure was whether the lesion touched it. A small lesion in the wrong place can spoil one volume completely."
+"a": "The lesions in our 48 test pairs ranged from 1.3 to 298 millilitres, with a median of 67. What mattered for a structure was whether the lesion touched it. A small lesion in the wrong place can spoil one volume completely."
 },
 {
 "q": "Did the makers of SynthSeg test it on stroke?",
@@ -695,7 +695,7 @@ window.QA = {
 },
 {
 "q": "What do 39 % and 7 % mean?",
-"a": "The share of brain voxels whose SynthSeg label changed because of the lesion: 39 % of the voxels 1 to 2 mm from the lesion, 16 % at 4 to 5 mm, 7 % at 8 to 10 mm, and about 1 % far away, which is the tool's own scatter."
+"a": "The share of brain voxels whose SynthSeg label changed because of the lesion: 39 % of the voxels 1 to 2 mm from the lesion, 16 % at 4 to 5 mm, 7 % at 8 to 10 mm, and about 1 % more than 15 mm away."
 },
 {
 "q": "Why is the margin the most pragmatic way?",
@@ -721,7 +721,7 @@ window.QA = {
 },
 {
 "q": "How much time do I have for the atlas quiz?",
-"a": "Eight minutes for the whole exercise. Each question has its own countdown of 40 seconds. When it reaches zero, the right answer is shown and the question counts as not answered."
+"a": "Five minutes for the whole exercise, for seven questions. Each question has its own countdown of 40 seconds. When it reaches zero, the right answer is shown and the question counts as not answered."
 },
 {
 "q": "Is the quiz graded?",
@@ -729,7 +729,7 @@ window.QA = {
 },
 {
 "q": "Which regions are asked?",
-"a": "Ten structures, from easy to hard. First large parts of the brain, then the deep grey matter structures from this lecture, and one region of the cortex. All of them are structures that FreeSurfer and SynthSeg label."
+"a": "Seven structures: six deep grey matter structures from this lecture (thalamus, caudate, hippocampus, putamen, pallidum, amygdala) and one region of the cortex, the insula. All of them are structures that FreeSurfer and SynthSeg label."
 },
 {
 "q": "How do I tell the putamen from the pallidum?",
@@ -752,8 +752,8 @@ window.QA = {
 "a": "To check a segmentation, you must know where a structure should be. If you cannot find the putamen yourself, you cannot see that its label is wrong. The rule of this lecture is: never trust a segmentation you have not checked."
 },
 {
-"q": "What is the try page after the quiz?",
-"a": "It shows a real public stroke scan with the labels of SynthSeg and its table of QC scores. Scroll through it. All QC values pass, and yet the labels around the lesion are not right. Find the place."
+"q": "What is the try page with the stroke scan?",
+"a": "It comes after the slide on the QC score, if there is time. It shows a real public stroke scan with the labels of SynthSeg and its table of QC scores. Scroll through it. All QC values pass, and yet the labels around the lesion are not right. Find the place."
 }
 ],
 "wmh_what": [
@@ -767,11 +767,11 @@ window.QA = {
 },
 {
 "q": "What is small vessel disease?",
-"a": "It is a disease of the smallest arteries deep in the brain. Their walls get thick and stiff, and the tissue they supply suffers. On MRI we see the results, not the vessels: white matter hyperintensities, small deep infarcts and microbleeds. High blood pressure and age are the main risk factors."
+"a": "It is a group of diseases of the small vessels of the brain. The tissue these vessels supply suffers. On MRI we see the results, not the vessels: white matter hyperintensities, small deep infarcts, microbleeds and more. Age and high blood pressure are the main known risk factors."
 },
 {
 "q": "Where do the numbers 'three times' and 'twice' come from?",
-"a": "From a systematic review of 46 long-term studies, published in 2010. Its pooled analysis of 22 of them gave a hazard ratio of 3.3 for stroke and 1.9 for dementia in people with many white matter hyperintensities. The risk of death was also doubled, with a hazard ratio of 2.0."
+"a": "From a systematic review of 46 long-term studies, published in 2010. Its pooled analysis of 22 of them compared people with white matter hyperintensities, or with more of them, against people without or with fewer. It gave a hazard ratio of 3.3 for stroke and 1.9 for dementia. The risk of death was also doubled, with a hazard ratio of 2.0."
 },
 {
 "q": "Does this mean the bright spots cause stroke and dementia?",
@@ -801,7 +801,7 @@ window.QA = {
 "wmh_use": [
 {
 "q": "What is the grade by eye?",
-"a": "A doctor looks at the scan and puts it in a class. The usual scale is the Fazekas scale; the study on the slide used three groups: mild, moderate and severe. It takes seconds and needs no software, but it has only a few steps."
+"a": "A doctor looks at the scan and puts it in a class. The usual scale is the Fazekas scale; the study on the slide used three groups: mild, moderate and severe. It is quick and needs no software, but it has only a few steps."
 },
 {
 "q": "What exactly happened to the people in that study?",
@@ -829,7 +829,7 @@ window.QA = {
 },
 {
 "q": "Does finding these lesions change what the doctor does?",
-"a": "Mostly it changes how hard you look for risk factors such as high blood pressure and treat them. It rarely forbids a treatment. Example: before clot-dissolving therapy for stroke, severe white matter disease means a higher bleeding risk, but the authors say this does not justify withholding the therapy."
+"a": "Mostly it changes how hard you look for risk factors such as high blood pressure and treat them. It rarely forbids a treatment. Example: before clot-dissolving therapy for stroke, severe white matter disease seen on CT means a higher bleeding risk, but the authors say this does not justify withholding the therapy."
 },
 {
 "q": "Are these lesions the only sign of small vessel disease?",
@@ -901,7 +901,7 @@ window.QA = {
 },
 {
 "q": "Why 40 neighbours, and not 5 or 500?",
-"a": "Forty is the default built into the software. The trade-off is general: with very few neighbours, one odd example can flip the vote, so the result is noisy. With very many, the rare class, lesion, is easily outvoted and small lesions are lost."
+"a": "Forty is the value fixed in the BIANCA code that we ran; the user guide does not offer it as a setting. The trade-off is general: with very few neighbours, one odd example can flip the vote, so the result is noisy. With very many, the rare class, lesion, is easily outvoted and small lesions are lost."
 },
 {
 "q": "What does BIANCA actually learn during training?",
@@ -917,11 +917,11 @@ window.QA = {
 },
 {
 "q": "Brightness has no fixed unit in MRI. How can BIANCA compare voxels from different scans?",
-"a": "Good point. BIANCA rescales every image first: it subtracts the mean brightness of that scan and divides by the spread. After that, a value says how bright a voxel is compared with the rest of its own brain. For position, every scan is aligned to a common standard brain."
+"a": "BIANCA rescales every image first: it subtracts the mean brightness of that scan and divides by the spread. After that, a value says how bright a voxel is compared with the rest of its own brain. For position, you give BIANCA a registration matrix from each scan to a common standard brain. BIANCA uses it to compute the standard-space coordinates of every voxel; the image itself is not resampled."
 },
 {
 "q": "Are the dots in the plot real data or a drawing?",
-"a": "Real. They are 640 training voxels from our own BIANCA run, 160 lesion and 480 healthy, plotted by FLAIR and T1 brightness. The vote is real too: 35 of the 40 nearest points are lesion. The plot cannot show position, which BIANCA also uses."
+"a": "Real. They are 640 stored training voxels from our own BIANCA run, 160 lesion and 480 healthy, plotted by FLAIR and T1 brightness. The vote of 35 of 40 is counted among these 640 points, with brightness only. The real BIANCA, with all stored points and the position too, gave this voxel 0.85."
 }
 ],
 "bianca_thr": [
@@ -939,7 +939,7 @@ window.QA = {
 },
 {
 "q": "How was 'best' decided?",
-"a": "We split the 60 training scans into two halves of 30. BIANCA learned on one half. On the other half we tried many cut-offs from 0.05 to 0.99 and compared each mask with the expert mask. The cut-off with the highest mean Dice won: 0.95."
+"a": "We split the 60 training scans into two halves of 30. BIANCA learned on one half. On the other half we tried many cut-offs from 0.05 to 0.99 and compared each mask with the expert mask. The cut-off with the highest mean Dice won: 0.95. In our best setup, whose Dice of 0.70 you see later, the same test chose 0.90."
 },
 {
 "q": "Then why not go even higher, to 0.99?",
@@ -951,7 +951,7 @@ window.QA = {
 },
 {
 "q": "How much does the measured lesion volume depend on the cut-off?",
-"a": "Very much. In our example scan the expert marked 21.88 ml. BIANCA's mask held 49.29 ml at a cut-off of 0.5 and 26.54 ml at 0.95. So the same patient has twice the lesion volume with the lower limit. Always report the cut-off with the volume."
+"a": "Very much. In our example scan the expert marked 21.88 ml. BIANCA's mask held 49.29 ml at a cut-off of 0.5 and 26.54 ml at 0.95. So the same patient has almost twice the lesion volume with the lower limit. Always report the cut-off with the volume."
 },
 {
 "q": "Which tissue gets marked wrongly at a low cut-off?",
@@ -963,7 +963,7 @@ window.QA = {
 },
 {
 "q": "Is information lost when we make a mask out of the probabilities?",
-"a": "Yes. A voxel with 0.94 and a voxel with 0.10 both become zero. That is the price of a clear answer. Keep the probability map on disk. Then you can later test another cut-off without running BIANCA again."
+"a": "Yes. At a cut-off of 0.95, a voxel with 0.925 and a voxel with 0.10 both become zero. That is the price of a clear answer. Keep the probability map on disk. Then you can later test another cut-off without running BIANCA again."
 }
 ],
 "try_cutoff": [
@@ -1053,11 +1053,11 @@ window.QA = {
 "bianca_small": [
 {
 "q": "What is 'one lesion' here, and when does it count as found?",
-"a": "One lesion is a group of connected voxels in the expert mask. Voxels belong together if they touch by a face, an edge or a corner. A lesion counts as found if at least one voxel of BIANCA's mask touches it. That is a generous rule."
+"a": "One lesion is a group of connected voxels in the expert mask. In our count, voxels belong together if they share a face. A lesion counts as found if at least one voxel of BIANCA's final mask lies inside it. That is a generous rule."
 },
 {
-"q": "How big is a lesion of ten voxels?",
-"a": "Tiny. In these scans a voxel is about 1 by 1 mm within the slice and 3 mm thick. Ten voxels on one slice cover about 10 square millimetres, a spot a few millimetres across, or even less on two slices. On the screen it is a faint dot that you can easily overlook yourself."
+"q": "Is \"under 10\" counted in voxels?",
+"a": "Tiny. The sizes are counted in cubic millimetres, not voxels. In these scans a voxel is about 1 by 1 mm within the slice and 3 mm thick, so roughly 2 to 5 cubic millimetres. A lesion under 10 cubic millimetres is only about 2 to 6 voxels. On the screen it is a faint dot that you can easily overlook yourself."
 },
 {
 "q": "Why does BIANCA miss the small ones in particular?",
@@ -1065,11 +1065,11 @@ window.QA = {
 },
 {
 "q": "And the sizes in between?",
-"a": "The rate climbs step by step with size. Under 10 voxels: 24 percent found. From 10 to 30 voxels: 41 percent. From 30 to 100: 70 percent. From 100 to 1000: 93 percent. Over 1000 voxels: 99 percent, that is 187 of 188 lesions."
+"a": "The rate climbs step by step with size. Under 10 cubic millimetres: 24 percent found. From 10 to 30: 41 percent. From 30 to 100: 70 percent. From 100 to 1000: 93 percent. Over 1000 cubic millimetres, that is over 1 ml: 99 percent, 187 of 188 lesions."
 },
 {
 "q": "Are small lesions rare, so that this does not matter much?",
-"a": "No, by number they are the largest group. Of 8,980 lesions in the 110 test scans, 3,470 were smaller than 10 voxels, and only 188 were larger than 1000. By volume it is the other way round: the few big lesions hold most of the lesion tissue."
+"a": "No, by number they are the largest group. Of 8,980 lesions in the 110 test scans, 3,470 were smaller than 10 cubic millimetres, and only 188 were larger than 1 ml. By volume it is the other way round: these 188 big lesions held about 81 percent of all lesion volume, the smallest group about 1 percent."
 },
 {
 "q": "If BIANCA misses three of four small lesions, is the total lesion volume still right?",
@@ -1215,7 +1215,7 @@ window.QA = {
 },
 {
 "q": "Why is it called Dice? Has it to do with dice?",
-"a": "No. It is the name of a person, Lee Dice, a biologist. In 1945 he published the measure in the journal Ecology, to describe how often two species occur at the same places. Image analysis borrowed it much later for two masks instead of two species."
+"a": "No. It is the name of a person, Lee R. Dice. In 1945 he published the measure in the journal Ecology, to describe how strongly two species are associated, that is, how often they occur at the same places. Image analysis borrowed it much later for two masks instead of two species."
 }
 ],
 "raters": [
@@ -1295,7 +1295,7 @@ window.QA = {
 },
 {
 "q": "If a patient has one big lesion and the program misses a small second one, does Dice show it?",
-"a": "Hardly. Dice counts voxels, and nearly all voxels belong to the big lesion. The missed small one changes the score in the third digit. The pitfall papers name exactly this: overlap measures do not check that every object was found."
+"a": "Hardly. Dice counts voxels, and nearly all voxels belong to the big lesion. The missed small one changes the score only a little. The pitfall papers name exactly this: overlap measures do not check that every object was found."
 },
 {
 "q": "Does the voxel size of the scan play a role in this?",
@@ -1371,7 +1371,7 @@ window.QA = {
 },
 {
 "q": "I painted more than the expert, and I think I am right. Who decides?",
-"a": "In this exercise, the expert mask, by definition. That does not prove your spot is not a lesion. But the expert followed fixed rules, for example not to count the thin rim along the ventricles. Check whether your extra marks are such rule cases."
+"a": "In this exercise, the expert mask, by definition. That does not prove your spot is not a lesion. But the expert followed fixed published criteria, called STRIVE. In the tutorial example you saw that the expert left out the thin bright rim along the ventricles. Check whether your extra marks are such cases."
 },
 {
 "q": "How well does BIANCA do on exactly the slices I painted?",
@@ -1409,7 +1409,7 @@ window.QA = {
 },
 {
 "q": "What else can look like a microbleed?",
-"a": "Several things give small dark dots: a vessel cut across, calcium, iron deposits from other causes, and signal loss next to bone. Rarer are small vessel malformations, bleeding metastases and injuries after head trauma. The lists in the papers are not identical, so name your source when you list them."
+"a": "Several things give small dark dots: a vessel cut across, calcium, iron deposits from other causes, and signal loss next to bone. Others are small vessel malformations, bleeding metastases and injuries after head trauma. The lists in the papers are not identical, so name your source when you list them."
 },
 {
 "q": "Can I see microbleeds on T1, FLAIR or CT?",
@@ -1421,7 +1421,7 @@ window.QA = {
 },
 {
 "q": "I see more than three dark dots on this slice. What are the others?",
-"a": "Lookalikes, mostly vessels. A vessel that crosses the slice is a dark dot, and one that runs inside the slice is a dark line. Only the three ringed dots are in the marks of the expert, which come with the public data. How to tell them apart comes a few slides later."
+"a": "Most likely lookalikes, for example vessels. A vessel that crosses the slice is a dark dot, and one that runs inside the slice is a dark line. Only the three ringed dots are in the marks of the expert, which come with the public data. How to tell them apart comes a few slides later."
 },
 {
 "q": "By which criteria do experts accept a dark dot as a microbleed?",
@@ -1430,12 +1430,20 @@ window.QA = {
 ],
 "cmb_use": [
 {
+"q": "Why does the slide only give the number for people over 80?",
+"a": "To keep one number per box. The Rotterdam Scan Study scanned people aged 60 and older at 1.5 tesla: 17.8 % had microbleeds at age 60 to 69, and 38.3 % over 80. With other scanners and sequences the numbers differ."
+},
+{
 "q": "How sure is a microbleed count?",
 "a": "It depends on the scan and on the reader. In a small comparison, a thick-slice scan showed only a third of the microbleeds seen on a thin-slice SWI scan. Two readers also agreed better on SWI. So a count without the name of the sequence is not a complete finding."
 },
 {
 "q": "Which count decides about the new Alzheimer antibodies?",
 "a": "More than 4 microbleeds on the scan before treatment: no antibody. That is the expert advice for both drugs, taken from the trials. In the European Union it is a formal contraindication. In the United States it is not, but the label names two or more microbleeds as a risk."
+},
+{
+"q": "Who were the patients in the CROMIS-2 study?",
+"a": "1,447 adults with atrial fibrillation who had just had an ischaemic stroke or a TIA and started a blood thinner (anticoagulant). They were followed for up to two years. Those with microbleeds had 9.8 symptomatic brain bleeds per 1,000 patient-years, those without 2.6. It was an observational study, not a randomised trial."
 },
 {
 "q": "And when new microbleeds appear during treatment?",
@@ -1447,15 +1455,7 @@ window.QA = {
 },
 {
 "q": "Is the place really a reliable sign of the cause?",
-"a": "It is a hint, not a proof. In the population study, microbleeds only in the lobes went with signs of amyloid, deep ones with high blood pressure and vessel hardening. Many patients have both kinds. The place shifts the probability; it does not replace the rest of the work-up."
-},
-{
-"q": "Should a patient with microbleeds stop the blood thinner?",
-"a": "Not for that reason alone. In more than 20,000 patients after a stroke, even those with ten or more microbleeds had more new strokes from a blocked vessel than brain bleeds: 64 against 27 per 1,000 patient-years. The authors say the evidence does not support withholding the drug; trials are still needed."
-},
-{
-"q": "Does the bleeding risk grow with the number?",
-"a": "Yes, steeply. Compared with no microbleeds, the risk of a brain bleed was about two and a half times higher with any microbleed, four and a half times with five or more, and more than eight times with twenty or more. The risk of a stroke from a blocked vessel rose much less."
+"a": "It is a hint, not a proof. In the population study, microbleeds only in the lobes went with signs of amyloid, deep ones with high blood pressure and vessel hardening. The place shifts the probability; it does not replace the rest of the work-up."
 },
 {
 "q": "Can a program do the counting in the clinic today?",
@@ -1509,7 +1509,7 @@ window.QA = {
 },
 {
 "q": "Does the network also tell us how big each microbleed is?",
-"a": "Yes, the marked voxels of one object give its volume. In the public benchmark the best program outlined the microbleeds it had found quite well: the overlap with the expert outline, the Dice score, was about 0.84. Finding them at all was the harder part."
+"a": "Yes, the marked voxels of one object give its volume. In the public benchmark the best program outlined the microbleeds it had found quite well: the Dice overlap with the expert outline, averaged over the found microbleeds of a scan, had a median of about 0.84 over the scans. Its median F1 for finding them was only 0.68."
 }
 ],
 "cmb_26": [
@@ -1527,7 +1527,7 @@ window.QA = {
 },
 {
 "q": "Does the rule, 6 or 26 neighbours, really change the count?",
-"a": "Yes. In one scan of today's exercise, counting the expert's marks with only the 6 face neighbours gives two pieces more than counting with 26 neighbours. The voxels are the same; only the rule differs. So always say which rule you used."
+"a": "Yes. In one public VALDO scan, sub-101, two of the expert's microbleeds have voxels that touch only by an edge or a corner. Counted with only the 6 face neighbours they give 14 pieces, with 26 neighbours 12 microbleeds. The voxels are the same; only the rule differs. So always say which rule you used."
 },
 {
 "q": "Which rule is the correct one?",
@@ -1565,7 +1565,7 @@ window.QA = {
 },
 {
 "q": "What do the colours of the marked squares mean?",
-"a": "One colour is one cluster, so one microbleed. Squares with the same colour belong together under the rule that is switched on. When you change the rule or add a voxel, the colours are given out again. The colour itself has no meaning."
+"a": "One colour is one cluster, so one microbleed. Squares with the same colour belong together under the rule that is switched on. When you change the rule or add a voxel, the colours are given out again. The colour itself has no meaning, and with more than seven clusters the colours repeat."
 },
 {
 "q": "What do the blue frames show when I point at a square?",
@@ -1649,7 +1649,7 @@ window.QA = {
 },
 {
 "q": "Which drugs are meant?",
-"a": "Two antibodies against amyloid: lecanemab, sold as Leqembi, and donanemab, sold as Kisunla. They are given as infusions into a vein. The European label of lecanemab names mild cognitive impairment and mild dementia due to Alzheimer's disease, with amyloid confirmed, as the use."
+"a": "Two antibodies against amyloid: lecanemab, sold as Leqembi, and donanemab, sold as Kisunla. The European label of lecanemab names mild cognitive impairment and mild dementia due to Alzheimer's disease, with amyloid confirmed, as the use, and only for people who carry no or one copy of the ApoE e4 gene variant."
 },
 {
 "q": "Is the limit of four the same everywhere?",
@@ -1665,7 +1665,7 @@ window.QA = {
 },
 {
 "q": "Does the count depend on the scanner or the type of image?",
-"a": "Yes, it can. The recommendations ask for T2* gradient echo or an equivalent such as SWI, preferably at 3 tesla, and the donanemab recommendations ask for the same scanner at every visit. That SWI shows more microbleeds is stated in the small vessel disease standards, not in the drug recommendations."
+"a": "Yes, it can. The recommendations ask for T2* gradient echo or an equivalent such as SWI, preferably at 3 tesla, and the donanemab recommendations ask, whenever possible, for the same scanner at every visit, at least the same field strength. That SWI shows more microbleeds is stated in the small vessel disease standards, not in the drug recommendations."
 },
 {
 "q": "What happens when new microbleeds appear during treatment?",
@@ -1677,7 +1677,7 @@ window.QA = {
 },
 {
 "q": "Who should count: the radiologist, the program, or both?",
-"a": "Our checked sources do not decide this. Some arguments: a program does not get tired and counts the same way every time; a person knows the lookalikes and the patient. With the best published programs at an F1 of about 0.7, a program alone is not enough today. A sensible answer: the program suggests, the person decides."
+"a": "Our checked sources do not decide this. Some arguments: a program does not get tired and counts the same way every time; a person knows the lookalikes and the patient. The best program in the public benchmark reached a median F1 of only 0.68 per scan, so a program alone is not enough today. A sensible answer: the program suggests, the person decides."
 }
 ],
 "cmb_vessel": [
@@ -1729,7 +1729,7 @@ window.QA = {
 },
 {
 "q": "How much time do I have?",
-"a": "Nine minutes for the three scans, so about three minutes per scan. Each scan has its own clock. At zero it turns red and counts on, but nothing is blocked: you can still mark and get your score."
+"a": "Six minutes for the two scans, so about three minutes per scan. Each scan has its own clock. At zero it turns red and counts on, but nothing is blocked: you can still mark and get your score."
 },
 {
 "q": "How exactly do I have to hit the microbleed?",
@@ -1741,7 +1741,7 @@ window.QA = {
 },
 {
 "q": "How many microbleeds are there in each scan?",
-"a": "That is your task, so no number now. The three scans go from easy to hard: from large, clearly dark microbleeds to many small and faint ones. You see how many you found and how many you missed together with your score."
+"a": "That is your task, so no number now. The two scans go from easy to harder: the first has large, clearly dark microbleeds, the second more and smaller ones. You see how many you found and how many you missed together with your score. A third, harder scan is homework in the microbleed trainer."
 },
 {
 "q": "Do I really have to look at every slice?",
@@ -1757,11 +1757,11 @@ window.QA = {
 },
 {
 "q": "How is my score calculated at the end?",
-"a": "For each scan you get your hits, false alarms and misses, and from them precision, recall and F1. For the final F1, the hits, false alarms and misses of all three scans are added up first, and then one F1 is computed from the sums."
+"a": "For each scan you get your hits, false alarms and misses, and from them precision, recall and F1. For the final F1, the hits, false alarms and misses of both scans are added up first, and then one F1 is computed from the sums."
 },
 {
 "q": "Can I change my marks after I have seen the score?",
-"a": "No. Once a scan is scored, it is locked. But you can start the whole exercise again as often as you like, now or at home."
+"a": "Not directly. Once a scan is scored, its markers are locked and the expert reference is shown. But you can press 'Try again' to mark that scan once more, or start the whole exercise again, now or at home."
 }
 ],
 "beat3": [
@@ -1771,7 +1771,7 @@ window.QA = {
 },
 {
 "q": "What does 'median F1 per scan' mean?",
-"a": "F1 was computed for every test scan separately. The median is the value in the middle: half of the scans were better, half were worse. The spread was wide: on a quarter of the scans the program was perfect, and on another quarter its F1 was 0.37 or lower."
+"a": "F1 was computed for every test scan separately. The median is the value in the middle: half of the scans were better, half were worse. The spread was wide: on at least a quarter of the scans the program was perfect, and on a quarter its F1 was about 0.37 or lower."
 },
 {
 "q": "Does an F1 of 0.7 mean that the program finds 70 percent of the microbleeds?",
@@ -1779,15 +1779,15 @@ window.QA = {
 },
 {
 "q": "I have a higher F1 than the program. Am I better?",
-"a": "Enjoy it, but it is not a fair comparison. You had three scans chosen for teaching; the program was scored on 147 other scans. The hit rules differ. And your F1 is pooled over three scans, while the program's value is a median over single scans."
+"a": "Enjoy it, but it is not a fair comparison. You had two scans chosen for teaching; the program was scored on 147 other scans. The hit rules differ. And your F1 is pooled over two scans, while the program's value is a median over single scans."
 },
 {
 "q": "Why does almost everybody find the big one and miss small ones?",
-"a": "A large microbleed fills many voxels and is clearly black. A small one fills only a few. In a thick slice it is averaged with the healthy tissue above and below, so it looks only a little grey. In this exercise the misses are usually the small, faint ones, and the false alarms are usually vessels."
+"a": "A large microbleed fills many voxels and is clearly black. A small one fills only a few. In a thick slice it is averaged with the healthy tissue above and below, so it looks only a little grey. So we expect the misses to be mostly the small, faint ones, and the false alarms mostly vessels; we have no counts from students for this."
 },
 {
 "q": "How good are human experts at this? What F1 does a radiologist reach?",
-"a": "Our checked sources give no such number for microbleeds, so I will not invent one. For white matter lesions we saw that a second expert reached a Dice of only 0.77 to 0.79 against the reference. Experts are not perfect either. In your exercise the expert marks are the reference by definition."
+"a": "Our checked sources give no such number for microbleeds, so I will not invent one. For white matter lesions, two additional observers each reached a Dice of only 0.77 and 0.79 against the reference, on the 60 training scans. Experts are not perfect either. In your exercise the expert marks are the reference by definition."
 },
 {
 "q": "Would several programs together be better than one?",
@@ -1795,7 +1795,7 @@ window.QA = {
 },
 {
 "q": "Is an F1 of 0.7 good enough to use such a program on patients?",
-"a": "Our sources do not say so. The paper on the competition calls the microbleed results promising. The imaging standards for small vessel disease, which we could read as accepted manuscript, say that microbleeds are assessed by visual rating and that computer methods are in development and need validation. So today a person has to check."
+"a": "Our sources do not say so. The paper on the competition calls the microbleed results promising. The imaging standards for small vessel disease, which we could read as accepted manuscript, say that microbleeds are assessed by visual rating and that computer methods are in development and need validation. So today, with a median F1 of 0.68 per scan, a person has to check."
 },
 {
 "q": "My F1 was low. What should I do differently?",
@@ -1803,7 +1803,7 @@ window.QA = {
 },
 {
 "q": "Is 0.7 still the state of the art?",
-"a": "The number comes from a competition held in 2021 and published in 2024. Newer programs may well be better. We did not check newer results for this lecture, so take 0.7 as a documented reference point, not as the latest record."
+"a": "The number comes from a competition held in 2021 and published in 2024: a median F1 of 0.68 per scan. Newer programs may well be better. We did not check newer results for this lecture, so take it as a documented reference point, not as the latest record."
 }
 ],
 "train_vs_own": [
@@ -1841,11 +1841,11 @@ window.QA = {
 },
 {
 "q": "How was 'found' decided for the detector?",
-"a": "With the rule of the microbleed exercise: the centre of a detection must lie at most 2 mm from a microbleed within the slice and at most one slice above or below. Each microbleed counts once. Each scan was judged by a model that had not been trained on it."
+"a": "With the rule of the microbleed exercise: the centre of a detection must lie at most 2 mm, within the slice, from a voxel of the microbleed, and at most 2 mm worth of slices above or below, at least one slice. Each microbleed counts once. Each scan was judged by a model that had not been trained on it."
 },
 {
 "q": "Why do follow-up scans need the same scanner and protocol?",
-"a": "Real change is small: whole-brain volume falls by about 0.45 % per year in older people without dementia (Fotenos 2005). In our run on public scans, repeat measurements of the thalamus varied by 3.4 %. A new scanner or protocol can shift volumes by more than years of change, so keep both fixed and use a longitudinal pipeline."
+"a": "Real change is small: whole-brain volume falls by about 0.45 % per year in older people without dementia (Fotenos 2005). In our run on public scans, repeat measurements of the thalamus varied by about 3.4 % around the trend. A change of scanner or protocol can shift the measured volumes too, and that shift can look like change over time. So keep both fixed and use a longitudinal pipeline."
 }
 ],
 "two_ways": [
@@ -1867,7 +1867,7 @@ window.QA = {
 },
 {
 "q": "What is forgetting?",
-"a": "When a network is trained further on new data only, its weights move towards the new task and it can get worse on the old one. This is called catastrophic forgetting. Mixing avoids it, because the old data stay in the training."
+"a": "When a network is trained further on new data only, its weights move towards the new task and it can get worse on the old one. This is called catastrophic forgetting. Mixing reduces it, because the old data stay in the training."
 },
 {
 "q": "Does forgetting matter for me?",
@@ -1879,11 +1879,11 @@ window.QA = {
 },
 {
 "q": "How does your microbleed detector use both ways?",
-"a": "It has two stages. The first stage, a U-Net that finds candidates, is fine-tuned from the model trained on the public data. The second stage, a classifier that rejects mimics, is retrained on public and local candidates together, so nothing learned from the public data is overwritten there."
+"a": "It has two stages. The first stage, a U-Net that finds candidates, is the model trained on the public data; for a new sequence the documentation says to fine-tune it on your own marked scans. In our tests, fine-tuning was about as good as training the U-Net anew on the local scans. The second stage, a classifier that rejects mimics, was trained on public and local candidates together."
 },
 {
 "q": "How many of my own scans do I need to mark?",
-"a": "Fewer for fine-tuning than for training from scratch, but how many depends on your data. Measure it with a learning curve on your own scans; the next slide shows how. In one study on white matter lesions, two scans of the new scanner already helped a lot."
+"a": "Fewer for fine-tuning than for training from scratch, but how many depends on your data. Measure it with a learning curve on your own scans; the fine-tuning slide shows how. In one study on white matter lesions, a network fine-tuned on only two scans of the new scanner did much better than the same network trained from scratch on those two."
 },
 {
 "q": "Can I adapt a tool without marking anything?",
@@ -1909,7 +1909,7 @@ window.QA = {
 },
 {
 "q": "How long does retraining BIANCA take?",
-"a": "In our runs, training BIANCA on the 60 challenge scans plus up to five local scans took about half a minute on a normal processor, and each new scan about 15 seconds. Most of the work is marking the scans by hand."
+"a": "In our runs, training BIANCA on the 60 challenge scans plus up to five local scans took about half a minute on a normal processor, and each new scan about 17 seconds. Most of the work is marking the scans by hand."
 },
 {
 "q": "Why were five scans of each new scanner kept aside?",
@@ -1967,11 +1967,53 @@ window.QA = {
 },
 {
 "q": "Which scans should I mark for fine-tuning?",
-"a": "Typical patients from your own scanner, with a usual number of lesions, are the best use of your time. Scans without any lesions teach the model nothing about what to find, and a few patients with very many lesions cost a lot of marking."
+"a": "Typical patients from your own scanner, with a usual number of lesions, are the best use of your time. Scans without any lesions teach the model little about what to find, although they help to check and reduce false alarms, for example when you choose the threshold. A few patients with very many lesions cost a lot of marking."
 },
 {
 "q": "Is fine-tuning the same as training from scratch with fewer scans?",
 "a": "No. Training from scratch starts from random weights and must learn everything from your scans, so it needs many more of them. Fine-tuning starts from a model that already works on other data. With many marked scans the two can end up similar."
+}
+],
+"outlook_transformer": [
+{
+"q": "What is a token?",
+"a": "A token is one small piece of the input that the transformer handles as a unit. In text it is a word or part of a word. In an image it is a small patch, in a 3D scan a small cube of voxels, in DNA a short piece of letters. Each token is turned into a vector, a list of numbers."
+},
+{
+"q": "How big is one MRI token in the example?",
+"a": "A cube of 16 by 16 by 16 voxels, that is 4,096 voxels. UNETR, a transformer for 3D medical segmentation, uses exactly this patch size. At 1 mm resolution, one cube is 16 mm on each side."
+},
+{
+"q": "What does 'meaning is a direction' mean?",
+"a": "In a good embedding, a difference between two vectors can carry a meaning. The classic example from word vectors: king minus man plus woman lands closest to queen. So 'male to female' is roughly one direction in the vector space."
+},
+{
+"q": "Is the MRI arrow picture with FLAIR minus T1 a real result?",
+"a": "No. It is an illustration of the idea, drawn by us, and it says so on the slide. We did not train a model or measure these vectors. Whether a real MRI model learns one clean direction for contrast is an open question for each model."
+},
+{
+"q": "Why must the position be added?",
+"a": "Attention by itself does not know the order or place of the tokens: it would treat the cubes like a bag. So a position vector is added to each token. Then the model knows where in the brain a cube sits, which matters a lot in anatomy."
+},
+{
+"q": "What does attention do?",
+"a": "Each token compares itself with every other token and takes in information from those that matter for it. A cube with a lesion can, for example, look at the same region in the other hemisphere. So the model can use context far away, not only the neighbours."
+},
+{
+"q": "Why is attention expensive for 3D MRI?",
+"a": "The cost grows with the square of the number of tokens. A 1 mm brain on the MNI152 grid, 182 by 218 by 182 voxels, gives 2,016 cubes of 16 cubed. That is about 4.1 million pairs per attention layer. A 224 by 224 photo has only 196 patches and 38,416 pairs."
+},
+{
+"q": "Why are transformers so strong?",
+"a": "They can link information that is far apart, and they keep improving when they get more training data. This is the idea behind foundation models: train once on a lot of data, then adapt to many tasks."
+},
+{
+"q": "What already exists for CT that is still rare for MRI?",
+"a": "For CT there are public sets of about 25,000 3D scans with their radiology reports, for example CT-RATE with 25,692 chest CTs, and models that learn from images and text together. The brain MRI model BrainIAC learned from 48,965 MRIs, but from the images alone."
+},
+{
+"q": "Is a transformer always better than a U-Net?",
+"a": "No. Transformers need much data; with too little training data a Vision Transformer did worse than convolutional networks. Many strong medical segmentation tools are still convolutional, like the U-Nets in this lecture. Test on your own scans, as for every tool."
 }
 ],
 "exam": [
@@ -1993,7 +2035,7 @@ window.QA = {
 },
 {
 "q": "Is BIANCA fine-tuned?",
-"a": "No. BIANCA has no pretrained model: you train it on your own hand-marked scans. To adapt it, you add marked scans from the new scanner to its training set and train again, which takes minutes."
+"a": "No. BIANCA has no pretrained model: you train it on your own hand-marked scans. To adapt it, you add marked scans from the new scanner to its training set and train again; in our runs that took about half a minute."
 },
 {
 "q": "Why check with my own eyes if there are QC scores?",
@@ -2001,15 +2043,15 @@ window.QA = {
 },
 {
 "q": "Why are small lesions always the problem?",
-"a": "A small lesion has few voxels, little contrast and many lookalikes. One voxel of disagreement costs a small lesion much of its Dice. BIANCA found 24 % of lesions under 10 voxels, our microbleed detector 4 of 10 microbleeds under 2 mm."
+"a": "A small lesion has few voxels, little contrast and many lookalikes. One voxel of disagreement costs a small lesion much of its Dice. BIANCA found 24 % of lesions under 10 cubic millimetres, our microbleed detector 4 of 10 microbleeds under 2 mm."
 },
 {
 "q": "Why several raters?",
-"a": "Even experts disagree: a second expert reached a Dice of only about 0.77 to 0.79 against the reference. With several raters you can see where the reference itself is uncertain, and a program cannot be expected to beat that agreement."
+"a": "Even experts disagree: in the WMH challenge two additional observers each reached a Dice of only 0.77 and 0.79 against the reference. With several raters you can see where the reference itself is uncertain, and a program cannot be expected to beat that agreement by much."
 },
 {
 "q": "Which numbers are worth remembering?",
-"a": "A SynthSeg QC score below 0.65 means failed. A Dice of about 0.8 is the level of a second expert. The best microbleed program reached an F1 of about 0.7. More than 4 microbleeds is the limit in the drug recommendations."
+"a": "A SynthSeg QC score below 0.65 means failed. Single experts reach a Dice of about 0.77 to 0.79 for white matter lesions, the best program 0.80. The best microbleed program reached a median F1 of 0.68 per scan. More than 4 microbleeds is the limit in the drug recommendations, and in the EU a contraindication."
 },
 {
 "q": "What is the one rule behind all five points?",
@@ -2023,7 +2065,7 @@ window.QA = {
 },
 {
 "q": "What is the atlas trainer?",
-"a": "A web page for practising brain anatomy on MRI. Today's atlas quiz with its ten questions is a short version of it. The full trainer has many more brain regions and three modes: explore, quiz and study. The link is also under the Sources button."
+"a": "A web page for practising brain anatomy on MRI. Today's atlas quiz with its seven questions is a short version of it. The full trainer has many more brain regions and three modes: explore, quiz and study. The link is also under the Sources button."
 },
 {
 "q": "Is the material in English?",
@@ -2035,7 +2077,7 @@ window.QA = {
 },
 {
 "q": "Can I use the pictures in my own presentation?",
-"a": "Check the licence first; it is listed under the Sources button. The grey matter pictures come from data without restrictions. The lesion and microbleed data allow non-commercial use with credit, so a seminar talk is fine and commercial use is not. We could not see every detail of the terms for the microbleed data."
+"a": "Check the licence under the Sources button. The grey matter and stroke pictures are public data without restrictions (CC0). The white matter lesion data allow non-commercial use with credit (CC BY-NC); the microbleed data too, and changed material must keep the same licence (CC BY-NC-SA). So a seminar talk is fine, commercial use is not."
 },
 {
 "q": "Can I hear the explanations again at home?",
@@ -2051,7 +2093,7 @@ window.QA = {
 },
 {
 "q": "Is the atlas trainer part of the exam?",
-"a": "The slide offers it as extra practice for the brain regions. The three exam skills are on the slide before: read a quality score, compute Dice, and count clusters for F1. For those, today's exercises and check questions are the better training."
+"a": "The slide offers it as extra practice for the brain regions. The conclusion slide before it sums up the main lessons, not an exam list. For the skills you practised today, reading a quality score, computing Dice and counting clusters for F1, today's exercises and check questions are the better training."
 },
 {
 "q": "What should I read if I want to go deeper?",

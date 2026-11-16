@@ -4,14 +4,14 @@ A quiz-only version of the public brain-anatomy game
 [mrt-atlas-trainer](https://mendeltem.github.io/mrt-atlas-trainer/)
 ([repo](https://github.com/mendeltem/mrt-atlas-trainer)).
 After the lecture part on grey-matter segmentation (FreeSurfer, SynthSeg) every student opens
-`index.html` and answers 10 fixed questions: a structure is marked on the MNI152 MRI,
+`index.html` and answers 7 fixed questions (since 13.11.2026; 3 of the original 10 are set aside as comments in the QUIZ block): a structure is marked on the MNI152 MRI,
 "Which structure is this?", four options.
 
 ## Use
 
 - Open `index.html` (double click, `file://`) or serve the folder as a static site (GitHub Pages).
   The folder needs `index.html` and `data/`. No server code, no build step for the students.
-- Start screen -> 10 questions -> end screen with score, total time, review list, "Try again" and
+- Start screen -> 7 questions -> end screen with score, total time, review list, "Try again" and
   "Practise more" (link to the full trainer).
 - Each question has a countdown (large seconds + shrinking bar, red in the last 10 s). At zero the
   question is closed, the correct answer is shown and the question counts as not answered (= wrong;
@@ -36,7 +36,7 @@ Everything a lecturer needs is in ONE block at the top of `index.html` ("QUIZ CO
 A typing mistake in the block gives a readable error card instead of a dead page.
 After an edit, saved progress of the old list is dropped automatically.
 
-The 10 questions as delivered (easy -> hard):
+The 10 questions as first delivered (easy -> hard). Since 13.11.2026 numbers 1, 2 and 10 (cerebellum, brain stem, nucleus accumbens) are commented out, and question 4 (caudate) opens in the sagittal view:
 
 | No | Structure | Atlas / label | View | Options (in display order) |
 |---|---|---|---|---|
@@ -86,10 +86,10 @@ Without network the page falls back to system fonts and works unchanged (the tes
 ## Tests
 
 `node build/02_test_quiz.js` drives the page in headless Chromium (Playwright), writes
-`build/test_output/test_log.txt` and screenshots. Last run 2026-11-10: 201 checks, all passed.
+`build/test_output/test_log.txt` and screenshots. Last run 2026-11-10 (with the 10-question list): 201 checks, all passed. Not re-run with the 7-question list.
 
 - (a) loads from `file://` and from a plain static http server, no console errors;
-- (b) all correct -> 10 / 10, all wrong -> 0 / 10, mix -> 7 / 10, review marks exactly the wrong ones;
+- (b) (10-question list) all correct -> 10 / 10, all wrong -> 0 / 10, mix -> 7 / 10, review marks exactly the wrong ones;
 - (c) per question: the atlas label under the marker (read from the label map) is the region of the
   question, in all three views; 4 options as configured; screenshots `qNN_question.png` and
   `qNN_answered.png` were also checked by eye;
@@ -115,8 +115,10 @@ Carried over from the trainer's `LICENSE` and `THIRD-PARTY.md`.
   Research freeware, non-commercial use.
 - **Harvard-Oxford cortical and subcortical atlases**: part of FSL (FMRIB Software Library,
   fsl.fmrib.ox.ac.uk), FSL licence, non-commercial use. Desikan et al. 2006; Makris et al. 2006.
-- **MNI152 template** (FSL MNI152_T1_2mm, distributed with FSL under the FSL licence,
-  non-commercial): Fonov et al., NeuroImage 54(1):313-327, 2011.
+- **MNI152 template**: the trainer's THIRD-PARTY.md lists both the ICBM152 nonlinear 2009 template
+  (McGill, free for research and teaching with attribution) and FSL MNI152_T1_2mm (FSL licence,
+  non-commercial); citation Fonov et al., NeuroImage 54(1):313-327, 2011. Which one the slices come
+  from was not re-checked here.
 - **Image data** taken from the NiiVue demo data (BSD-2-Clause), pre-rendered to slices.
 - **Fonts**: Google Fonts, SIL Open Font License 1.1, loaded at runtime.
 
