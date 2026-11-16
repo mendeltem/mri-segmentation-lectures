@@ -725,7 +725,7 @@ window.QA = {
 },
 {
 "q": "Is the quiz graded?",
-"a": "No. It is only practice. Your progress is kept in your own browser, so a reload brings you back to the same question. For more practice at home there is the full atlas trainer, linked on the last slide."
+"a": "No. It is only practice. Your progress is kept in your own browser, so a reload brings you back to the same question. If you want to keep learning, there is the full atlas trainer, linked on the last slide."
 },
 {
 "q": "Which regions are asked?",
@@ -1340,8 +1340,8 @@ window.QA = {
 "a": "Yes, it is a real scan from a public collection. Its licence allows non-commercial use, such as teaching, with credit. The reference is the hand-painted expert mask that comes with these data. See the Sources button for the paper and the licence."
 },
 {
-"q": "Is my painting uploaded, and can I practise again at home?",
-"a": "Nothing is uploaded. Your masks and scores are stored only in your own browser. The exercise stays online. At home you can switch to the homework mode, which gives you eight slices instead of three."
+"q": "Is my painting uploaded, and can I practise again later?",
+"a": "Nothing is uploaded. Your masks and scores are stored only in your own browser. The exercise stays online. Whenever you like, you can switch to the mode with all eight slices instead of three."
 }
 ],
 "beat2": [
@@ -1355,7 +1355,7 @@ window.QA = {
 },
 {
 "q": "I got more than 0.8. Am I better than the second expert?",
-"a": "On these three slices you agreed with the reference very well; that is a real result. But the experts painted 60 whole scans, with every kind of patient. Your patient was picked for teaching. Try the eight slices at home and see whether you hold the score."
+"a": "On these three slices you agreed with the reference very well; that is a real result. But the experts painted 60 whole scans, with every kind of patient. Your patient was picked for teaching. If you like, try all eight slices later and see whether you hold the score."
 },
 {
 "q": "Can the three numbers on the slide be compared with each other?",
@@ -1367,7 +1367,7 @@ window.QA = {
 },
 {
 "q": "If I painted the same slices again tomorrow, would I get the same Dice?",
-"a": "Probably not exactly. You would stop at slightly different edges and perhaps see one small spot more or less. That is the same effect as between two experts, only within one person. Try it at home; the difference between your two attempts is your own repeatability."
+"a": "Probably not exactly. You would stop at slightly different edges and perhaps see one small spot more or less. That is the same effect as between two experts, only within one person. Try it later if you like; the difference between your two attempts is your own repeatability."
 },
 {
 "q": "I painted more than the expert, and I think I am right. Who decides?",
@@ -1741,7 +1741,7 @@ window.QA = {
 },
 {
 "q": "How many microbleeds are there in each scan?",
-"a": "That is your task, so no number now. The two scans go from easy to harder: the first has large, clearly dark microbleeds, the second more and smaller ones. You see how many you found and how many you missed together with your score. A third, harder scan is homework in the microbleed trainer."
+"a": "That is your task, so no number now. The two scans go from easy to harder: the first has large, clearly dark microbleeds, the second more and smaller ones. You see how many you found and how many you missed together with your score. For anyone who wants to keep learning, a third, harder scan is in the microbleed trainer."
 },
 {
 "q": "Do I really have to look at every slice?",
@@ -1761,7 +1761,7 @@ window.QA = {
 },
 {
 "q": "Can I change my marks after I have seen the score?",
-"a": "Not directly. Once a scan is scored, its markers are locked and the expert reference is shown. But you can press 'Try again' to mark that scan once more, or start the whole exercise again, now or at home."
+"a": "Not directly. Once a scan is scored, its markers are locked and the expert reference is shown. But you can press 'Try again' to mark that scan once more, or start the whole exercise again, now or whenever you like."
 }
 ],
 "beat3": [
@@ -1799,7 +1799,7 @@ window.QA = {
 },
 {
 "q": "My F1 was low. What should I do differently?",
-"a": "Look at the kind of error. Many false alarms: before you click, scroll up and down and check whether the dot goes on like a vessel. Many misses: go through every slice slowly and zoom in. The exercise stays online, so try again at home."
+"a": "Look at the kind of error. Many false alarms: before you click, scroll up and down and check whether the dot goes on like a vessel. Many misses: go through every slice slowly and zoom in. The exercise stays online, so try again whenever you like."
 },
 {
 "q": "Is 0.7 still the state of the art?",
@@ -1848,130 +1848,46 @@ window.QA = {
 "a": "Real change is small: whole-brain volume falls by about 0.45 % per year in older people without dementia (Fotenos 2005). In our run on public scans, repeat measurements of the thalamus varied by about 3.4 % around the trend. A change of scanner or protocol can shift the measured volumes too, and that shift can look like change over time. So keep both fixed and use a longitudinal pipeline."
 }
 ],
-"two_ways": [
+"adapt": [
 {
 "q": "When do I need to adapt a tool at all?",
 "a": "Only when testing shows a drop. First mark a few of your own scans by hand and score the tool on them. If the score is close to the published one, use the tool and keep checking by eye. Adapting costs time and marked scans."
 },
 {
-"q": "What does mixing mean?",
-"a": "You put a few of your own hand-marked scans into the training pool, together with the public training data, and train the tool again from the start. The tool then learns both the old and the new scanner at the same time."
+"q": "What does retraining with my scans added mean?",
+"a": "You put a few of your own hand-marked scans into the training data, together with the original training scans, and train the tool again. It then learns the old and the new scanner at the same time, and keeps what it learned from the original data."
+},
+{
+"q": "Why can I not always retrain?",
+"a": "Retraining needs the original training data. Many models are shared only as weights; the training scans may not be allowed to leave the hospital or the study. Then fine-tuning is the only way. For BIANCA you always have the training data, because you train BIANCA yourself."
+},
+{
+"q": "Why is BIANCA's model just a set of stored examples?",
+"a": "BIANCA is a k-nearest-neighbour method. Training means storing example voxels from the marked training scans, each with its features (FLAIR and T1 brightness, position). A new voxel is judged by a vote of the 40 stored points nearest to it. Adding marked voxels from your scanner gives it neighbours with your scanner's brightness."
+},
+{
+"q": "How much did adding scans help BIANCA in your test?",
+"a": "A little. On a 1.5 T scanner BIANCA had never seen, adding five marked scans raised the Dice from 0.62 to 0.64, and no scan got worse. It is a small test, ten scans per scanner. BIANCA carried over well here; on another scanner the drop can be larger, and then adding scans is cheap."
+},
+{
+"q": "Could I train BIANCA on my five scans alone?",
+"a": "It is risky. In our test, five local scans alone gave single results that jumped from much worse to much better, and fewer small lesions were found. Add your scans to the pool; do not replace it."
 },
 {
 "q": "What does fine-tuning mean?",
-"a": "You take the trained model, its weights, and go on training it for a while on your own marked scans, with a small learning rate. It keeps most of what it knew and adjusts to your scanner. You do not need the original training data."
+"a": "You take the trained network, its weights, and go on training it for a while on a few of your own marked scans, with small steps (a small learning rate). It keeps most of what it knew and adjusts to your scanner's contrast and noise. You do not need the original training data."
 },
 {
-"q": "Why can I not always mix?",
-"a": "Mixing needs the original training data. Many models are shared only as weights; the training scans may not be allowed to leave the hospital or the study. Then fine-tuning is the only way. For BIANCA you always have the training data, because you train BIANCA yourself."
-},
-{
-"q": "What is forgetting?",
-"a": "When a network is trained further on new data only, its weights move towards the new task and it can get worse on the old one. This is called catastrophic forgetting. Mixing reduces it, because the old data stay in the training."
-},
-{
-"q": "Does forgetting matter for me?",
-"a": "Only if the model must still work on the old scanners. If you only want to use it on your own scanner, a fine-tuned model that forgot a little about the old scanners is fine. If you share it with other centres, mixing is safer."
-},
-{
-"q": "Which way gives better results?",
-"a": "It depends on the data and the tool; there is no general winner. Mixing needs more computing because the whole pool is trained again. Fine-tuning is quick. Both must be tested on your own scans that were not used for adapting."
-},
-{
-"q": "How does your microbleed detector use both ways?",
-"a": "It has two stages. The first stage, a U-Net that finds candidates, is the model trained on the public data; for a new sequence the documentation says to fine-tune it on your own marked scans. In our tests, fine-tuning was about as good as training the U-Net anew on the local scans. The second stage, a classifier that rejects mimics, was trained on public and local candidates together."
-},
-{
-"q": "How many of my own scans do I need to mark?",
-"a": "Fewer for fine-tuning than for training from scratch, but how many depends on your data. Measure it with a learning curve on your own scans; the fine-tuning slide shows how. In one study on white matter lesions, a network fine-tuned on only two scans of the new scanner did much better than the same network trained from scratch on those two."
-},
-{
-"q": "Can I adapt a tool without marking anything?",
-"a": "Partly. Some tools have settings you can choose on your own data, such as the threshold. With scans that you know contain no lesions, you can set the threshold so that the tool makes few false alarms. To check how many lesions it finds, you need marked scans."
-}
-],
-"bianca_mix": [
-{
-"q": "Why is BIANCA's model just a set of points?",
-"a": "BIANCA is a k-nearest-neighbour method. Training means storing example voxels from the marked training scans, each with its features (FLAIR and T1 brightness, position). A new voxel is judged by a vote of the 40 stored points nearest to it. There are no weights to learn."
-},
-{
-"q": "Why can a new scanner make the neighbours vote wrong?",
-"a": "Another scanner gives other brightness values for the same tissue. A lesion voxel can then fall where the stored points are mostly healthy tissue, and the 40 nearest neighbours vote 'healthy'. The picture on the slide draws such a shift as an illustration; it is not measured."
-},
-{
-"q": "Why does adding marked scans from the new scanner help?",
-"a": "Their voxels are stored as new example points with the new brightness. A lesion voxel from the new scanner then finds lesion examples from the same scanner among its nearest neighbours, and the vote can be right again."
-},
-{
-"q": "Is this mixing or fine-tuning?",
-"a": "Mixing. For BIANCA you always have the training data, because you train it yourself: you add your marked scans to the stored examples and train again. There are no weights that could be fine-tuned."
-},
-{
-"q": "How long does retraining BIANCA take?",
-"a": "In our runs, training BIANCA on the 60 challenge scans plus up to five local scans took about half a minute on a normal processor, and each new scan about 17 seconds. Most of the work is marking the scans by hand."
-},
-{
-"q": "Why were five scans of each new scanner kept aside?",
-"a": "To test fairly: the scans used for training must not be the scans used for scoring. Each scanner's 10 test scans were split into 5 local scans that could be added and 5 held-out scans for the score, in several random splits."
-},
-{
-"q": "Why compare with a model trained on the local scans only?",
-"a": "It shows whether the 60 public scans still help. Five local scans alone gave about the same mean, 0.68, but 7 of 20 scans got worse and small lesions were found less often. The mix was the safer choice."
-},
-{
-"q": "Should I always add local scans to BIANCA?",
-"a": "Check first. In our test on the two new scanners of the challenge, adding five marked scans raised the Dice only from 0.66 to 0.68; five scans got better, none worse. Here BIANCA carried over well. On another scanner the drop can be larger; then adding scans is cheap."
-},
-{
-"q": "Does adding scans change BIANCA's best threshold?",
-"a": "It can. The probability map changes when the stored examples change, so the cut-off that gave the best Dice may move. In the lecture the cut-off stayed fixed at 0.90, the value chosen on the training split."
-},
-{
-"q": "Why are there small differences between splits?",
-"a": "With only five test scans per split, one patient with many or very few lesions changes the mean. That is why the experiment repeats random splits and reports the mean over them; with so few scans, small differences are not reliable."
-}
-],
-"finetune": [
-{
-"q": "What are the weights of a network?",
-"a": "The numbers inside the network that are learned during training: how strongly each part reacts to each pattern. A trained model is just the network plus its weights. Fine-tuning changes these numbers a little; training from scratch starts with random numbers."
-},
-{
-"q": "What is the learning rate?",
-"a": "How big each step is when the weights are changed during training. A small learning rate in fine-tuning means small steps, so the model keeps what it already knows and only adjusts it to your scans."
-},
-{
-"q": "Why does starting from a trained model help?",
-"a": "The model already knows what a microbleed looks like in general: a small dark round dot. It only needs to learn how your scanner shows it, for example another contrast or more noise. That needs far fewer examples than learning everything from random weights."
-},
-{
-"q": "Why is choosing a new threshold the cheapest step?",
-"a": "The network gives each voxel a probability; the threshold decides what counts as a detection. On a new scanner, the probabilities can be higher or lower overall. Moving the threshold costs no training, and scans without microbleeds are enough to set it so that false alarms stay low."
-},
-{
-"q": "What are normalisation layers?",
-"a": "Layers inside the network that rescale the values passing through, so that the next layer gets numbers in a familiar range. Adapting only them, and leaving the rest fixed, can absorb a change in brightness and contrast with very few scans."
+"q": "Can fine-tuning make the model worse on the old scanners?",
+"a": "Yes. Trained further on your scans only, the weights move towards your scanner, and the model can get worse on the old ones. This is called catastrophic forgetting. It matters only if the model must still work on the old scanners; retraining with all the data avoids it."
 },
 {
 "q": "Why test on scans that were not used for training?",
 "a": "A model always looks good on the scans it was adapted on; it may simply have learned them. Only scans it has never seen tell you how it will do on the next patient. Keep a few marked scans aside for testing."
 },
 {
-"q": "What is a learning curve?",
-"a": "A plot of how good the model is against how many marked scans it was trained with. Train with 3, 5, 10, 20 scans, and each time test on the rest. Where the curve stops rising, more marking does not pay."
-},
-{
-"q": "Why does the slide show question marks instead of a curve?",
-"a": "Because the curve depends on your data, your scanner and your tool. Any curve we drew would look like data from somewhere. You have to measure your own."
-},
-{
-"q": "Which scans should I mark for fine-tuning?",
-"a": "Typical patients from your own scanner, with a usual number of lesions, are the best use of your time. Scans without any lesions teach the model little about what to find, although they help to check and reduce false alarms, for example when you choose the threshold. A few patients with very many lesions cost a lot of marking."
-},
-{
-"q": "Is fine-tuning the same as training from scratch with fewer scans?",
-"a": "No. Training from scratch starts from random weights and must learn everything from your scans, so it needs many more of them. Fine-tuning starts from a model that already works on other data. With many marked scans the two can end up similar."
+"q": "What is a learning curve, and why does the slide show question marks?",
+"a": "A plot of how good the model is against how many marked scans it was trained with: train with 3, 5, 10, 20 scans, test each time on the rest; where it stops rising, more marking does not pay. The slide shows question marks because the curve depends on your data, scanner and tool. You have to measure your own."
 }
 ],
 "outlook_transformer": [
@@ -2027,7 +1943,7 @@ window.QA = {
 },
 {
 "q": "What do I do with a new scanner?",
-"a": "Mark a few of your own scans and score the tool on them. If the score is close to the published one, use it and keep checking by eye. If it drops, mix your marked scans into the training, or fine-tune the model if you only have its weights."
+"a": "Mark a few of your own scans and score the tool on them. If the score is close to the published one, use it and keep checking by eye. If it drops, add your marked scans to the training data and retrain, or fine-tune the model if you only have its weights."
 },
 {
 "q": "Does SynthSeg need fine-tuning on a new scanner?",
@@ -2080,7 +1996,7 @@ window.QA = {
 "a": "Check the licence under the Sources button. The grey matter and stroke pictures are public data without restrictions (CC0). The white matter lesion data allow non-commercial use with credit (CC BY-NC); the microbleed data too, and changed material must keep the same licence (CC BY-NC-SA). So a seminar talk is fine, commercial use is not."
 },
 {
-"q": "Can I hear the explanations again at home?",
+"q": "Can I hear the explanations again later?",
 "a": "Yes. Every slide has a short film with a spoken explanation, and the deck stays online. You can replay any single slide as often as you like, at your own speed."
 },
 {
