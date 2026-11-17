@@ -378,6 +378,48 @@ window.QA = {
 "a": "With one command inside FreeSurfer, with the input scan and an output name. Options add the cortical regions, a table of volumes, a table of quality scores, and the robust version for difficult scans."
 }
 ],
+"classic_tissue": [
+{
+"q": "Does FAST need training data?",
+"a": "No. It fits a model of the three tissue brightnesses to each scan on its own, with the EM algorithm. No labelled scans are needed. This is the big difference to SynthSeg or a U-Net."
+},
+{
+"q": "What is EM, in one sentence?",
+"a": "Expectation maximisation: guess which tissue each voxel is, re-estimate the bell curves from these guesses, and repeat until nothing changes any more."
+},
+{
+"q": "Why do FAST and Atropos look at the neighbours?",
+"a": "Single voxels are noisy. A Markov random field adds the prior that a voxel is most likely the same tissue as its neighbours, so the map gets fewer scattered single voxels."
+},
+{
+"q": "What is the brightness drift?",
+"a": "The same tissue is a bit brighter in one part of the image than in another, because of the coil and the field. This is called the bias field. FAST estimates it within the same fit; in ANTs pipelines it is usually removed first with N4."
+},
+{
+"q": "What is the difference between FAST and Atropos?",
+"a": "The idea is the same: a mixture of tissue classes fitted with EM, with neighbours. Atropos is more flexible: it can use template priors and many more classes (69 in its paper), and it is part of the ANTs cortical thickness pipeline."
+},
+{
+"q": "How long did FAST take on the scan on the slide?",
+"a": "96 seconds for the whole 3-D brain on our workstation's processor, with three classes and bias correction."
+},
+{
+"q": "Why does the thalamus look partly like white matter in the FAST map?",
+"a": "Deep grey nuclei are brighter than cortex on T1, because they contain many fibres. With only three brightness classes, part of them falls into the white matter class. Tools with atlases or training, such as FIRST, FreeSurfer or SynthSeg, name these structures instead."
+},
+{
+"q": "Is the classic way outdated?",
+"a": "No. Tissue maps of grey matter, white matter and fluid from this kind of model are still widely used, for example in many voxel-based studies, and they need no training data. They give tissue types, not named regions."
+},
+{
+"q": "What happens with a stroke lesion?",
+"a": "The tool sees only brightness. A dark infarct on T1 is sorted into the dark classes, fluid or grey matter. So the lesion has to be masked, as for the other tools."
+},
+{
+"q": "What is FIRST then?",
+"a": "Also part of FSL, but for deep grey structures: a shape and appearance model learned from 336 manually labelled T1 scans, 15 structures, median Dice 0.7 to 0.9."
+}
+],
 "tool_choice": [
 {
 "q": "Can FreeSurfer be used on clinical scans at all?",
