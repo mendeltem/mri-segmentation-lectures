@@ -1,12 +1,31 @@
 window.SLIDES = [
  {
   "n": 1,
+  "key": "title",
+  "title": "Every Voxel Counts",
+  "part": "Opening",
+  "kind": "clip",
+  "clip": "clips/01_title.mp4",
+  "poster": "poster/01_title.jpg",
+  "text": "Welcome to brain M. R. I. segmentation with artificial intelligence: from images to measurements. This picture is the whole lecture: M. R. I. scans go in on the left, a model, a neural network, works in the middle, and segmentations come out on the right, with the numbers we measure from them. Three targets today: grey matter regions, white matter lesions, and micro-bleeds.",
+  "check": null,
+  "exercise": null,
+  "sources": [],
+  "optional": false,
+  "key_q": false,
+  "notes": "Welcome to brain M. R. I. segmentation with artificial intelligence: from images to measurements. This picture is the whole lecture: M. R. I. scans go in on the left, a model, a neural network, works in the middle, and segmentations come out on the right, with the numbers we measure from them. Three targets today: grey matter regions, white matter lesions, and micro-bleeds.",
+  "background": "Title slide (one step; the lecture clock starts with the first click). Welcome, say who you are and what this session is. The picture is the whole lecture in one view: on the left three contrasts, T1 for grey matter, FLAIR for white matter lesions, T2* for microbleeds; in the middle a model, drawn in the U shape of a U-Net; on the right the segmentations, and what we measure from them: volume per region in ml, lesion volume in ml, and a count of microbleeds. All three pictures are public data (Dallas Lifespan Brain Study, WMH Segmentation Challenge, VALDO), three different people.",
+  "links": [],
+  "qr": null
+ },
+ {
+  "n": 2,
   "key": "plan",
   "title": "Three tasks and one lesson",
   "part": "Opening",
   "kind": "clip",
-  "clip": "clips/01_plan.mp4",
-  "poster": "poster/01_plan.jpg",
+  "clip": "clips/02_plan.mp4",
+  "poster": "poster/02_plan.jpg",
   "text": "Three tasks today. Grey matter: how big is each brain region? White matter lesions: how much is there? And micro-bleeds: how many are there? And one lesson at the end: new data, new scanner.",
   "check": {
    "q": "Which of the three targets is the smallest?",
@@ -28,13 +47,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 2,
+  "n": 3,
   "key": "intro",
   "title": "Segmentation: one label per voxel",
   "part": "Opening",
   "kind": "clip",
-  "clip": "clips/02_intro.mp4",
-  "poster": "poster/02_intro.jpg",
+  "clip": "clips/03_intro.mp4",
+  "poster": "poster/03_intro.jpg",
   "text": "An M. R. I. scan is made of small cubes, the voxels. Here, each one is a cube of one millimetre. Segmentation gives every voxel a label: a name, like cortex or thalamus. Count the voxels of one label, and you have its volume. A thousand voxels are one millilitre. This cortex: five hundred sixty two millilitres.",
   "check": {
    "q": "A voxel is 1 mm x 1 mm x 1 mm. How many voxels make 1 ml?",
@@ -62,13 +81,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 3,
+  "n": 4,
   "key": "gm_use",
   "title": "What are brain volumes used for?",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/03_gm_use.mp4",
-  "poster": "poster/03_gm_use.jpg",
+  "clip": "clips/04_gm_use.mp4",
+  "poster": "poster/04_gm_use.jpg",
   "text": "Why measure brain volumes at all? First, we need to know what is normal. Brain charts from more than a hundred thousand people work like growth charts for children: they show the normal volume at every age, from before birth to one hundred. Three examples from research. First, Alzheimer's disease: shrinking of the brain is one of three markers of the disease, the N in the A, T, N scheme. Second, drug trials. In multiple sclerosis, brain shrinking is used as an outcome, and drugs that slowed the shrinking more also slowed disability more. Third, many centres put their scans together. In depression, the hippocampus is only about one percent smaller: invisible in one patient, but clear in thousands. And one rule for all of this: a volume only means something when it is corrected for head size and compared with people of the same age.",
   "check": null,
   "exercise": null,
@@ -107,13 +126,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 4,
+  "n": 5,
   "key": "fs_idea",
   "title": "FreeSurfer: the cortex as a folded sheet",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/04_fs_idea.mp4",
-  "poster": "poster/04_fs_idea.jpg",
+  "clip": "clips/05_fs_idea.mp4",
+  "poster": "poster/05_fs_idea.jpg",
   "text": "Free Surfer is the classic tool. It sees the cortex as a folded sheet, only a few millimetres thin. So it does not count voxels: it draws two surfaces. The white surface is the inner border, between white and grey matter. The pial surface is the outer border. The distance between them is the cortical thickness.",
   "check": {
    "q": "Cortical thickness is the distance between ...",
@@ -141,13 +160,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 5,
+  "n": 6,
   "key": "fs_thick",
   "title": "Cortical thickness, point by point",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/05_fs_thick.mp4",
-  "poster": "poster/05_fs_thick.jpg",
+  "clip": "clips/06_fs_thick.mp4",
+  "poster": "poster/06_fs_thick.jpg",
   "text": "How thick is the cortex at one point? From every point of one surface, Free Surfer measures the shortest way to the other surface. A short way means thin cortex. A long way means thick cortex. Colour every point by its distance, and you get a thickness map. The surfaces run between the voxels. So the map can show differences smaller than one voxel. You see where the cortex gets thinner, not only that it shrinks. Now the same on a whole brain: Free Surfer's average brain. The white surface grows outwards, to the pial surface. Then every point gets its colour. Purple is thin cortex. Yellow is thick cortex.",
   "check": null,
   "exercise": null,
@@ -171,13 +190,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 6,
+  "n": 7,
   "key": "fs_atlas",
   "title": "From folds to named regions",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/06_fs_atlas.mp4",
-  "poster": "poster/06_fs_atlas.jpg",
+  "clip": "clips/07_fs_atlas.mp4",
+  "poster": "poster/07_fs_atlas.jpg",
   "text": "To name the folds, Free Surfer blows the surface up into a sphere. There it matches the folds to an average brain. So every fold gets a name: thirty four regions per hemisphere.",
   "check": {
    "q": "How many regions per hemisphere has the Desikan-Killiany atlas?",
@@ -210,13 +229,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 7,
+  "n": 8,
   "key": "ss_idea",
   "title": "SynthSeg: trained on images that never existed",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/07_ss_idea.mp4",
-  "poster": "poster/07_ss_idea.jpg",
+  "clip": "clips/08_ss_idea.mp4",
+  "poster": "poster/08_ss_idea.jpg",
   "text": "Synth Seg is a neural network that never saw a real scan. It trained on fake images with random contrast and resolution. So a real scan is just one more variation.",
   "check": {
    "q": "What was SynthSeg trained on?",
@@ -244,13 +263,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 8,
+  "n": 9,
   "key": "ss_fast",
   "title": "Any contrast, in minutes",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/08_ss_fast.mp4",
-  "poster": "poster/08_ss_fast.jpg",
+  "clip": "clips/09_ss_fast.mp4",
+  "poster": "poster/09_ss_fast.jpg",
   "text": "Because of this training, it works on almost any contrast and resolution, without retraining. And it is fast: the scan goes through the network once. About a minute on a normal computer. But it gives volumes, not surfaces. For cortical thickness, you still need Free Surfer.",
   "check": {
    "q": "Clinical FLAIR scans with 5 mm slices, and you want volumes. Which tool?",
@@ -278,13 +297,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 9,
+  "n": 10,
   "key": "tool_choice",
   "title": "FreeSurfer or SynthSeg?",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/09_tool_choice.mp4",
-  "poster": "poster/09_tool_choice.jpg",
+  "clip": "clips/10_tool_choice.mp4",
+  "poster": "poster/10_tool_choice.jpg",
   "text": "Free Surfer or Synth Seg? Ask three questions. One: do you need cortical thickness, or surfaces? Then Free Surfer. And then you need a good research scan. Two: are your scans clinical, with thick slices or another contrast? Then Synth Seg. Three: do you have thousands of scans, and little time? Also Synth Seg. And whichever you choose: look at the result. Both tools always give an answer. Not always a right one.",
   "check": null,
   "exercise": null,
@@ -308,13 +327,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 10,
+  "n": 11,
   "key": "qc_score",
   "title": "How do we know it is right? The QC score",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/10_qc_score.mp4",
-  "poster": "poster/10_qc_score.jpg",
+  "clip": "clips/11_qc_score.mp4",
+  "poster": "poster/11_qc_score.jpg",
   "text": "How do we know a segmentation is right? Nobody can look at ten thousand scans. So Synth Seg scores its own result. A second small network looks only at the label map, not at the scan. It has learned how good label maps look, and how broken ones look. So for each region, it guesses the quality: a score between zero and one. Below zero point six five, a region fails. This scan passes. This one fails. Look at it.",
   "check": {
    "q": "A region gets a QC score of 0.60. What now?",
@@ -374,16 +393,16 @@ window.SLIDES = [
    }
   ],
   "qr": null,
-  "n": 11
+  "n": 12
  },
  {
-  "n": 12,
+  "n": 13,
   "key": "qc_test",
   "title": "The proof: test against a reference",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/11_qc_test.mp4",
-  "poster": "poster/11_qc_test.jpg",
+  "clip": "clips/12_qc_test.mp4",
+  "poster": "poster/12_qc_test.jpg",
   "text": "The strongest proof: compare with labels drawn by an expert. That is accuracy. Same person scanned twice: same result? That is repeatability. Robustness: does it still work on another scanner, or on a sick brain?",
   "check": {
    "q": "Same person, two scans in one week, hippocampus 6 % apart. Which property is poor?",
@@ -405,13 +424,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 13,
+  "n": 14,
   "key": "fail_lesion",
   "title": "Where it fails: stroke lesions",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/12_fail_lesion.mp4",
-  "poster": "poster/12_fail_lesion.jpg",
+  "clip": "clips/13_fail_lesion.mp4",
+  "poster": "poster/13_fail_lesion.jpg",
   "text": "None of these tools saw a large stroke lesion in training. For them, it is something new. This brain has a stroke lesion. Where the lesion touches a structure, the program gets its volume wrong. In our test, the pallidum came out about a fifth too small. Structures far from the lesion are fine.",
   "check": {
    "q": "A lesion covers the left putamen. Which volume can you trust most?",
@@ -444,13 +463,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 14,
+  "n": 15,
   "key": "fail_fix",
   "title": "What to do about stroke lesions",
   "part": "1  Grey matter",
   "kind": "clip",
-  "clip": "clips/13_fail_fix.mp4",
-  "poster": "poster/13_fail_fix.jpg",
+  "clip": "clips/14_fail_fix.mp4",
+  "poster": "poster/14_fail_fix.jpg",
   "text": "There are several ways to deal with these lesions, for Synth Seg and for Free Surfer. One: fill it. For a stroke, copy the grey values from the mirror image of the healthy hemisphere. White matter values would not fit, because a stroke often includes cortex. Two: null it. The lesion voxels are set to zero. Three: leave the lesion and a margin around it out of the count. In our test, right next to the lesion, two in five labels changed. Ten millimetres away, fewer than one in ten. With a five millimetre margin, eighty five percent of the structures on the stroke side stayed within five percent, as good as mirror filling. This is the most pragmatic way. Four: if the lesion is very large, use only the healthy hemisphere. All of these ways need the lesion first: someone, or something, has to find it. How does a program find lesions? That is part two.",
   "check": {
    "q": "All ways to handle a lesion need one thing first. Which?",
@@ -498,13 +517,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 15,
+  "n": 16,
   "key": "ex1",
   "title": "Your turn: atlas quiz",
   "part": "1  Grey matter",
   "kind": "exercise",
   "clip": null,
-  "poster": "poster/14_ex1.jpg",
+  "poster": "poster/15_ex1.jpg",
   "text": "Now it is your turn. Open the atlas quiz on your phone or laptop. Seven questions: a region lights up, and you pick its name. You have five minutes.",
   "check": null,
   "exercise": {
@@ -528,13 +547,13 @@ window.SLIDES = [
   "qr": "qr/atlas-quiz.png"
  },
  {
-  "n": 16,
+  "n": 17,
   "key": "wmh_what",
   "title": "White matter hyperintensities",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/15_wmh_what.mp4",
-  "poster": "poster/15_wmh_what.jpg",
+  "clip": "clips/16_wmh_what.mp4",
+  "poster": "poster/16_wmh_what.jpg",
   "text": "Part two: how do we find lesions? FLAIR is a scan that makes the brain fluid dark. So damaged white matter stands out as bright spots: white matter hyper-intensities. They are a sign of small vessel disease. People with many of them have a higher risk of stroke and dementia.",
   "check": {
    "q": "On which image are these lesions bright?",
@@ -572,13 +591,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 17,
+  "n": 18,
   "key": "wmh_use",
   "title": "What is the lesion volume used for?",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/16_wmh_use.mp4",
-  "poster": "poster/16_wmh_use.jpg",
+  "clip": "clips/17_wmh_use.mp4",
+  "poster": "poster/17_wmh_use.jpg",
   "text": "What do we do with this? In one study of older people, doctors graded the lesions by eye: mild, moderate or severe. With severe lesions, almost three times as many people lost their independence or died each year. Trials use the volume as an outcome: strict blood pressure control slowed the growth of the lesions. But the difference was small: about half a millilitre in four years. A grade by eye cannot reliably show such a small change. You need a measured volume. And for the new Alzheimer antibodies, severe lesions speak against the treatment.",
   "check": null,
   "exercise": null,
@@ -612,13 +631,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 18,
+  "n": 19,
   "key": "wmh_manual",
   "title": "The reference: masks drawn by experts",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/17_wmh_manual.mp4",
-  "poster": "poster/17_wmh_manual.jpg",
+  "clip": "clips/18_wmh_manual.mp4",
+  "poster": "poster/18_wmh_manual.jpg",
   "text": "The reference is a mask painted by an expert, by hand, slice by slice. That is slow, and two experts never paint exactly the same. So we want a program to do it.",
   "check": {
    "q": "Why do we want an automatic method?",
@@ -651,13 +670,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 19,
+  "n": 20,
   "key": "bianca_knn",
   "title": "BIANCA: ask the neighbours",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/18_bianca_knn.mp4",
-  "poster": "poster/18_bianca_knn.jpg",
+  "clip": "clips/19_bianca_knn.mp4",
+  "poster": "poster/19_bianca_knn.jpg",
   "text": "Bianka learns from examples. In training scans, an expert has marked the lesions. Bianka takes sample voxels, lesion and healthy, and stores each one as a point: its brightness and its position. Now a new scan, without a mask. For one voxel, the forty nearest stored points vote. Thirty five say lesion: probability zero point eight eight. Bianka does this for every voxel. A cut-off then turns these probabilities into a mask.",
   "check": {
    "q": "30 of the 40 neighbours are lesion voxels. Lesion probability?",
@@ -712,16 +731,16 @@ window.SLIDES = [
    }
   ],
   "qr": null,
-  "n": 20
+  "n": 21
  },
  {
-  "n": 21,
+  "n": 22,
   "key": "bianca_small",
   "title": "What BIANCA misses: small lesions",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/19_bianca_small.mp4",
-  "poster": "poster/19_bianca_small.jpg",
+  "clip": "clips/20_bianca_small.mp4",
+  "poster": "poster/20_bianca_small.jpg",
   "text": "Which lesions does Bianka find? The big ones, almost always. But of the smallest lesions, under ten cubic millimetres, only one in four. That is why small lesions pull Dice down.",
   "check": null,
   "exercise": null,
@@ -740,13 +759,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 22,
+  "n": 23,
   "key": "unet",
   "title": "The U-Net in one picture",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/20_unet.mp4",
-  "poster": "poster/20_unet.jpg",
+  "clip": "clips/21_unet.mp4",
+  "poster": "poster/21_unet.jpg",
   "text": "A U net goes down, shrinking the image to see context. Then it goes up again, and skip connections bring back the detail. It learns its own features. Today, the best lesion tools work like this.",
   "check": {
    "q": "What do the skip connections bring back?",
@@ -779,13 +798,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 23,
+  "n": 24,
   "key": "bianca_vs_unet",
   "title": "BIANCA or U-Net?",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/21_bianca_vs_unet.mp4",
-  "poster": "poster/21_bianca_vs_unet.jpg",
+  "clip": "clips/22_bianca_vs_unet.mp4",
+  "poster": "poster/22_bianca_vs_unet.jpg",
   "text": "So, Bianka or U net? Bianka needs no graphics card. It is simple: you can follow every step. And sometimes, it is good enough. A U net is usually more accurate. But training it needs a graphics card, and it is harder to see why it decides.",
   "check": null,
   "exercise": null,
@@ -809,13 +828,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 24,
+  "n": 25,
   "key": "dice",
   "title": "The Dice score",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/22_dice.mp4",
-  "poster": "poster/22_dice.jpg",
+  "clip": "clips/23_dice.mp4",
+  "poster": "poster/23_dice.jpg",
   "text": "Put the mask on the reference: hits in both, extra marks, and misses. Dice is two times the hits, divided by both mask sizes together. One is perfect. This slice: zero point eight two. Bianka on average: zero point seven.",
   "check": {
    "q": "TP = 50, FP = 25, FN = 25. Dice?",
@@ -848,13 +867,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 25,
+  "n": 26,
   "key": "raters",
   "title": "Even experts do not agree",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/23_raters.mp4",
-  "poster": "poster/23_raters.jpg",
+  "clip": "clips/24_raters.mp4",
+  "poster": "poster/24_raters.jpg",
   "text": "Even experts do not agree. Two other experts reached only zero point seven seven and zero point seven nine against the reference, on the training scans. The best program, a U net, reached zero point eight on the test scans: about the same level. So that is the ceiling.",
   "check": null,
   "exercise": null,
@@ -873,13 +892,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 26,
+  "n": 27,
   "key": "dice_small",
   "title": "Dice is hard on small lesions",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/24_dice_small.mp4",
-  "poster": "poster/24_dice_small.jpg",
+  "clip": "clips/25_dice_small.mp4",
+  "poster": "poster/25_dice_small.jpg",
   "text": "Shift a big lesion by one voxel. Ninety of a hundred voxels still overlap: Dice is zero point nine. The same shift on a tiny lesion. Only two of four voxels still overlap: Dice is zero point five. Small lesions are hard on Dice.",
   "check": {
    "q": "Same method, two patients. Who tends to get the lower Dice?",
@@ -901,13 +920,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 27,
+  "n": 28,
   "key": "ex2",
   "title": "Your turn: segment the lesions",
   "part": "2  White matter lesions",
   "kind": "exercise",
   "clip": null,
-  "poster": "poster/25_ex2.jpg",
+  "poster": "poster/26_ex2.jpg",
   "text": "Your turn. Open the lesion exercise. A short tutorial first, then paint the lesions on three slices of one patient, and get your Dice. You have six minutes.",
   "check": null,
   "exercise": {
@@ -931,13 +950,13 @@ window.SLIDES = [
   "qr": "qr/wmh-dice.png"
  },
  {
-  "n": 28,
+  "n": 29,
   "key": "beat2",
   "title": "Can you beat the algorithm?",
   "part": "2  White matter lesions",
   "kind": "clip",
-  "clip": "clips/26_beat2.mp4",
-  "poster": "poster/26_beat2.jpg",
+  "clip": "clips/27_beat2.mp4",
+  "poster": "poster/27_beat2.jpg",
   "text": "How did you do? Bianka got zero point seven, two other experts zero point seven seven and zero point seven nine, the best program, a U net, zero point eight. Hands up, who beat Bianka? The small spots are hard for everyone.",
   "check": null,
   "exercise": null,
@@ -966,13 +985,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 29,
+  "n": 30,
   "key": "cmb_what",
   "title": "Microbleeds: small dark dots",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/27_cmb_what.mp4",
-  "poster": "poster/27_cmb_what.jpg",
+  "clip": "clips/28_cmb_what.mp4",
+  "poster": "poster/28_cmb_what.jpg",
   "text": "Part three. A micro-bleed is a tiny old bleed. It leaves iron behind, and iron disturbs the signal. So on T two star it is a small, round, dark dot, usually two to five millimetres wide. Watch for lookalikes, like vessels cut across. This slice has three.",
   "check": {
    "q": "On which images do you look for microbleeds?",
@@ -1005,13 +1024,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 30,
+  "n": 31,
   "key": "cmb_use",
   "title": "Why count microbleeds?",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/28_cmb_use.mp4",
-  "poster": "poster/28_cmb_use.jpg",
+  "clip": "clips/29_cmb_use.mp4",
+  "poster": "poster/29_cmb_use.jpg",
   "text": "Why count them? Micro-bleeds are common, and more so with age: in one large study, more than a third of people over eighty had some. Where they sit hints at the cause. In the lobes, at the cortex: amyloid in the vessel walls. Deep in the brain: high blood pressure. And they matter for treatment. In patients on blood thinners after a stroke, those with micro-bleeds had almost four times as many brain bleeds.",
   "check": null,
   "exercise": null,
@@ -1040,13 +1059,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 31,
+  "n": 32,
   "key": "cmb_unet",
   "title": "The network marks voxels. We need a count.",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/29_cmb_unet.mp4",
-  "poster": "poster/29_cmb_unet.jpg",
+  "clip": "clips/30_cmb_unet.mp4",
+  "poster": "poster/30_cmb_unet.jpg",
   "text": "A three D U net looks at the scan as a block, with the slices above and below, and marks every voxel that looks like a bleed. But doctors count bleeds, not voxels. So we group the voxels into objects.",
   "check": {
    "q": "The network marks 17 voxels. How many microbleeds is that?",
@@ -1074,13 +1093,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 32,
+  "n": 33,
   "key": "f1",
   "title": "F1: counting hits and misses",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/30_f1.mp4",
-  "poster": "poster/30_f1.jpg",
+  "clip": "clips/31_f1.mp4",
+  "poster": "poster/31_f1.jpg",
   "text": "Now we count objects, not voxels. The expert marked five micro-bleeds: the circles. The program marked five places: the squares. Four are found. One is a false alarm: a vessel. And one bleed is missed. Precision: how many marks are real. Recall: how many bleeds we found. F one combines both. Four found, one false, one missed: F one is zero point eight.",
   "check": {
    "q": "TP = 3, FP = 3, FN = 0. Precision?",
@@ -1108,13 +1127,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 33,
+  "n": 34,
   "key": "count4",
   "title": "Why the count matters: four",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/31_count4.mp4",
-  "poster": "poster/31_count4.jpg",
+  "clip": "clips/32_count4.mp4",
+  "poster": "poster/32_count4.jpg",
   "text": "Why count so carefully? New Alzheimer drugs remove amyloid and slow early Alzheimer's. But they can cause swelling and new bleeds in the brain. The risk is higher in people who already have micro-bleeds. In Europe, with more than four, the drug is not given. Four or five: one dot decides.",
   "check": {
    "q": "A patient has 5 microbleeds. By the appropriate use recommendations ...",
@@ -1157,13 +1176,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 34,
+  "n": 35,
   "key": "cmb_vessel",
   "title": "Microbleed or vessel? Scroll.",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/32_cmb_vessel.mp4",
-  "poster": "poster/32_cmb_vessel.jpg",
+  "clip": "clips/33_cmb_vessel.mp4",
+  "poster": "poster/33_cmb_vessel.jpg",
   "text": "Is every dark dot a micro-bleed? No. On a single slice, a micro-bleed and a vessel cut across look the same. So scroll through the slices. The micro-bleed is gone after a few slices. The vessel goes on, slice after slice, and it moves. From the side, the micro-bleed is a ball, and the vessel is a line. Mark the vessel, and you have a false positive. Calcium, and the edges near bone and air, can fool us the same way.",
   "check": {
    "q": "A dark dot stays visible over 15 slices and moves sideways. It is most likely ...",
@@ -1196,13 +1215,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 35,
+  "n": 36,
   "key": "ex3",
   "title": "Your turn: find the microbleeds",
   "part": "3  Microbleeds",
   "kind": "exercise",
   "clip": null,
-  "poster": "poster/33_ex3.jpg",
+  "poster": "poster/34_ex3.jpg",
   "text": "Last exercise. Two scans. Scroll through the slices and click on every micro-bleed you find. Then you get your precision, your recall and your F one. You have six minutes. If you want more, harder scans are in the microbleed trainer.",
   "check": null,
   "exercise": {
@@ -1226,13 +1245,13 @@ window.SLIDES = [
   "qr": "qr/cmb-f1.png"
  },
  {
-  "n": 36,
+  "n": 37,
   "key": "beat3",
   "title": "Can you beat the algorithm?",
   "part": "3  Microbleeds",
   "kind": "clip",
-  "clip": "clips/34_beat3.mp4",
-  "poster": "poster/34_beat3.jpg",
+  "clip": "clips/35_beat3.mp4",
+  "poster": "poster/35_beat3.jpg",
   "text": "The best program reached a median F one of zero point six eight per scan. Hands up: who did better? Who found the big one, and who missed small ones?",
   "check": null,
   "exercise": null,
@@ -1256,13 +1275,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 37,
+  "n": 38,
   "key": "train_vs_own",
   "title": "Does your data look like the training data?",
   "part": "4  New data, new scanner",
   "kind": "clip",
-  "clip": "clips/35_train_vs_own.mp4",
-  "poster": "poster/35_train_vs_own.jpg",
+  "clip": "clips/36_train_vs_own.mp4",
+  "poster": "poster/36_train_vs_own.jpg",
   "text": "Before you use a trained tool, ask: what was it trained on? Check the people, the scanner, the sequence, the slice thickness, and the number and size of the lesions. Even inside one challenge, the three sites differ: one point five or three tesla, slices from under one millimetre to four. At one site, three scans hold most of the micro-bleeds. And your scans? And size matters. Our micro-bleed detector, on public scans it had not seen in training. Over five millimetres, six of eight were found. Two to five millimetres: sixty five percent. Under two millimetres: only four of ten. The small ones fail first.",
   "check": {
    "q": "The tool was trained on 3 T T2* GRE scans. Your scans are SWI from another scanner. What do you do first?",
@@ -1310,13 +1329,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 38,
+  "n": 39,
   "key": "adapt",
   "title": "Your own scanner: retrain or fine-tune",
   "part": "4  New data, new scanner",
   "kind": "clip",
-  "clip": "clips/36_adapt.mp4",
-  "poster": "poster/36_adapt.jpg",
+  "clip": "clips/37_adapt.mp4",
+  "poster": "poster/37_adapt.jpg",
   "text": "Your scans differ, and the score drops. What now? If you have the training data, retrain: add your own marked scans to it, and train again. For Bianka this is easy, because its model is just the stored example voxels. Add your scans, and training again takes under a minute. In a small test on public scans from a new scanner, five added scans raised the Dice from zero point six two to zero point six four. Often you only get the trained network, not its training data. Then you fine-tune: start from the network's weights, and continue training, in small steps, on a few of your own marked scans. Either way, test on your own scans that were not used for training.",
   "check": {
    "q": "You downloaded a trained model, but not its training data. Which way is open to you?",
@@ -1354,13 +1373,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 39,
+  "n": 40,
   "key": "outlook_transformer",
   "title": "Outlook: one model, many languages",
   "part": "4  New data, new scanner",
   "kind": "clip",
-  "clip": "clips/37_outlook_transformer.mp4",
-  "poster": "poster/37_outlook_transformer.jpg",
+  "clip": "clips/38_outlook_transformer.mp4",
+  "poster": "poster/38_outlook_transformer.jpg",
   "text": "An outlook: one model, many languages. In a language model, each word becomes an arrow, a list of numbers. Take Germany and France. The arrow from Germany to Berlin means capital of. Take the same arrow from France, and you land on Paris. Same direction, same meaning. Now, everything can become tokens: a sentence becomes words, a C. T. scan becomes small cubes, D. N. A. pieces of six letters. All become arrows in the same space, so one model reads them like one language. For C. T. and English, this exists. Asked to describe the lungs in a chest C. T., C. T. CHAT answers: ground glass densities in both lungs, more in the lower lobes. It learned from about twenty five thousand chest C. T. scans with their reports. For D. N. A., it exists too. Chat N. T. joins a D. N. A. transformer to a language model. Is there an acceptor splice site in this sequence? Yes, without question. But it only answers the tasks it was trained on. And M. R. I. plus English is next. In twenty twenty-six, the first large public set appeared: ninety eight thousand brain and spine studies with reports. Its model is still to come. And careful: on scans from other hospitals, C. T. CLIP, the sister of C. T. CHAT, was clearly worse. Not a doctor yet. The take-home: images, D. N. A. and words are all languages, and models that read them in one space can translate between them: a C. T. into a report, D. N. A. into an answer. M. R. I. is next. To learn more, watch the three blue one brown video on transformers.",
   "check": {
    "q": "Why does CT + English already exist, and MRI + English only now?",
@@ -1425,13 +1444,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 40,
+  "n": 41,
   "key": "exam",
   "title": "Conclusion",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/38_exam.mp4",
-  "poster": "poster/38_exam.jpg",
+  "clip": "clips/39_exam.mp4",
+  "poster": "poster/39_exam.jpg",
   "text": "To conclude. First, know your tool's training data: which patients, which scanners, which lesion sizes? None of these tools was trained on large stroke lesions, so fill or mask the lesion. Second, a new scanner changes the image. Test the tool on your own scans first. If it drops, mix your scans into the training, or fine-tune. Third, check with your own eyes: quality control really matters. Fourth, small lesions are the problem. Large lesions are found, the small ones are often missed. And fifth, if you can, use several raters, because even experts do not agree. And one rule for all: never trust a segmentation you have not checked.",
   "check": null,
   "exercise": null,
@@ -1475,13 +1494,13 @@ window.SLIDES = [
   "qr": null
  },
  {
-  "n": 41,
+  "n": 42,
   "key": "more",
   "title": "Films, slides and exercises stay online",
   "part": "Wrap-up",
   "kind": "clip",
-  "clip": "clips/39_more.mp4",
-  "poster": "poster/39_more.jpg",
+  "clip": "clips/40_more.mp4",
+  "poster": "poster/40_more.jpg",
   "text": "Everything stays online. For more practice, there are three trainers: brain regions, lesions, and micro-bleeds. Thank you.",
   "check": null,
   "exercise": null,

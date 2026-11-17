@@ -1,5 +1,47 @@
 // made by film/code/11_make_qa.py, do not edit by hand
 window.QA = {
+"title": [
+{
+"q": "What does segmentation mean?",
+"a": "Segmentation gives every voxel of a scan a label: a name such as cortex, thalamus, lesion or microbleed. Once every voxel has a label, you can count voxels and turn a picture into a measurement."
+},
+{
+"q": "Why does the title say every voxel counts?",
+"a": "A volume is just a count of voxels: with 1 mm voxels, 1,000 voxels are 1 ml. So every voxel that gets the wrong label changes the number, and for tiny targets such as microbleeds a few voxels decide whether something is found at all."
+},
+{
+"q": "Why are there three different scans on the left?",
+"a": "Each target is seen best on its own contrast: grey matter and brain regions on T1, white matter lesions on FLAIR, where they are bright, and microbleeds on T2* (or SWI), where they are small dark dots."
+},
+{
+"q": "What is the model in the middle?",
+"a": "A neural network with the U shape of a U-Net: it shrinks the image step by step to see more context, then grows it back to full size, and skip connections bring back the fine detail. The picture is a sketch, not one particular trained network."
+},
+{
+"q": "Is it one model for all three targets?",
+"a": "No. The picture is a summary. In the lecture each target has its own tool: FreeSurfer or SynthSeg for grey matter, BIANCA or a U-Net for white matter lesions, and a 3D U-Net for microbleeds."
+},
+{
+"q": "What numbers come out at the end?",
+"a": "For grey matter, the volume of each region in ml. For white matter lesions, the lesion volume in ml. For microbleeds, a count: how many there are. The lecture shows why each number needs a check before you trust it."
+},
+{
+"q": "Where do the pictures on this slide come from?",
+"a": "Only from public data: a T1 scan of the Dallas Lifespan Brain Study with SynthSeg labels, a FLAIR scan of the WMH Segmentation Challenge with its expert lesion mask, and a T2* scan of the VALDO challenge with rings at its microbleeds. No patient data."
+},
+{
+"q": "Are the three pictures from the same person?",
+"a": "No. Each picture comes from a different public data set, chosen to show its target well. In practice you would usually have all three contrasts of the same person from one session."
+},
+{
+"q": "Do I need to program to follow the lecture?",
+"a": "No. The lecture is about what the tools do, how they fail and how to check them. The three exercises run in the browser: an atlas quiz, painting a lesion, and clicking microbleeds."
+},
+{
+"q": "What is the most important lesson of today?",
+"a": "Never trust a segmentation you have not checked. Look at it, use quality scores, and test a tool on your own scans before you use its numbers."
+}
+],
 "plan": [
 {
 "q": "Why exactly these three tasks?",
