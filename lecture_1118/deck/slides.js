@@ -88,7 +88,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/04_gm_use.mp4",
   "poster": "poster/04_gm_use.jpg",
-  "text": "Why measure brain volumes at all? First, we need to know what is normal. Brain charts from more than a hundred thousand people work like growth charts for children: they show the normal volume at every age, from before birth to one hundred. Three examples from research. First, Alzheimer's disease: shrinking of the brain is one of three markers of the disease, the N in the A, T, N scheme. Second, drug trials. In multiple sclerosis, brain shrinking is used as an outcome, and drugs that slowed the shrinking more also slowed disability more. Third, many centres put their scans together. In depression, the hippocampus is only about one percent smaller: invisible in one patient, but clear in thousands. And one rule for all of this: a volume only means something when it is corrected for head size and compared with people of the same age.",
+  "text": "Why measure brain volumes at all? First, we need to know what is normal. Brain charts from more than a hundred thousand people work like growth charts for children: they show the normal volume at every age, from before birth to one hundred. Three examples from research. First, Alzheimer's disease: shrinking of the brain is a marker of N, nerve cell loss, in the A, T, N research scheme. It shows that nerve cells are lost, but not why. Second, drug trials. In multiple sclerosis, brain shrinking is used as an outcome, and drugs that slowed the shrinking more also slowed disability more. Third, many centres put their scans together. In depression, the hippocampus is only about one percent smaller: invisible in one patient, but clear in thousands. And one rule for all of this: a volume only means something when it is corrected for head size and compared with people of the same age.",
   "check": null,
   "exercise": null,
   "sources": [
@@ -116,12 +116,17 @@ window.SLIDES = [
     "label": "O'Brien et al. 2011, Psychiatry Res (adjusting for head size)",
     "url": "https://doi.org/10.1016/j.pscychresns.2011.01.007",
     "about": "Heads differ in size, so do brain structures: volumes must be adjusted for head (intracranial) size. Compares three ways (proportion, residual, covariance) and recommends a general model."
+   },
+   {
+    "label": "Jack et al. 2024, Alzheimers Dement (revised criteria)",
+    "url": "https://doi.org/10.1002/alz.13859",
+    "about": "Revised criteria of the Alzheimer's Association Workgroup, meant as a bridge between research and clinical care; atrophy on MRI stays a non-specific sign of neurodegeneration."
    }
   ],
   "optional": false,
   "key_q": false,
-  "notes": "Why measure brain volumes at all? First, we need to know what is normal. Brain charts from more than a hundred thousand people work like growth charts for children: they show the normal volume at every age, from before birth to one hundred. Three examples from research. First, Alzheimer's disease: shrinking of the brain is one of three markers of the disease, the N in the A, T, N scheme. Second, drug trials. In multiple sclerosis, brain shrinking is used as an outcome, and drugs that slowed the shrinking more also slowed disability more. Third, many centres put their scans together. In depression, the hippocampus is only about one percent smaller: invisible in one patient, but clear in thousands. And one rule for all of this: a volume only means something when it is corrected for head size and compared with people of the same age.",
-  "background": "Real studies, to show why the numbers matter. (1) Brain charts (Bethlehem 2022): 123,984 scans of 101,457 people, from 115 days after conception to 100 years; a person gets a centile, there is no fixed cut-off. (2) NIA-AA research framework (Jack 2018): Alzheimer's disease is defined by biomarkers, A = amyloid, T = tau, (N) = neurodegeneration; atrophy on MRI is one of the (N) markers. It is not specific for Alzheimer's disease, and the framework is meant for research, not for routine practice. (3) Multiple sclerosis: meta-analysis of 13 trials with more than 13,500 patients (Sormani 2014); the treatment effect on brain atrophy went with the treatment effect on disability (R2 = 0.48). This holds for trials (groups), not for one patient. Extra, if asked: in anti-amyloid trials the ventricles grew faster on drug than on placebo (Alves 2023, +2.1 ml). (4) ENIGMA depression group (Schmaal 2016): 1,728 patients and 7,199 controls, hippocampus 1.24 % smaller (Cohen's d = -0.14). For contrast: in temporal lobe epilepsy with hippocampal sclerosis the hippocampus on the seizure side is much smaller (d about -1.8, Whelan 2018); that one you can see in a single patient. Head size and age (new 13.11.2026): a volume alone means little - heads differ in size, so volumes are adjusted for intracranial volume (proportion, residual or covariance method; O'Brien 2011 compares them and recommends a general model), and compared with people of the same age (brain charts give centiles, Bethlehem 2022).",
+  "notes": "Why measure brain volumes at all? First, we need to know what is normal. Brain charts from more than a hundred thousand people work like growth charts for children: they show the normal volume at every age, from before birth to one hundred. Three examples from research. First, Alzheimer's disease: shrinking of the brain is a marker of N, nerve cell loss, in the A, T, N research scheme. It shows that nerve cells are lost, but not why. Second, drug trials. In multiple sclerosis, brain shrinking is used as an outcome, and drugs that slowed the shrinking more also slowed disability more. Third, many centres put their scans together. In depression, the hippocampus is only about one percent smaller: invisible in one patient, but clear in thousands. And one rule for all of this: a volume only means something when it is corrected for head size and compared with people of the same age.",
+  "background": "Real studies, to show why the numbers matter. (1) Brain charts (Bethlehem 2022): 123,984 scans of 101,457 people, from 115 days after conception to 100 years; a person gets a centile, there is no fixed cut-off. (2) NIA-AA research framework (Jack 2018): Alzheimer's disease is defined by biomarkers, A = amyloid, T = tau, (N) = neurodegeneration; atrophy on MRI is one of the (N) markers. It is not specific for Alzheimer's disease, and the framework is meant for research, not for routine practice. (3) Multiple sclerosis: meta-analysis of 13 trials with more than 13,500 patients (Sormani 2014); the treatment effect on brain atrophy went with the treatment effect on disability (R2 = 0.48). This holds for trials (groups), not for one patient. Extra, if asked: in trials of ARIA-inducing anti-amyloid antibodies the ventricles grew faster on drug than on placebo (Alves 2023, +2.1 ml). (4) ENIGMA depression group (Schmaal 2016): 1,728 patients and 7,199 controls, hippocampus 1.24 % smaller (Cohen's d = -0.14). For contrast: in temporal lobe epilepsy with hippocampal sclerosis the hippocampus on the seizure side is much smaller (d about -1.8, Whelan 2018); that one you can see in a single patient. Head size and age (new 13.11.2026): a volume alone means little - heads differ in size, so volumes are adjusted for intracranial volume (proportion, residual or covariance method; O'Brien 2011 compares them and recommends a general model), and compared with people of the same age (brain charts give centiles, Bethlehem 2022).",
   "links": [],
   "qr": null
  },
@@ -174,12 +179,17 @@ window.SLIDES = [
    {
     "label": "Fischl, Dale 2000, PNAS (cortical thickness)",
     "url": "https://doi.org/10.1073/pnas.200033797",
-    "about": "How FreeSurfer measures cortical thickness from the two surfaces, with submillimetre accuracy; the spread between people was below 0.5 mm."
+    "about": "How FreeSurfer measures cortical thickness from the two surfaces; the spread between people was below 0.5 mm."
    },
    {
     "label": "FreeSurfer: recon-all",
     "url": "https://surfer.nmr.mgh.harvard.edu/fswiki/recon-all",
     "about": "FreeSurfer documentation of recon-all, the command that runs the whole pipeline."
+   },
+   {
+    "label": "Das et al. 2009, NeuroImage (DiReCT)",
+    "url": "https://doi.org/10.1016/j.neuroimage.2008.12.016",
+    "about": "Cortical thickness measured from a voxel segmentation by registration, without surfaces (DiReCT, used in the ANTs cortical thickness pipeline)."
    }
   ],
   "optional": false,
@@ -213,12 +223,17 @@ window.SLIDES = [
    {
     "label": "Fischl, Sereno, Dale 1999, NeuroImage",
     "url": "https://doi.org/10.1006/nimg.1998.0396",
-    "about": "FreeSurfer part II: the cortex inflated and mapped to a sphere; folding patterns aligned between brains."
+    "about": "FreeSurfer part II: the cortex inflated and mapped to a sphere."
    },
    {
     "label": "Desikan et al. 2006, NeuroImage",
     "url": "https://doi.org/10.1016/j.neuroimage.2006.01.021",
     "about": "Automatic labelling of 34 cortical regions per hemisphere, learned from 40 hand-labelled brains."
+   },
+   {
+    "label": "Fischl, Sereno, Tootell, Dale 1999, Hum Brain Mapp",
+    "url": "https://doi.org/10.1002/(SICI)1097-0193(1999)8:4<272::AID-HBM10>3.0.CO;2-4",
+    "about": "An average folding pattern on the sphere; the folds of each brain are aligned to it, which gives a common coordinate system."
    }
   ],
   "optional": false,
@@ -287,12 +302,22 @@ window.SLIDES = [
     "label": "Billot et al. 2023, Med Image Anal (SynthSeg)",
     "url": "https://doi.org/10.1016/j.media.2023.102789",
     "about": "SynthSeg: a network trained only on synthetic images; segments scans of any contrast and resolution."
+   },
+   {
+    "label": "Billot et al. 2023, PNAS (robust SynthSeg, QC)",
+    "url": "https://doi.org/10.1073/pnas.2216399120",
+    "about": "SynthSeg+ (robust version) with automatic QC scores per region; below 0.65 a region counts as failed."
+   },
+   {
+    "label": "Gopinath et al. 2025, Med Image Anal (recon-all-clinical)",
+    "url": "https://doi.org/10.1016/j.media.2025.103608",
+    "about": "recon-all-clinical: cortical surfaces and thickness on clinical scans of any contrast and resolution; less accurate with thick slices."
    }
   ],
   "optional": false,
   "key_q": true,
   "notes": "Because of this training, it works on almost any contrast and resolution, without retraining. And it is fast: the scan goes through the network once. About a minute on a normal computer. But it gives volumes, not surfaces. For cortical thickness, you still need Free Surfer.",
-  "background": "Synth Seg is a deep learning tool for brain M R I. It segments grey matter, white matter, and many other structures. It works on almost any contrast and resolution. You do not need to retrain it for a new scan type. That is the main selling point. It is fast. On a graphics card it takes seconds. On a processor it takes one to two minutes. Sources differ a little on the exact numbers, but the order of magnitude is clear. The output is volumes, not surfaces. So you get millilitres per region. You do not get cortical thickness. For thickness you still need Free Surfer. A question for the room: you have a clinical FLAIR scan with five millimetre slices. You want volumes. Which tool do you pick? Free Surfer recon-all, Synth Seg, or neither? Think about it for a moment. The answer is Synth Seg. Free Surfer expects a T one scan with good resolution. Synth Seg can handle the FLAIR. That is the practical difference.",
+  "background": "Synth Seg is a deep learning tool for brain M R I. It segments grey matter, white matter, and many other structures. It works on almost any contrast and resolution. You do not need to retrain it for a new scan type. That is the main selling point. It is fast. On a graphics card it takes seconds. On a processor it takes one to two minutes. Sources differ a little on the exact numbers, but the order of magnitude is clear. The output is volumes, not surfaces. So you get millilitres per region. You do not get cortical thickness. For thickness you still need Free Surfer. A question for the room: you have a clinical FLAIR scan with five millimetre slices. You want volumes. Which tool do you pick? Free Surfer recon-all, Synth Seg, or neither? Think about it for a moment. The answer is Synth Seg. Free Surfer recon-all expects a T one scan with good resolution. Synth Seg can handle the FLAIR. That is the practical difference.",
   "links": [],
   "qr": null
  },
@@ -331,6 +356,11 @@ window.SLIDES = [
     "label": "Data: Dallas Lifespan Brain Study, CC0",
     "url": "https://doi.org/10.18112/openneuro.ds004856.v1.3.0",
     "about": "Dallas Lifespan Brain Study: public MRI data (CC0), used for our grey-matter pictures."
+   },
+   {
+    "label": "Patenaude et al. 2011, NeuroImage (FSL FIRST)",
+    "url": "https://doi.org/10.1016/j.neuroimage.2011.02.046",
+    "about": "FSL FIRST: a shape and appearance model for 15 subcortical structures, learned from 336 hand-labelled T1 scans; median Dice 0.7 to 0.9."
    }
   ],
   "optional": false,
@@ -429,7 +459,13 @@ window.SLIDES = [
    "why": ""
   },
   "exercise": null,
-  "sources": [],
+  "sources": [
+   {
+    "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
+    "url": "https://doi.org/10.1109/TMI.2019.2905770",
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other trained observers 0.77 and 0.79 against the reference (training scans)."
+   }
+  ],
   "optional": false,
   "key_q": false,
   "notes": "The strongest proof: compare with labels drawn by an expert. That is accuracy. Same person scanned twice: same result? That is repeatability. Robustness: does it still work on another scanner, or on a sick brain?",
@@ -454,7 +490,7 @@ window.SLIDES = [
     "Right thalamus"
    ],
    "answer": 2,
-   "why": "Structures the lesion does not touch changed by less than 1 % in our test."
+   "why": "Structures far from the lesion, such as the right thalamus, changed by less than 1 % in our test. Even untouched neighbours of the lesion, such as the left pallidum, could shift by a few percent."
   },
   "exercise": null,
   "sources": [
@@ -467,6 +503,11 @@ window.SLIDES = [
     "label": "Data: Aphasia Recovery Cohort, CC0",
     "url": "https://openneuro.org/datasets/ds004884",
     "about": "Aphasia Recovery Cohort: public stroke MRI with expert lesion masks (CC0)."
+   },
+   {
+    "label": "Billot et al. 2023, Med Image Anal (SynthSeg)",
+    "url": "https://doi.org/10.1016/j.media.2023.102789",
+    "about": "SynthSeg: a network trained only on synthetic images; segments scans of any contrast and resolution."
    }
   ],
   "optional": false,
@@ -484,7 +525,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/14_fail_fix.mp4",
   "poster": "poster/14_fail_fix.jpg",
-  "text": "There are several ways to deal with these lesions, for Synth Seg and for Free Surfer. One: fill it. For a stroke, copy the grey values from the mirror image of the healthy hemisphere. White matter values would not fit, because a stroke often includes cortex. Two: null it. The lesion voxels are set to zero. Three: leave the lesion and a margin around it out of the count. In our test, right next to the lesion, two in five labels changed. Ten millimetres away, fewer than one in ten. With a five millimetre margin, eighty five percent of the structures on the stroke side stayed within five percent, as good as mirror filling. This is the most pragmatic way. Four: if the lesion is very large, use only the healthy hemisphere. All of these ways need the lesion first: someone, or something, has to find it. How does a program find lesions? That is part two.",
+  "text": "There are several ways to deal with these lesions, for Synth Seg and for Free Surfer. One: fill it. For a stroke, copy the grey values from the mirror image of the healthy hemisphere. White matter values would not fit, because a stroke often includes cortex. Two: null it. The lesion voxels are set to zero. Three: leave the lesion and a margin around it out of the count. In our test, right next to the lesion, two in five labels changed. Ten millimetres away, fewer than one in ten. With a five millimetre margin, eighty five percent of the remaining structure parts on the stroke side stayed within five percent; but then you measure only the part outside the margin. This is the most pragmatic way. Four: if the lesion is very large, use only the healthy hemisphere. All of these ways need the lesion first: someone, or something, has to find it. How does a program find lesions? That is part two.",
   "check": {
    "q": "All ways to handle a lesion need one thing first. Which?",
    "options": [
@@ -521,11 +562,16 @@ window.SLIDES = [
     "label": "Data: Dallas Lifespan Brain Study, CC0",
     "url": "https://doi.org/10.18112/openneuro.ds004856.v1.3.0",
     "about": "Dallas Lifespan Brain Study: public MRI data (CC0), used for our grey-matter pictures."
+   },
+   {
+    "label": "Billot et al. 2023, PNAS (robust SynthSeg, QC)",
+    "url": "https://doi.org/10.1073/pnas.2216399120",
+    "about": "SynthSeg+ (robust version) with automatic QC scores per region; below 0.65 a region counts as failed."
    }
   ],
   "optional": false,
   "key_q": false,
-  "notes": "There are several ways to deal with these lesions, for Synth Seg and for Free Surfer. One: fill it. For a stroke, copy the grey values from the mirror image of the healthy hemisphere. White matter values would not fit, because a stroke often includes cortex. Two: null it. The lesion voxels are set to zero. Three: leave the lesion and a margin around it out of the count. In our test, right next to the lesion, two in five labels changed. Ten millimetres away, fewer than one in ten. With a five millimetre margin, eighty five percent of the structures on the stroke side stayed within five percent, as good as mirror filling. This is the most pragmatic way. Four: if the lesion is very large, use only the healthy hemisphere. All of these ways need the lesion first: someone, or something, has to find it. How does a program find lesions? That is part two.",
+  "notes": "There are several ways to deal with these lesions, for Synth Seg and for Free Surfer. One: fill it. For a stroke, copy the grey values from the mirror image of the healthy hemisphere. White matter values would not fit, because a stroke often includes cortex. Two: null it. The lesion voxels are set to zero. Three: leave the lesion and a margin around it out of the count. In our test, right next to the lesion, two in five labels changed. Ten millimetres away, fewer than one in ten. With a five millimetre margin, eighty five percent of the remaining structure parts on the stroke side stayed within five percent; but then you measure only the part outside the margin. This is the most pragmatic way. Four: if the lesion is very large, use only the healthy hemisphere. All of these ways need the lesion first: someone, or something, has to find it. How does a program find lesions? That is part two.",
   "background": "Several ways to deal with a stroke lesion, the same for SynthSeg and FreeSurfer (rebuilt 13.11.2026). Same public stroke scan as the slide before (ARC sub-M2104, CC0). (1) Fill it: for strokes the usual way is mirror filling from the healthy hemisphere (enantiomorphic filling, the idea of Nachev et al. 2008, NeuroImage, proposed for spatial normalisation); filling with white-matter values (FSL lesion_filling, Battaglini 2012) was made for white matter lesions and does not fit a lesion that includes cortex. The picture shows a plain left-right flip of the slice as an illustration; real tools register the flipped brain first. (2) Null it: lesion voxels set to zero. (3) Leave the lesion + a margin out of the count (most pragmatic). (4) Very large lesion: healthy hemisphere only. Our test: stroke masks from public data (ARC) pasted as unfilled cavities into 8 healthy public scans (DLBS), 222 pairs, SynthSeg --robust with and without the lesion. Labels changed: 38.8 % at 1-2 mm, 15.8 % at 4-5 mm, 6.7 % at 8-10 mm, 1.0 % beyond 15 mm (the tool's own scatter). Stroke-side structures (thalamus, caudate, putamen, pallidum, hippocampus, amygdala, cortex, white matter) within 5 % of the lesion-free volume: untreated 66.5 %, mirror-filled 82.0 % (221 pairs), lesion + 5 mm left out 84.9 % (remaining part). No margin removes all errors; bigger margins cost healthy tissue. Last beat = bridge to part 2: every way needs the lesion mask first (an expert or a program has to find the lesion) - 'How does a program find lesions? That is part two.' Part 2 opens with exactly this question.",
   "links": [],
   "qr": null
@@ -570,7 +616,7 @@ window.SLIDES = [
   "poster": "poster/16_wmh_what.jpg",
   "text": "Part two: how do we find lesions? FLAIR is a scan that makes the brain fluid dark. So damaged white matter stands out as bright spots: white matter hyper-intensities. They are a sign of small vessel disease. People with many of them have a higher risk of stroke and dementia.",
   "check": {
-   "q": "On which image are these lesions bright?",
+   "q": "On which image do we see and segment these lesions best?",
    "options": [
     "T1",
     "FLAIR",
@@ -612,7 +658,7 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/17_wmh_use.mp4",
   "poster": "poster/17_wmh_use.jpg",
-  "text": "What do we do with this? In one study of older people, doctors graded the lesions by eye: mild, moderate or severe. With severe lesions, almost three times as many people lost their independence or died each year. Trials use the volume as an outcome: strict blood pressure control slowed the growth of the lesions. But the difference was small: about half a millilitre in four years. A grade by eye cannot reliably show such a small change. You need a measured volume. And for the new Alzheimer antibodies, severe lesions speak against the treatment.",
+  "text": "What do we do with this? In one study of older people, doctors graded the lesions by eye: mild, moderate or severe. With severe lesions, almost three times as many people lost their independence or died each year. Trials use the volume as an outcome: strict blood pressure control slowed the growth of the lesions. But the difference was small: about half a millilitre in four years. A standard grade by eye, such as the Fazekas scale, cannot reliably show such a small change. You need a measured volume. And for the new Alzheimer antibodies, severe lesions speak against the treatment.",
   "check": null,
   "exercise": null,
   "sources": [
@@ -634,12 +680,32 @@ window.SLIDES = [
    {
     "label": "Cummings et al. 2023, lecanemab: appropriate use",
     "url": "https://doi.org/10.14283/jpad.2023.30",
-    "about": "US appropriate use recommendations for lecanemab: no treatment with more than 4 microhaemorrhages (taken from the trial exclusion criteria)."
+    "about": "US appropriate use recommendations for lecanemab (expert group, not the drug label): no treatment with severe white matter hyperintensities (Fazekas 3) or more than 4 microhaemorrhages, following the trial exclusion criteria."
+   },
+   {
+    "label": "Debette et al. 2019, JAMA Neurol (MRI markers, meta-analysis)",
+    "url": "https://doi.org/10.1001/jamaneurol.2018.3122",
+    "about": "Meta-analysis: white matter hyperintensities go with a higher risk of stroke (HR 2.45), dementia (HR 1.84) and death (HR 2.00)."
+   },
+   {
+    "label": "Vald\u00e9s Hern\u00e1ndez et al. 2013, Neuroepidemiology (visual score vs volume)",
+    "url": "https://doi.org/10.1159/000341859",
+    "about": "672 people of the Lothian Birth Cohort 1936: Fazekas score and lesion volume ranked them almost the same way (Spearman 0.78)."
+   },
+   {
+    "label": "Charidimou et al. 2016, Stroke (leukoaraiosis and thrombolysis)",
+    "url": "https://doi.org/10.1161/STROKEAHA.116.014096",
+    "about": "Meta-analysis on CT and MRI: white matter disease goes with more bleeding after thrombolysis, but this does not justify withholding the therapy."
+   },
+   {
+    "label": "Duering et al. 2023, Lancet Neurol (STRIVE-2)",
+    "url": "https://doi.org/10.1016/S1474-4422(23)00131-X",
+    "about": "Update of STRIVE: newer imaging features of small vessel disease; microbleeds are rated visually, computer methods still need validation."
    }
   ],
   "optional": false,
   "key_q": false,
-  "notes": "What do we do with this? In one study of older people, doctors graded the lesions by eye: mild, moderate or severe. With severe lesions, almost three times as many people lost their independence or died each year. Trials use the volume as an outcome: strict blood pressure control slowed the growth of the lesions. But the difference was small: about half a millilitre in four years. A grade by eye cannot reliably show such a small change. You need a measured volume. And for the new Alzheimer antibodies, severe lesions speak against the treatment.",
+  "notes": "What do we do with this? In one study of older people, doctors graded the lesions by eye: mild, moderate or severe. With severe lesions, almost three times as many people lost their independence or died each year. Trials use the volume as an outcome: strict blood pressure control slowed the growth of the lesions. But the difference was small: about half a millilitre in four years. A standard grade by eye, such as the Fazekas scale, cannot reliably show such a small change. You need a measured volume. And for the new Alzheimer antibodies, severe lesions speak against the treatment.",
   "background": "(1) LADIS (Inzitari 2009): older people who lived independently, followed for 3 years. Transition to disability or death per year: 10.5 % with mild, 15.1 % with moderate, 29.5 % with severe white matter changes on the visual scale. (2) SPRINT MIND (2019): intensive versus standard blood pressure control; lesion volume went from 4.57 to 5.49 cm3 versus 4.40 to 5.85 cm3 (growth 0.92 versus 1.45 cm3, our subtraction), follow-up MRI after about 4 years; reported difference -0.54 cm3, the authors call it small. (3) Why a program: measuring the change of lesion volume was reliable, judging progression with visual scales less so (Gouw 2008, only 20 scan pairs). For one time point, visual score and volume agree well (Spearman 0.78, Valdes Hernandez 2013). (4) The appropriate use recommendations for lecanemab (Cummings 2023) exclude severe white matter hyperintensities (Fazekas score 3). This is advice from an expert group, not the drug label.",
   "links": [],
   "qr": null
@@ -668,7 +734,7 @@ window.SLIDES = [
    {
     "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
     "url": "https://doi.org/10.1109/TMI.2019.2905770",
-    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other experts 0.77 and 0.79 against the reference (training scans)."
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other trained observers 0.77 and 0.79 against the reference (training scans)."
    },
    {
     "label": "Data: WMH Segmentation Challenge, CC BY-NC 4.0",
@@ -763,6 +829,16 @@ window.SLIDES = [
     "label": "Data: WMH Segmentation Challenge, CC BY-NC 4.0",
     "url": "https://doi.org/10.34894/AECRSD",
     "about": "The public WMH Challenge data (DataverseNL), licence CC BY-NC 4.0; used in the lesion exercise."
+   },
+   {
+    "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
+    "url": "https://doi.org/10.1109/TMI.2019.2905770",
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other trained observers 0.77 and 0.79 against the reference (training scans)."
+   },
+   {
+    "label": "Griffanti et al. 2016, NeuroImage (BIANCA)",
+    "url": "https://doi.org/10.1016/j.neuroimage.2016.07.018",
+    "about": "BIANCA: k-nearest-neighbour WMH segmentation in FSL; Dice 0.76 in one cohort, 0.52 in another."
    }
   ],
   "optional": false,
@@ -801,7 +877,12 @@ window.SLIDES = [
    {
     "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
     "url": "https://doi.org/10.1109/TMI.2019.2905770",
-    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other experts 0.77 and 0.79 against the reference (training scans)."
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other trained observers 0.77 and 0.79 against the reference (training scans)."
+   },
+   {
+    "label": "Isensee et al. 2021, Nat Methods (nnU-Net)",
+    "url": "https://doi.org/10.1038/s41592-020-01008-z",
+    "about": "nnU-Net configures preprocessing, network and training by itself; without manual tuning it beat most methods on 23 public data sets."
    }
   ],
   "optional": false,
@@ -831,13 +912,13 @@ window.SLIDES = [
    {
     "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
     "url": "https://doi.org/10.1109/TMI.2019.2905770",
-    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other experts 0.77 and 0.79 against the reference (training scans)."
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other trained observers 0.77 and 0.79 against the reference (training scans)."
    }
   ],
   "optional": false,
   "key_q": false,
   "notes": "So, Bianka or U net? Bianka needs no graphics card. It is simple: you can follow every step. And sometimes, it is good enough. A U net is usually more accurate. But training it needs a graphics card, and it is harder to see why it decides.",
-  "background": "A fair close of the method part. BIANCA: runs on a normal processor, no graphics card; every step can be followed (stored examples, neighbours vote, cut-off); and with a good setup it is sometimes good enough (0.70 on the test scans). U-Net: usually more accurate (0.80), but training needs a graphics card, and its decision is harder to trace (in the challenge both were trained on the same 60 scans). Which one to use depends on the study, not on fashion.",
+  "background": "A fair close of the method part. BIANCA: runs on a normal processor, no graphics card; every step can be followed (stored examples, neighbours vote, cut-off); and with a good setup it is sometimes good enough (0.70 on the test scans). U-Net: usually more accurate (0.80), but training needs a graphics card, and its decision is harder to trace (both were trained on the same 60 challenge training scans: the U-Net by its authors in the challenge, BIANCA by us). Which one to use depends on the study, not on fashion.",
   "links": [],
   "qr": null
  },
@@ -888,20 +969,20 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/24_raters.mp4",
   "poster": "poster/24_raters.jpg",
-  "text": "Even experts do not agree. Two other experts reached only zero point seven seven and zero point seven nine against the reference, on the training scans. The best program, a U net, reached zero point eight on the test scans: about the same level. So that is the ceiling.",
+  "text": "Even experts do not agree. Two other trained observers reached only zero point seven seven and zero point seven nine against the reference, on the training scans. The best program, a U net, reached zero point eight on the test scans: about the same level. So that is the level of a second rater: a useful yardstick, not a hard ceiling.",
   "check": null,
   "exercise": null,
   "sources": [
    {
     "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
     "url": "https://doi.org/10.1109/TMI.2019.2905770",
-    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other experts 0.77 and 0.79 against the reference (training scans)."
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other trained observers 0.77 and 0.79 against the reference (training scans)."
    }
   ],
   "optional": false,
   "key_q": false,
-  "notes": "Even experts do not agree. Two other experts reached only zero point seven seven and zero point seven nine against the reference, on the training scans. The best program, a U net, reached zero point eight on the test scans: about the same level. So that is the ceiling.",
-  "background": "Kuijf et al. 2019 (WMH Challenge): two further observers segmented the 60 training scans; against the reference standard they reached Dice 0.77 (0.74-0.80) and 0.79 (0.76-0.81). The challenge winner (sysu_media, a fully convolutional network similar to U-Net, ensemble of three) reached 0.80 on the 110 test scans; Kuijf 2019: the top methods reach 'similar or superior performance as these two individual observers'. Lesson: a Dice of 1.0 is impossible in practice; the disagreement between experts sets the ceiling; the two observers also missed many single lesions of the reference (lesion recall 0.65 and 0.66). Note: the observers' 0.77 and 0.79 were measured on the 60 training scans; the winner's 0.80 on the 110 test scans (Kuijf 2019) - different scan sets, about the same level.",
+  "notes": "Even experts do not agree. Two other trained observers reached only zero point seven seven and zero point seven nine against the reference, on the training scans. The best program, a U net, reached zero point eight on the test scans: about the same level. So that is the level of a second rater: a useful yardstick, not a hard ceiling.",
+  "background": "Kuijf et al. 2019 (WMH Challenge): two further observers segmented the 60 training scans; against the reference standard they reached Dice 0.77 (0.74-0.80) and 0.79 (0.76-0.81). The challenge winner (sysu_media, a fully convolutional network similar to U-Net, ensemble of three) reached 0.80 on the 110 test scans; Kuijf 2019: the top methods reach 'similar or superior performance as these two individual observers'. Lesson: a Dice of 1.0 is impossible in practice; the disagreement between experts sets a yardstick, not a hard ceiling; the two observers also missed many single lesions of the reference (lesion recall 0.65 and 0.66). Note: the observers' 0.77 and 0.79 were measured on the 60 training scans; the winner's 0.80 on the 110 test scans (Kuijf 2019) - different scan sets, about the same level.",
   "links": [],
   "qr": null
  },
@@ -925,7 +1006,23 @@ window.SLIDES = [
    "why": ""
   },
   "exercise": null,
-  "sources": [],
+  "sources": [
+   {
+    "label": "Maier-Hein et al. 2024, Nat Methods (Metrics Reloaded)",
+    "url": "https://doi.org/10.1038/s41592-023-02151-z",
+    "about": "Recommendations for choosing validation metrics in image analysis, including for small structures and for counting objects."
+   },
+   {
+    "label": "Reinke et al. 2024, Nat Methods (metric pitfalls)",
+    "url": "https://doi.org/10.1038/s41592-023-02150-0",
+    "about": "Common pitfalls of metrics such as Dice, for example with small structures."
+   },
+   {
+    "label": "Griffanti et al. 2016, NeuroImage (BIANCA)",
+    "url": "https://doi.org/10.1016/j.neuroimage.2016.07.018",
+    "about": "BIANCA: k-nearest-neighbour WMH segmentation in FSL; Dice 0.76 in one cohort, 0.52 in another."
+   }
+  ],
   "optional": false,
   "key_q": false,
   "notes": "Shift a big lesion by one voxel. Ninety of a hundred voxels still overlap: Dice is zero point nine. The same shift on a tiny lesion. Only two of four voxels still overlap: Dice is zero point five. Small lesions are hard on Dice.",
@@ -954,6 +1051,11 @@ window.SLIDES = [
     "label": "Data: WMH Segmentation Challenge, CC BY-NC 4.0",
     "url": "https://doi.org/10.34894/AECRSD",
     "about": "The public WMH Challenge data (DataverseNL), licence CC BY-NC 4.0; used in the lesion exercise."
+   },
+   {
+    "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
+    "url": "https://doi.org/10.1109/TMI.2019.2905770",
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other trained observers 0.77 and 0.79 against the reference (training scans)."
    }
   ],
   "optional": false,
@@ -971,14 +1073,14 @@ window.SLIDES = [
   "kind": "clip",
   "clip": "clips/27_beat2.mp4",
   "poster": "poster/27_beat2.jpg",
-  "text": "How did you do? Bianka got zero point seven, two other experts zero point seven seven and zero point seven nine, the best program, a U net, zero point eight. Hands up, who beat Bianka? The small spots are hard for everyone.",
+  "text": "How did you do? Bianka got zero point seven, two other human observers zero point seven seven and zero point seven nine, the best program, a U net, zero point eight. Hands up, who beat Bianka? The small spots are hard for everyone.",
   "check": null,
   "exercise": null,
   "sources": [
    {
     "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
     "url": "https://doi.org/10.1109/TMI.2019.2905770",
-    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other experts 0.77 and 0.79 against the reference (training scans)."
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other trained observers 0.77 and 0.79 against the reference (training scans)."
    },
    {
     "label": "Griffanti et al. 2016, NeuroImage (BIANCA)",
@@ -993,7 +1095,7 @@ window.SLIDES = [
   ],
   "optional": false,
   "key_q": false,
-  "notes": "How did you do? Bianka got zero point seven, two other experts zero point seven seven and zero point seven nine, the best program, a U net, zero point eight. Hands up, who beat Bianka? The small spots are hard for everyone.",
+  "notes": "How did you do? Bianka got zero point seven, two other human observers zero point seven seven and zero point seven nine, the best program, a U net, zero point eight. Hands up, who beat Bianka? The small spots are hard for everyone.",
   "background": "Bring the room back after the exercise. Ask for a show of hands: who beat BIANCA? Our best BIANCA setup reached 0.695 on the 110 challenge test scans (trained on the 60 training scans, our own run); two additional human observers, each against the reference on the 60 training scans, reached 0.77 and 0.79 (Kuijf 2019); the challenge winner, a U-Net-like network (ensemble of three), reached 0.80 on the 110 test scans. Small spots lower everybody's Dice, people and programs alike. Your own catch question can go here. Then give the link for anyone who wants to keep learning: the WMH trainer, mendeltem.github.io/wmh_trainer (110 public challenge scans, Dice against the expert and BIANCA, works on phones). It is also at the end of the exercise and in this slide's sources.",
   "links": [],
   "qr": null
@@ -1028,6 +1130,16 @@ window.SLIDES = [
     "label": "Sudre et al. 2024, Med Image Anal (VALDO challenge)",
     "url": "https://doi.org/10.1016/j.media.2023.103029",
     "about": "VALDO challenge (MICCAI 2021): automatic detection of small vessel lesions, including microbleeds."
+   },
+   {
+    "label": "Wardlaw et al. 2013, Lancet Neurol (STRIVE)",
+    "url": "https://doi.org/10.1016/S1474-4422(13)70124-8",
+    "about": "Neuroimaging standards for small vessel disease (STRIVE): definitions of six core MRI signs, including microbleeds (generally 2-5 mm, up to 10 mm)."
+   },
+   {
+    "label": "Duering et al. 2023, Lancet Neurol (STRIVE-2)",
+    "url": "https://doi.org/10.1016/S1474-4422(23)00131-X",
+    "about": "Update of STRIVE: newer imaging features of small vessel disease; microbleeds are rated visually, computer methods still need validation."
    }
   ],
   "optional": false,
@@ -1057,12 +1169,37 @@ window.SLIDES = [
    {
     "label": "Charidimou et al. 2022, Lancet Neurol (Boston criteria 2.0)",
     "url": "https://doi.org/10.1016/S1474-4422(22)00208-3",
-    "about": "Boston criteria 2.0 for cerebral amyloid angiopathy: strictly lobar haemorrhagic lesions (bleeds, microbleeds, superficial siderosis) make the diagnosis."
+    "about": "Boston criteria 2.0 for cerebral amyloid angiopathy: two or more strictly lobar haemorrhagic lesions (bleeds, microbleeds, superficial siderosis), or one plus a white matter sign, make the diagnosis probable in people aged 50 or over with a typical presentation."
    },
    {
     "label": "Wilson et al. 2018, Lancet Neurol (CROMIS-2)",
     "url": "https://doi.org/10.1016/S1474-4422(18)30145-5",
     "about": "CROMIS-2: 1,447 patients anticoagulated for atrial fibrillation after ischaemic stroke or TIA; symptomatic brain bleeds 9.8 (with microbleeds) vs 2.6 (without) per 1,000 patient-years (adjusted hazard ratio 3.67)."
+   },
+   {
+    "label": "Nandigam et al. 2009, AJNR (microbleed detection and sequence)",
+    "url": "https://doi.org/10.3174/ajnr.A1355",
+    "about": "How many microbleeds are found depends on the sequence and its settings; susceptibility-weighted imaging finds more."
+   },
+   {
+    "label": "Cheng et al. 2013, Stroke (SWI vs GRE, rater agreement)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/23920014/",
+    "about": "Raters agreed better on microbleed counts on SWI than on T2* gradient echo."
+   },
+   {
+    "label": "Akoudad et al. 2016, JAMA Neurol (microbleeds and dementia)",
+    "url": "https://doi.org/10.1001/jamaneurol.2016.1017",
+    "about": "Rotterdam Study: microbleeds go with cognitive decline and a higher risk of dementia (HR 2.02)."
+   },
+   {
+    "label": "Tsivgoulis et al. 2016, JAMA Neurol (microbleeds and thrombolysis)",
+    "url": "https://doi.org/10.1001/jamaneurol.2016.0292",
+    "about": "Meta-analysis of 9 studies, 2,479 patients: more symptomatic bleeding after thrombolysis with more than 10 microbleeds (RR 12.1, wide confidence interval)."
+   },
+   {
+    "label": "Powers et al. 2019, Stroke (AHA/ASA acute stroke guideline)",
+    "url": "https://doi.org/10.1161/STR.0000000000000211",
+    "about": "US guideline for acute ischaemic stroke; with more than 10 microbleeds the benefit of thrombolysis is uncertain (weak recommendation), not a strict exclusion."
    }
   ],
   "optional": false,
@@ -1097,12 +1234,22 @@ window.SLIDES = [
     "label": "Sudre et al. 2024, Med Image Anal (VALDO challenge)",
     "url": "https://doi.org/10.1016/j.media.2023.103029",
     "about": "VALDO challenge (MICCAI 2021): automatic detection of small vessel lesions, including microbleeds."
+   },
+   {
+    "label": "Ronneberger et al. 2015, MICCAI (U-Net)",
+    "url": "https://doi.org/10.1007/978-3-319-24574-4_28",
+    "about": "U-Net: the encoder-decoder network with skip connections for biomedical image segmentation."
+   },
+   {
+    "label": "Maier-Hein et al. 2024, Nat Methods (Metrics Reloaded)",
+    "url": "https://doi.org/10.1038/s41592-023-02151-z",
+    "about": "Recommendations for choosing validation metrics in image analysis, including for small structures and for counting objects."
    }
   ],
   "optional": false,
   "key_q": false,
   "notes": "A three D U net looks at the scan as a block, with the slices above and below, and marks every voxel that looks like a bleed. But doctors count bleeds, not voxels. So we group the voxels into objects.",
-  "background": "Here we move from detection to counting. A three D U net reads the whole brain volume. It gives a label to each voxel. Voxels that look like a micro-bleed get marked. This is a dense task. Every voxel gets a decision. The output is a mask, not a number. But the clinical question is a number. How many micro-bleeds does this patient have? One micro-bleed is a small object. It may cover several voxels. So a mask with many marked voxels may still be one micro-bleed. We must group the voxels into objects. This step is called connected component analysis. In the next slides we use twenty-six connected clusters. Think of a simple case. The network marks seventeen voxels. Are there seventeen micro-bleeds? No. They may form one cluster, or two, or more. We cannot know until we group them. Ask the room: if two marked voxels touch only at a corner, should they be one object or two? This choice changes the count. It also changes the F one score. So the grouping rule matters. Keep this in mind for the next slide.",
+  "background": "Here we move from detection to counting. A three D U net reads the whole brain volume. It gives a label to each voxel. Voxels that look like a micro-bleed get marked. This is a dense task. Every voxel gets a decision. The output is a mask, not a number. But the clinical question is a number. How many micro-bleeds does this patient have? One micro-bleed is a small object. It may cover several voxels. So a mask with many marked voxels may still be one micro-bleed. We must group the voxels into objects. This step is called connected component analysis. In the next slides we use twenty-six connected clusters (VALDO used six-connected clusters, so our F one values are not computed exactly like theirs). Think of a simple case. The network marks seventeen voxels. Are there seventeen micro-bleeds? No. They may form one cluster, or two, or more. We cannot know until we group them. Ask the room: if two marked voxels touch only at a corner, should they be one object or two? This choice changes the count. It also changes the F one score. So the grouping rule matters. Keep this in mind for the next slide.",
   "links": [],
   "qr": null
  },
@@ -1131,6 +1278,11 @@ window.SLIDES = [
     "label": "Sudre et al. 2024, Med Image Anal (VALDO challenge)",
     "url": "https://doi.org/10.1016/j.media.2023.103029",
     "about": "VALDO challenge (MICCAI 2021): automatic detection of small vessel lesions, including microbleeds."
+   },
+   {
+    "label": "Maier-Hein et al. 2024, Nat Methods (Metrics Reloaded)",
+    "url": "https://doi.org/10.1038/s41592-023-02151-z",
+    "about": "Recommendations for choosing validation metrics in image analysis, including for small structures and for counting objects."
    }
   ],
   "optional": false,
@@ -1185,7 +1337,7 @@ window.SLIDES = [
   "optional": false,
   "key_q": true,
   "notes": "Why count so carefully? New Alzheimer drugs remove amyloid and slow early Alzheimer's. But they can cause swelling and new bleeds in the brain. The risk is higher in people who already have micro-bleeds. In Europe, with more than four, the drug is not given. Four or five: one dot decides.",
-  "background": "New antibody drugs against amyloid (lecanemab, donanemab) can slow early Alzheimer's disease. Their main side effect is ARIA: amyloid related imaging abnormalities, swelling (ARIA-E) and new bleeds (ARIA-H) on MRI. The risk is higher in people who already have microbleeds; the US label names 2 or more microhaemorrhages as a risk factor. Following the trial exclusion criteria, the appropriate use recommendations exclude treatment with more than 4 microbleeds on the baseline scan (Cummings 2023, Rabinovici 2025); for donanemab any superficial siderosis also excludes. In the EU more than 4 microhaemorrhages is a formal contraindication for both drugs. One dot more or less on the scan decides about a therapy. Question to the room: who should count, the radiologist, the program, or both? The 'more than 4' limit is a contraindication in the EU label; the US label does not make it a contraindication (facts_checked item 1(d)); the slide says 'in Europe'.",
+  "background": "New antibody drugs against amyloid (lecanemab, donanemab) can slow early Alzheimer's disease. Their main side effect is ARIA: amyloid related imaging abnormalities, swelling (ARIA-E) and new bleeds (ARIA-H) on MRI. The risk is higher in people who already have microbleeds; the US label names 2 or more microhaemorrhages as a risk factor. Following the trial exclusion criteria, the appropriate use recommendations exclude treatment with more than 4 microbleeds on the baseline scan (Cummings 2023, Rabinovici 2025); for both drugs any superficial siderosis also excludes (for donanemab this is stricter than its trial, which allowed one area). In the EU more than 4 microhaemorrhages is a formal contraindication for both drugs. One dot more or less on the scan decides about a therapy. Question to the room: who should count, the radiologist, the program, or both? The 'more than 4' limit is a contraindication in the EU label; the US label does not make it a contraindication (facts_checked item 1(d)); the slide says 'in Europe'.",
   "links": [],
   "qr": null
  },
@@ -1279,6 +1431,11 @@ window.SLIDES = [
     "label": "Microbleed trainer: click microbleeds on 57 public VALDO scans, F1 against the expert and a 3D U-Net",
     "url": "https://mendeltem.github.io/cmb_detection_trainer/",
     "about": "For anyone who wants to keep learning: click every microbleed on the 57 public VALDO cross-validation scans, then see your F1 against the expert and against a 3D U-Net."
+   },
+   {
+    "label": "Duering et al. 2023, Lancet Neurol (STRIVE-2)",
+    "url": "https://doi.org/10.1016/S1474-4422(23)00131-X",
+    "about": "Update of STRIVE: newer imaging features of small vessel disease; microbleeds are rated visually, computer methods still need validation."
    }
   ],
   "optional": false,
@@ -1317,7 +1474,7 @@ window.SLIDES = [
    {
     "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
     "url": "https://doi.org/10.1109/TMI.2019.2905770",
-    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other experts 0.77 and 0.79 against the reference (training scans)."
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other trained observers 0.77 and 0.79 against the reference (training scans)."
    },
    {
     "label": "Griffanti et al. 2016, NeuroImage (BIANCA)",
@@ -1338,7 +1495,7 @@ window.SLIDES = [
   "optional": false,
   "key_q": true,
   "notes": "Before you use a trained tool, ask: what was it trained on? Check the people, the scanner, the sequence, the slice thickness, and the number and size of the lesions. Even inside one challenge, the three sites differ: one point five or three tesla, slices from under one millimetre to four. At one site, three scans hold most of the micro-bleeds. And your scans? And size matters. Our micro-bleed detector, on public scans it had not seen in training. Over five millimetres, six of eight were found. Two to five millimetres: sixty five percent. Under two millimetres: only four of ten. The small ones fail first.",
-  "background": "Before using any trained tool, compare its training data with your scans: people (healthy, elderly, small vessel disease, stroke), scanner and field strength, sequence (2D T2* GRE, 3D T2* GRE, SWI), slice thickness, number and size of the lesions. Example: the three VALDO Task 2 training sites (Sudre 2024; counts recounted by us from the public reference masks, microbleed = 26-connected cluster): SABRE, London population cohort, Philips 3 T, 2D T2* GRE, 0.45 x 0.45 mm in-plane, 3 mm slices (4 mm spacing in the header), 11 scans, 106 microbleeds, 91 of them (86 %) in the 3 heaviest scans; RSS, Rotterdam population cohort aged 45 and over, GE 1.5 T, 3D T2* GRE, 0.49 x 0.49 x 0.8 mm, 34 scans, 96 microbleeds; ALFA, cognitively normal relatives of Alzheimer patients aged 45-74, GE Discovery 3 T, 2D T2* GRE, 1 x 1 mm, 3-4 mm slices, 27 scans, 34 microbleeds. (The paper's Table 2 lists 123 for SABRE: it counts differently; we count connected clusters.) (For questions; the adapt slide states the small BIANCA test:) WMH example (WMH Segmentation Challenge, our best BIANCA setup trained on the 60 training scans from 3 scanners, tested on the 110 official test scans): scans from the 3 training scanners Dice 0.702 (90 scans), scans from the 2 scanners not in training 0.664 (20 scans): 1.5 T GE Signa HDxt 0.621, 3 T Philips Ingenuity 0.706 (as good as the seen ones; seen scanners 0.667-0.764). The gap is small here - say it honestly; you only know after testing. Detector by size: our 3D U-Net (cmb-valdo-chain, two seeds averaged, fixed post-processing p > 0.3, at least 2 mm3, CSF rule), out-of-fold on the 57 public cross-validation scans (each scan predicted by a model that never trained on it). Hit rule of the microbleed exercise: the centre of a detection lies at most 2 mm from a microbleed voxel in the slice and at most one slice away. Size = equivalent-sphere diameter (a ball with the same volume). Found: over 5 mm 6 of 8 (75 %), 2-5 mm 79 of 121 (65 %), under 2 mm 4 of 10 (40 %); overall 89 of 139, F1 0.65. Wrong detections by detection size: under 2 mm 10 of 25 (40 %), 2-5 mm 36 of 107 (34 %), over 5 mm 1 of 4. Small classes are small; the trend matches BIANCA (under 10 voxels 24 % found, over 1,000 voxels 99 %). Decision (next slide): similar data -> use the tool and still check by eye; different -> mark a few own scans by hand and score the tool; only if it drops: retrain with your scans added, or fine-tune. Internal version: when the bottom bar says 'internal data loaded', this slide shows our own clinical cohorts instead of the open column (local copy only, never online). (The follow-up beat - Fotenos 2005 and our DLBS thalamus run - was removed on 16.11.2026, user; its notes are in notes_extra.json.vor-1116-outlook2.)",
+  "background": "Before using any trained tool, compare its training data with your scans: people (healthy, elderly, small vessel disease, stroke), scanner and field strength, sequence (2D T2* GRE, 3D T2* GRE, SWI), slice thickness, number and size of the lesions. Example: the three VALDO Task 2 training sites (Sudre 2024; counts recounted by us from the public reference masks, microbleed = 26-connected cluster): SABRE, London population cohort, Philips 3 T, 2D T2* GRE, 0.45 x 0.45 mm in-plane, 3 mm slices (4 mm spacing in the header), 11 scans, 106 microbleeds, 91 of them (86 %) in the 3 heaviest scans; RSS, Rotterdam population cohort aged 45 and over, GE 1.5 T, 3D T2* GRE, 0.49 x 0.49 x 0.8 mm, 34 scans, 96 microbleeds; ALFA, cognitively normal relatives of Alzheimer patients aged 45-74, GE Discovery 3 T, 2D T2* GRE, 1 x 1 mm, 3-4 mm slices, 27 scans, 34 microbleeds. (The paper's Table 2 lists 123 for SABRE: it counts differently; we count connected clusters.) (For questions; the adapt slide states the small BIANCA test:) WMH example (WMH Segmentation Challenge, our best BIANCA setup trained on the 60 training scans from 3 scanners, tested on the 110 official test scans): scans from the 3 training scanners Dice 0.702 (90 scans), scans from the 2 scanners not in training 0.664 (20 scans): 1.5 T GE Signa HDxt 0.621, 3 T Philips Ingenuity 0.706 (as good as the seen ones; seen scanners 0.667-0.764). The gap is small here - say it honestly; you only know after testing. Detector by size: our 3D U-Net (cmb-valdo-chain, two seeds averaged, fixed post-processing p > 0.3, at least 2 mm3, CSF rule), out-of-fold on the 57 public cross-validation scans (each scan predicted by a model that never trained on it). Hit rule of the microbleed exercise: the centre of a detection lies at most 2 mm from a microbleed voxel in the slice and at most N slices away, N = max(1, floor(2 mm / slice thickness)): one slice for 3-4 mm slices, two for 0.8 mm slices. Size = equivalent-sphere diameter (a ball with the same volume). Found: over 5 mm 6 of 8 (75 %), 2-5 mm 79 of 121 (65 %), under 2 mm 4 of 10 (40 %); overall 89 of 139, F1 0.65. Wrong detections by detection size: under 2 mm 10 of 25 (40 %), 2-5 mm 36 of 107 (34 %), over 5 mm 1 of 4. Small classes are small; the trend matches BIANCA (lesions under 10 mm3: 24 % found; over 1,000 mm3 (1 ml): 99 %). Decision (next slide): similar data -> use the tool and still check by eye; different -> mark a few own scans by hand and score the tool; only if it drops: retrain with your scans added, or fine-tune. Internal version: when the bottom bar says 'internal data loaded', this slide shows our own clinical cohorts instead of the open column (local copy only, never online). (The follow-up beat - Fotenos 2005 and our DLBS thalamus run - was removed on 16.11.2026, user; its notes are in notes_extra.json.vor-1116-outlook2.)",
   "links": [],
   "qr": null
  },
@@ -1382,7 +1539,7 @@ window.SLIDES = [
   "optional": false,
   "key_q": true,
   "notes": "Your scans differ, and the score drops. What now? If you have the training data, retrain: add your own marked scans to it, and train again. For Bianka this is easy, because its model is just the stored example voxels. Add your scans, and training again takes under a minute. In a small test on public scans from a new scanner, five added scans raised the Dice from zero point six two to zero point six four. Often you only get the trained network, not its training data. Then you fine-tune: start from the network's weights, and continue training, in small steps, on a few of your own marked scans. Either way, test on your own scans that were not used for training.",
-  "background": "Merged on 16.11.2026 from the set-aside slides two_ways, bianca_mix and finetune (lecturer: fine-tuning strongly reduced). Only adapt if testing on a few own hand-marked scans shows a drop. (1) Retrain = add your marked scans to the training data and train again; needs the training data and time. For BIANCA you always have it, because you train it yourself: BIANCA is k-nearest-neighbour, its model IS the stored labelled example voxels, so adapting = adding marked voxels of the new scanner to the pool (in our runs about 34 s per training run on a processor, about 17 s to apply it to one scan). The point cloud is the real one of the bianca_knn slide; the shift of the new scanner is DRAWN, not measured. Small test on public data (WMH Challenge, our best setup, cut-off 0.90; 10 scans per new scanner, 5 added / 5 held out, repeated random splits): GE 1.5 T (new) Dice 0.62 -> 0.64 with 5 added scans, no scan worse; Philips 3 T (new) 0.71 -> 0.71; a known scanner (GE 3 T) gained about the same (0.68 -> 0.68). The 5 local scans alone were risky (single evaluations -0.14 to +0.27; fewer small lesions found, 15 % instead of 27 %): add your scans to the pool, do not replace it. (2) Fine-tune = when you only have the trained network (weights shared, data not; or no time / no GPU): start from its weights and train a little more with a small learning rate on a few marked scans. It keeps what it learned and adapts to the new contrast and noise; it can overwrite what it knew about the old scanners (catastrophic forgetting, Kirkpatrick 2017), which matters only if the old scanners still count. Evidence: Ghafoorian 2017 (WMH): fine-tuned with 2 scans of the new domain, Dice 0.63, clearly better than from scratch on the same 2 scans. Cheaper options if asked: re-choose the threshold on own scans (scans without lesions show the false alarms); adapt only the normalisation layers (Karani 2018, about 4 labelled scans per scanner). Our microbleed detector (cmb-valdo-chain) uses both ways: the stage-1 U-Net is fine-tuned, the stage-2 classifier is retrained on public + local candidates. (3) Either way, test on own scans that were not used for training. (Learning curve removed from the slide on 16.11.2026, lecturer: \"kann zu viel sein\"; if asked how many scans: measure it, train with 3, 5, 10, 20 scans and test each time on the rest.)",
+  "background": "Merged on 16.11.2026 from the set-aside slides two_ways, bianca_mix and finetune (lecturer: fine-tuning strongly reduced). Only adapt if testing on a few own hand-marked scans shows a drop. (1) Retrain = add your marked scans to the training data and train again; needs the training data and time. For BIANCA you always have it, because you train it yourself: BIANCA is k-nearest-neighbour, its model IS the stored labelled example voxels, so adapting = adding marked voxels of the new scanner to the pool (in our runs about 34 s per training run on a processor, about 17 s to apply it to one scan). The point cloud is the real one of the bianca_knn slide; the shift of the new scanner is DRAWN, not measured. Small test on public data (WMH Challenge, our best setup, cut-off 0.90; 10 scans per new scanner, 5 added / 5 held out, repeated random splits): GE 1.5 T (new) Dice 0.62 -> 0.64 with 5 added scans, no scan worse; Philips 3 T (new) 0.71 -> 0.71; a known scanner (GE 3 T) did not change either (0.68 -> 0.68). The 5 local scans alone were risky (single evaluations -0.14 to +0.27; fewer small lesions found, 15 % instead of 27 %): add your scans to the pool, do not replace it. (2) Fine-tune = when you only have the trained network (weights shared, data not; or no time / no GPU): start from its weights and train a little more with a small learning rate on a few marked scans. It keeps what it learned and adapts to the new contrast and noise; it can overwrite what it knew about the old scanners (catastrophic forgetting, Kirkpatrick 2017), which matters only if the old scanners still count. Evidence: Ghafoorian 2017 (WMH): fine-tuned with 2 scans of the new domain, Dice 0.63, clearly better than from scratch on the same 2 scans. Cheaper options if asked: re-choose the threshold on own scans (scans without lesions show the false alarms); adapt only the normalisation layers (Karani 2018, about 4 labelled scans per scanner). Our microbleed detector (cmb-valdo-chain) uses both ways: the stage-1 U-Net is fine-tuned, the stage-2 classifier is retrained on public + local candidates. (3) Either way, test on own scans that were not used for training. (Learning curve removed from the slide on 16.11.2026, lecturer: \"kann zu viel sein\"; if asked how many scans: measure it, train with 3, 5, 10, 20 scans and test each time on the rest.)",
   "links": [],
   "qr": null
  },
@@ -1492,18 +1649,23 @@ window.SLIDES = [
    {
     "label": "Kuijf et al. 2019, IEEE TMI (WMH Challenge)",
     "url": "https://doi.org/10.1109/TMI.2019.2905770",
-    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other experts 0.77 and 0.79 against the reference (training scans)."
+    "about": "WMH Segmentation Challenge: 60 training and 110 test scans, 5 scanners; best method Dice 0.80 (test scans); two other trained observers 0.77 and 0.79 against the reference (training scans)."
    },
    {
     "label": "Sudre et al. 2024, Med Image Anal (VALDO challenge)",
     "url": "https://doi.org/10.1016/j.media.2023.103029",
     "about": "VALDO challenge (MICCAI 2021): automatic detection of small vessel lesions, including microbleeds."
+   },
+   {
+    "label": "Billot et al. 2023, PNAS (robust SynthSeg, QC)",
+    "url": "https://doi.org/10.1073/pnas.2216399120",
+    "about": "SynthSeg+ (robust version) with automatic QC scores per region; below 0.65 a region counts as failed."
    }
   ],
   "optional": false,
   "key_q": false,
   "notes": "To conclude. First, know your tool's training data: which patients, which scanners, which lesion sizes? None of these tools was trained on large stroke lesions, so fill or mask the lesion. Second, a new scanner changes the image. Test the tool on your own scans first. If it drops, mix your scans into the training, or fine-tune. Third, check with your own eyes: quality control really matters. Fourth, small lesions are the problem. Large lesions are found, the small ones are often missed. And fifth, if you can, use several raters, because even experts do not agree. And one rule for all: never trust a segmentation you have not checked.",
-  "background": "Conclusion, five lessons. (1) Know your tool's training data. FreeSurfer's aseg atlas: 40 manually labelled scans (young, middle-aged and elderly people; Desikan 2006 also lists some with Alzheimer's disease, the atlas README calls them nondemented - the sources disagree). SynthSeg: trained on label maps only, 20 manual + 500 young (HCP) + 500 ageing (ADNI, including MCI and AD), with simulated white-matter-like lesions (Billot 2023). CAT12: average template from the public IXI data of healthy adults. BIANCA: no pretrained model - you train it on your own hand-marked patients. WMH challenge U-Nets: 60 patients with WMH from 3 scanners. VALDO microbleed models: 72 scans of middle-aged and older adults (two population cohorts aged 45 and over, and cognitively normal relatives of Alzheimer patients aged 45-74), 3 scanners. None was trained on large stroke lesions: fill or mask the lesion. (2) A new scanner changes contrast and brightness: test the tool on a few of your own hand-marked scans first; if it drops, mix your scans into the training (BIANCA: just add them, retraining takes minutes) or fine-tune the model (U-Net, when only the weights are available). SynthSeg was designed not to need it. (3) Check with your own eyes: QC scores help, but look at the picture. (4) Small lesions are the hard part: large lesions are found, small WMH and small microbleeds are often missed (BIANCA under 10 voxels 24 %; our microbleed detector under 2 mm 4 of 10). (5) Use several raters where possible: even experts disagree (two additional observers in the WMH challenge: Dice 0.77 and 0.79 against the reference). In the clinic, visual rating scales are common (for example the Fazekas scale for white matter lesions; LADIS used such a visual grade); some sites also use volumetry software that compares a patient with age norms (no source checked for how common either is). The one rule (from the former slide 'Three tasks, one rule', now set aside): never trust a segmentation you have not checked. Summary of the three tasks: grey matter - FreeSurfer or SynthSeg, checked by eye and with the QC score, fails at large lesions; white matter lesions - BIANCA or a U-Net, checked with Dice, small lesions are hard; microbleeds - a 3D U-Net and clusters, checked with F1, the lookalikes are the problem.",
+  "background": "Conclusion, five lessons. (1) Know your tool's training data. FreeSurfer's aseg atlas: 40 manually labelled scans (young, middle-aged and elderly people; Desikan 2006 also lists some with Alzheimer's disease, the atlas README calls them nondemented - the sources disagree). SynthSeg: trained on label maps only, 20 manual + 500 young (HCP) + 500 ageing (ADNI, including MCI and AD), with simulated white-matter-like lesions (Billot 2023). CAT12: average template from the public IXI data of healthy adults. BIANCA: no pretrained model - you train it on your own hand-marked patients. WMH challenge U-Nets: 60 patients with WMH from 3 scanners. VALDO microbleed models: 72 scans of middle-aged and older adults (two population cohorts aged 45 and over, and cognitively normal relatives of Alzheimer patients aged 45-74), 3 scanners. None was trained on large stroke lesions: fill or mask the lesion. (2) A new scanner changes contrast and brightness: test the tool on a few of your own hand-marked scans first; if it drops, mix your scans into the training (BIANCA: just add them, retraining takes under a minute) or fine-tune the model (U-Net, when only the weights are available). SynthSeg was designed not to need it. (3) Check with your own eyes: QC scores help, but look at the picture. (4) Small lesions are the hard part: large lesions are found, small WMH and small microbleeds are often missed (BIANCA: lesions under 10 mm3, 24 % found; our microbleed detector: under 2 mm, 4 of 10). (5) Use several raters where possible: even experts disagree (two additional observers in the WMH challenge: Dice 0.77 and 0.79 against the reference). In the clinic, visual rating scales are common (for example the Fazekas scale for white matter lesions; LADIS used such a visual grade); some sites also use volumetry software that compares a patient with age norms (no source checked for how common either is). The one rule (from the former slide 'Three tasks, one rule', now set aside): never trust a segmentation you have not checked. Summary of the three tasks: grey matter - FreeSurfer or SynthSeg, checked by eye and with the QC score, fails at large lesions; white matter lesions - BIANCA or a U-Net, checked with Dice, small lesions are hard; microbleeds - a 3D U-Net and clusters, checked with F1, the lookalikes are the problem.",
   "links": [],
   "qr": null
  },

@@ -27,7 +27,7 @@ window.QA = {
 },
 {
 "q": "Where do the pictures on this slide come from?",
-"a": "Only from public data: a T1 scan of the Dallas Lifespan Brain Study with SynthSeg labels, a FLAIR scan of the WMH Segmentation Challenge with its expert lesion mask, and a T2* scan of the VALDO challenge with rings at its microbleeds. No patient data."
+"a": "Only from public data: a T1 scan of the Dallas Lifespan Brain Study with SynthSeg labels, a FLAIR scan of the WMH Segmentation Challenge with its expert lesion mask, and a T2* scan of the VALDO challenge with rings at its microbleeds. No data from our own clinic: all three are public, de-identified research scans."
 },
 {
 "q": "Are the three pictures from the same person?",
@@ -57,7 +57,7 @@ window.QA = {
 },
 {
 "q": "What is a microbleed?",
-"a": "A microbleed is a tiny old bleed in the brain. On a T2-star image it is a small round dark dot, generally 2 to 5 millimetres wide, sometimes up to 10. There is no strict size limit. Part three explains it."
+"a": "A microbleed is a tiny old bleed in the brain. On a T2-star image it is a small round dark dot, generally 2 to 5 millimetres wide, at most about 10. How big it looks also depends on the scanner and the sequence. Part three explains it."
 },
 {
 "q": "Which of the three targets is the hardest for a program?",
@@ -115,7 +115,7 @@ window.QA = {
 },
 {
 "q": "Why do we want volumes at all?",
-"a": "A volume is a number that we can compare between people and over time. Grey matter shrinks with age and with disease. In our public sample, people over 60 had about 2 percent less cortex and 4 percent less hippocampus per decade of age."
+"a": "A volume is a number that we can compare between people and over time. Grey matter shrinks with age and with disease. In our public sample, people over 60 had about 2 percent less cortex and 4 percent less hippocampus per decade of age. That compares people of different ages; following the same people over time usually shows more change."
 },
 {
 "q": "Who decides which label is the right one?",
@@ -129,7 +129,7 @@ window.QA = {
 "gm_use": [
 {
 "q": "What do A, T and N stand for?",
-"a": "A is amyloid, T is tau, N is nerve cell damage (neurodegeneration). Atrophy on MRI is one of three accepted signs of N; the other two are tau in the spinal fluid and low sugar use on a PET scan. It is a scheme for research. Its authors say it is too early to use it in general practice."
+"a": "A is amyloid, T is tau, N is nerve cell damage (neurodegeneration). Atrophy on MRI is one of three accepted signs of N; the other two are tau in the spinal fluid and low sugar use on a PET scan. It was published in 2018 as a scheme for research; its authors said it was too early for general practice. A 2024 revision aims to bridge research and clinical care, but atrophy on MRI is still only a non-specific sign of nerve cell damage there."
 },
 {
 "q": "Does a small hippocampus prove Alzheimer's disease?",
@@ -213,7 +213,7 @@ window.QA = {
 "fs_thick": [
 {
 "q": "How exactly is thickness measured at one point?",
-"a": "The surface is a mesh of small triangles. At every corner point of this mesh, FreeSurfer takes the closest distance from the white surface to the pial surface. This distance is the thickness at that point. So you do not get one number per brain, but one number per point of the surface."
+"a": "The surface is a mesh of small triangles. At every corner point of this mesh, FreeSurfer takes the shortest distance from the white to the pial surface and the shortest distance back from the pial to the white surface, and averages the two. This distance is the thickness at that point. So you do not get one number per brain, but one number per point of the surface."
 },
 {
 "q": "Why not simply count the cortex voxels?",
@@ -237,7 +237,7 @@ window.QA = {
 },
 {
 "q": "Can SynthSeg measure cortical thickness?",
-"a": "No. SynthSeg gives a label for every voxel, and from that volumes. Thickness needs surfaces. FreeSurfer 8.2.0 ships a script, recon-all-clinical, that builds surfaces on clinical scans; we have not tested it."
+"a": "No. SynthSeg gives a label for every voxel, and from that volumes, but no thickness. FreeSurfer measures thickness between two surfaces; voxel-based methods such as ANTs DiReCT can also estimate it from a segmentation. FreeSurfer 8.2.0 ships a script, recon-all-clinical, that builds surfaces on clinical scans; we have not tested it."
 },
 {
 "q": "How precise is the measurement?",
@@ -317,11 +317,11 @@ window.QA = {
 },
 {
 "q": "The fake images do not look like real scans. Is that not a problem?",
-"a": "No, that is the point. They do not have to look real. They have to cover more variation than real scans show. The authors then tested the network on 5,000 real scans of six image types and ten resolutions."
+"a": "No, that is the point. They do not have to look real. They have to cover more variation than real scans show. The authors then evaluated it on about 5,000 real scans of six kinds of image (including CT) and ten resolutions; about 1,000 of them gave the training label maps, the rest were used for testing."
 },
 {
 "q": "Is anything real in the training at all?",
-"a": "Yes, the anatomy. The label maps come from real brains, so the network learns real shapes. The training also pastes in white matter lesion labels in half of the cases, to make it more robust against such lesions."
+"a": "Yes, the anatomy. The label maps come from real brains, so the network learns real shapes. The training also pastes in white matter lesion labels in half of the cases, to make it more robust against such lesions. This holds for the segmentation network; the QC network of slide 11 was trained on segmentations of deliberately degraded real scans."
 },
 {
 "q": "What do resolution and noise mean here?",
@@ -347,7 +347,7 @@ window.QA = {
 },
 {
 "q": "Why does it give no surfaces and no cortical thickness?",
-"a": "SynthSeg labels voxels, and its output has voxels of 1 millimetre. The cortex is only a few millimetres thick, so counting voxels is too coarse for thickness. The authors name surfaces for cortical thickness as future work."
+"a": "SynthSeg labels voxels, and its output has voxels of 1 millimetre. The cortex is only a few millimetres thick, so counting voxels is too coarse for thickness. In 2023 the authors named surfaces for cortical thickness as future work; the same group has since added recon-all-clinical to FreeSurfer, which estimates thickness on clinical scans of any contrast, less accurately with thick slices."
 },
 {
 "q": "Which tool should I use, SynthSeg or FreeSurfer?",
@@ -355,7 +355,7 @@ window.QA = {
 },
 {
 "q": "What does almost any contrast mean? Where is the limit?",
-"a": "The authors tested it on 5,000 scans of six kinds of image and ten resolutions, also with thick slices. In the authors' clinical test, the failures came mainly from poor images: very noisy scans, or scans that did not cover the whole brain."
+"a": "The authors evaluated it on about 5,000 scans of six kinds of image (including CT) and ten resolutions, also with thick slices; about 1,000 of them gave the training label maps. In the authors' clinical test, the failures came mainly from poor images: very noisy scans, or scans that did not cover the whole brain."
 },
 {
 "q": "What does without retraining mean?",
@@ -557,7 +557,7 @@ window.QA = {
 },
 {
 "q": "Are the experts not wrong sometimes too?",
-"a": "Yes. In the public lesion data of part two, two additional observers each reached a Dice of only 0.77 and 0.79 against the reference, on the 60 training scans. So expert labels are a reference, not the absolute truth. A program can hardly be shown to be better than that."
+"a": "Yes. In the public lesion data of part two, two additional observers each reached a Dice of only 0.77 and 0.79 against the reference, on the 60 training scans. So expert labels are a reference, not the absolute truth. In that challenge the best programs reached about the same Dice as these observers; above that level, differences against the reference are hard to interpret."
 },
 {
 "q": "Which of the three properties matters most?",
@@ -569,7 +569,7 @@ window.QA = {
 },
 {
 "q": "How large is this noise for real structures?",
-"a": "It depends on the size of the structure. In our own test on public data, between two visits of the same people, the change scattered by about 0.8 percent for the cortex, 2.8 percent for the thalamus and 6.7 percent for the pallidum. This spread also holds real change between the visits, so the pure noise is at most this large. Small structures are noisier."
+"a": "It depends on the size of the structure. In our own test on public data, between two visits of the same people, several years apart, the change scattered by about 0.8 percent for the cortex, 2.8 percent for the thalamus and 6.7 percent for the pallidum. This spread also holds real change between the visits, so the pure noise is at most this large. Small structures are noisier."
 },
 {
 "q": "Why would another scanner give another result for the same brain?",
@@ -599,7 +599,7 @@ window.QA = {
 },
 {
 "q": "Where do minus 14.4 and minus 22.5 percent come from?",
-"a": "From our own test. We pasted real stroke masks from public data into healthy public scans, 48 pairs, and ran the tool before and after. The healthy scan gives the right volume, so we can measure the error. The numbers are medians, the middle values."
+"a": "From our own test. We pasted real stroke masks from public data into healthy public scans, 48 pairs, and ran the tool before and after. The result on the same scan without the lesion is the reference, so the difference shows how much the lesion alone changes the volume. The numbers are medians, the middle values."
 },
 {
 "q": "Why does the volume become smaller and not larger?",
@@ -649,7 +649,7 @@ window.QA = {
 },
 {
 "q": "What was the test behind the numbers?",
-"a": "Stroke masks from public data were pasted into healthy public scans, and SynthSeg ran on each scan with and without the lesion: 222 pairs on 8 healthy scans. Every change is caused by the lesion, because the healthy scan is the truth."
+"a": "Stroke masks from public data were pasted into healthy public scans, and SynthSeg ran on each scan with and without the lesion: 222 pairs on 8 healthy scans. The run on the scan without the lesion is the reference, so the differences come from the lesion; beyond about 15 mm they are as small as the tool's own scatter."
 },
 {
 "q": "What do 39 % and 7 % mean?",
@@ -657,7 +657,7 @@ window.QA = {
 },
 {
 "q": "Why is the margin the most pragmatic way?",
-"a": "It needs no new image and no extra tool: you leave the lesion and a few millimetres around it out of the count. With 5 mm, 85 % of the structures on the stroke side stayed within 5 % of their true volume, as many as with mirror filling (82 %); untreated, only 67 %."
+"a": "It needs no new image and no extra tool: you leave the lesion and a few millimetres around it out of the count. With 5 mm, 85 % of the remaining structure parts on the stroke side stayed within 5 % of the volume measured without the lesion. With mirror filling 82 % of the whole structures did, untreated only 67 %. With a margin you measure only the part outside it."
 },
 {
 "q": "How big should the margin be?",
@@ -687,7 +687,7 @@ window.QA = {
 },
 {
 "q": "Which regions are asked?",
-"a": "Seven structures: six deep grey matter structures from this lecture (thalamus, caudate, hippocampus, putamen, pallidum, amygdala) and one region of the cortex, the insula. All of them are structures that FreeSurfer and SynthSeg label."
+"a": "Seven structures: six deep grey matter structures from this lecture (thalamus, caudate, hippocampus, putamen, pallidum, amygdala) and one region of the cortex, the insula. FreeSurfer labels all seven; SynthSeg labels the six deep structures by default and the insula when you switch on its cortical parcellation (--parc)."
 },
 {
 "q": "How do I tell the putamen from the pallidum?",
@@ -763,11 +763,11 @@ window.QA = {
 },
 {
 "q": "What exactly happened to the people in that study?",
-"a": "All of them lived independently at the start. The study counted how many became disabled or died. Per year this was 10.5 % with mild, 15.1 % with moderate and 29.5 % with severe lesions. That is where \"almost three times\" comes from: 29.5 divided by 10.5."
+"a": "All of them lived independently at the start. The study counted how many became disabled or died. Per year this was 10.5 % with mild, 15.1 % with moderate and 29.5 % with severe lesions. That is where \"almost three times\" comes from: 29.5 divided by 10.5. After adjusting for age and other factors, the risk was still about 2.4 times higher. The people were older outpatients who had seen a doctor for minor complaints."
 },
 {
 "q": "Do the lesions cause the disability?",
-"a": "The studies show a link, not a proof of cause. But the link is strong and repeated: pooled over many studies, people with many lesions had about two and a half to three times the risk of stroke and about twice the risk of dementia and of death."
+"a": "The studies show a link, not a proof of cause. But the link is strong and repeated: pooled over many studies, people with many lesions had about two and a half (2019 meta-analysis) to three times (2010 meta-analysis) the risk of stroke and about twice the risk of dementia and of death."
 },
 {
 "q": "How much is half a millilitre?",
@@ -787,11 +787,11 @@ window.QA = {
 },
 {
 "q": "Does finding these lesions change what the doctor does?",
-"a": "Mostly it changes how hard you look for risk factors such as high blood pressure and treat them. It rarely forbids a treatment. Example: before clot-dissolving therapy for stroke, severe white matter disease seen on CT means a higher bleeding risk, but the authors say this does not justify withholding the therapy."
+"a": "Mostly it changes how hard you look for risk factors such as high blood pressure and treat them. It rarely forbids a treatment. Example: before clot-dissolving therapy for stroke, severe white matter disease seen on CT or MRI means a higher bleeding risk, but the authors of a meta-analysis say this does not justify withholding the therapy."
 },
 {
 "q": "Are these lesions the only sign of small vessel disease?",
-"a": "No. The agreed list for MRI has six signs: recent small infarcts deep in the brain, white matter hyperintensities, lacunes, wide spaces around vessels, microbleeds and atrophy. Part 3 of this lecture is about one more of them, the microbleeds."
+"a": "No. The 2013 consensus (STRIVE) lists six core signs on MRI: recent small infarcts deep in the brain, white matter hyperintensities, lacunes, wide spaces around vessels, microbleeds and atrophy. The 2023 update (STRIVE-2) adds newer ones, such as tiny infarcts in the cortex. Part 3 of this lecture is about one more of them, the microbleeds."
 },
 {
 "q": "If a program gives the volume, does anyone still have to look?",
@@ -931,7 +931,7 @@ window.QA = {
 },
 {
 "q": "Is \"under 10\" counted in voxels?",
-"a": "Tiny. The sizes are counted in cubic millimetres, not voxels. In these scans a voxel is about 1 by 1 mm within the slice and 3 mm thick, so roughly 2 to 5 cubic millimetres. A lesion under 10 cubic millimetres is only about 2 to 6 voxels. On the screen it is a faint dot that you can easily overlook yourself."
+"a": "Tiny. The sizes are counted in cubic millimetres, not voxels. In these scans a voxel is about 1 by 1 mm within the slice and 3 mm thick, so roughly 3 to 4.5 cubic millimetres. A lesion under 10 cubic millimetres is only 1 to 3 voxels. On the screen it is a faint dot that you can easily overlook yourself."
 },
 {
 "q": "Why does BIANCA miss the small ones in particular?",
@@ -989,7 +989,7 @@ window.QA = {
 },
 {
 "q": "Was the U-Net invented for brain scans?",
-"a": "No. It was built for microscope images: it won a competition on outlining nerve cell structures in electron microscopy. The idea turned out to work on almost any medical image, and brain MRI is one of many uses."
+"a": "No. It was built for microscope images: it set the best score on an open benchmark for outlining nerve cell structures in electron microscopy, and won a 2015 cell tracking challenge. The idea turned out to work on almost any medical image, and brain MRI is one of many uses."
 },
 {
 "q": "Does a neural network not need thousands of training scans?",
@@ -1019,7 +1019,7 @@ window.QA = {
 },
 {
 "q": "How much more accurate is the U-Net in numbers?",
-"a": "On the same 110 public test scans, our best BIANCA setup reached a mean Dice of 0.70. The best network reached 0.80. The network also found more single lesions: 84 percent of them. Remember where BIANCA stood with the small ones."
+"a": "On the same 110 public test scans, our best BIANCA setup reached a mean Dice of 0.70. The best network reached 0.80. The network also found on average 84 percent of the single lesions per scan: 94 percent of the larger and 76 percent of the smaller half. The challenge counts lesions a little differently from us, so compare with BIANCA's small-lesion numbers only roughly."
 },
 {
 "q": "When is BIANCA 'good enough'?",
@@ -1073,11 +1073,11 @@ window.QA = {
 },
 {
 "q": "Why 0.82 on this slice, but only 0.70 on average?",
-"a": "This slice was picked because it shows large, clear lesions. Over the whole scan of this same patient, Dice is about 0.70. And about 0.70 is also the mean over all 110 test scans. One good-looking slice is not the result; always ask for the average over whole scans."
+"a": "This slice was picked because it shows large, clear lesions. It comes from our reference BIANCA setup, whose mean over all 110 test scans is 0.67; our best setup reached 0.70, the number on the slide. One good-looking slice is not the result; always ask for the average over whole scans."
 },
 {
 "q": "What is a good Dice? Is there a limit like 0.7?",
-"a": "There is no general limit. What can be reached depends on the task: for large, compact structures much more than for small scattered lesions. A fair yardstick is how well a second expert agrees with the reference. For these lesions we will see that in a moment."
+"a": "There is no general limit. What can be reached depends on the task: for large, compact structures much more than for small scattered lesions. A fair yardstick is how well a second rater agrees with the reference. For these lesions we will see that in a moment."
 },
 {
 "q": "Does Dice tell me whether the program marks too much or too little?",
@@ -1102,8 +1102,8 @@ window.QA = {
 "a": "It is a drawn example with the same result as the real observers. Expert A marked 48 voxels, expert B 43, and 35 voxels are in both masks. Dice is two times 35, so 70, divided by 48 plus 43, so 91. That gives 0.77."
 },
 {
-"q": "Why is about 0.8 a ceiling? Why can a program not reach 1.0?",
-"a": "Because the reference is itself one expert opinion. A program that marked every lesion truly correctly would still differ from this reference, as much as a second careful expert does. So a score near the expert level is the best we can expect to measure."
+"q": "Why can a program not reach 1.0?",
+"a": "Because the reference is itself a human judgement: one expert's masks, checked by a second. A second careful rater agrees with it only to about 0.8. A program can score higher, but then it mostly imitates the habits of the reference rater, so differences above this level are hard to interpret."
 },
 {
 "q": "The program has 0.80, the experts 0.77 and 0.79. Is the program better than the experts?",
@@ -1221,19 +1221,19 @@ window.QA = {
 "beat2": [
 {
 "q": "My Dice is higher than BIANCA's 0.70. Am I better than the program?",
-"a": "Enjoy it, but it is not a fair race. You painted three chosen slices of one patient, after a tutorial. BIANCA's 0.70 is the mean over 110 whole scans from five scanners, with easy and hard patients mixed. On your patient alone, BIANCA may score quite differently."
+"a": "Enjoy it, but it is not a fair race. You painted three of the eight prepared slices of one patient, after a tutorial. BIANCA's 0.70 is the mean over 110 whole scans from five scanners, with easy and hard patients mixed. On your patient alone, BIANCA may score quite differently."
 },
 {
 "q": "I marked every lesion I saw. Why is my Dice still low?",
 "a": "Finding the lesions is only half of it. Dice also counts the outline. If you paint a little wider or tighter than the expert around each spot, many edge voxels count as extra or missed. Look at the colours after scoring: are your errors mostly extra, or mostly missed?"
 },
 {
-"q": "I got more than 0.8. Am I better than the second expert?",
-"a": "On these three slices you agreed with the reference very well; that is a real result. But the experts painted 60 whole scans, with every kind of patient. Your patient was picked for teaching. If you like, try all eight slices later and see whether you hold the score."
+"q": "I got more than 0.8. Am I better than the human observers?",
+"a": "On these three slices you agreed with the reference very well; that is a real result. But the human observers painted 60 whole scans, with every kind of patient. Your patient was picked for teaching. If you like, try all eight slices later and see whether you hold the score."
 },
 {
 "q": "Can the three numbers on the slide be compared with each other?",
-"a": "BIANCA and the best program, yes: both were scored on the same 110 test scans. The second expert, only roughly: that number comes from the 60 training scans. So read the slide as an order of size, not as a ranking to two decimal places."
+"a": "BIANCA and the best program, yes: both were scored on the same 110 test scans. The human observers, only roughly: their numbers come from the 60 training scans. So read the slide as an order of size, not as a ranking to two decimal places."
 },
 {
 "q": "Small spots are hard for everyone. Even for the best program?",
@@ -1257,7 +1257,7 @@ window.QA = {
 },
 {
 "q": "Is 0.80 still the best that programs can do today?",
-"a": "The 0.80 comes from a public competition whose results were published in 2019. Newer programs may be better; we did not check newer results for this lecture. But keep the ceiling in mind: beyond the agreement between experts, a higher Dice says little."
+"a": "The 0.80 comes from a public competition whose results were published in 2019. Newer programs may be better; we did not check newer results for this lecture. But keep the yardstick in mind: above the agreement between human raters, a higher Dice is hard to interpret."
 }
 ],
 "cmb_what": [
@@ -1321,7 +1321,7 @@ window.QA = {
 },
 {
 "q": "And when new microbleeds appear during treatment?",
-"a": "They are counted again and graded: up to 4 new ones is mild, 5 to 9 is moderate, 10 or more is severe. With a moderate grade the drug is paused; with a severe grade the European label says stop for good. This is the one place where a count is a hard rule."
+"a": "They are counted again and graded: up to 4 new ones is mild, 5 to 9 is moderate, 10 or more is severe. With a moderate grade the drug is paused; with a severe grade the European label says stop for good. Anti-amyloid therapy is the one area where counts are hard rules: more than 4 before treatment, and these grades during treatment."
 },
 {
 "q": "How do microbleeds help to diagnose amyloid in the vessel walls?",
@@ -1341,7 +1341,7 @@ window.QA = {
 },
 {
 "q": "What about clot-dissolving therapy for an acute stroke?",
-"a": "Pooled data from 2,479 patients showed more bleeding after the therapy in patients with more than 10 microbleeds than in those with fewer. But very few patients had that many, so the estimate is very uncertain. We could not verify a guideline rule on this, so we do not state one."
+"a": "Pooled data from 2,479 patients showed more bleeding after the therapy in patients with more than 10 microbleeds than in those with fewer. But very few patients had that many, so the estimate is very uncertain. The US stroke guideline (AHA/ASA 2019) treats more than 10 microbleeds as a situation in which the benefit of the therapy is uncertain, a weak recommendation, not a strict exclusion."
 }
 ],
 "cmb_unet": [
@@ -1477,7 +1477,7 @@ window.QA = {
 },
 {
 "q": "On how many slices do I see a microbleed?",
-"a": "That depends on its size and on the slice thickness. In this example the slices are 0.8 millimetres thin, and the microbleed is seen on 5 of 19 slices, about 4 millimetres. With slices of 3 millimetres, a microbleed of this size would be seen on only one or two."
+"a": "That depends on its size and on the slice thickness. In this example the slices are 0.8 millimetres apart (acquired at 1.6 millimetres and interpolated), and the microbleed is seen on 5 of 19 slices, about 4 millimetres. With slices of 3 millimetres, a microbleed of this size would be seen on only one or two."
 },
 {
 "q": "What do you mean by 'the vessel moves'?",
@@ -1505,7 +1505,7 @@ window.QA = {
 },
 {
 "q": "What if the slices are thick and I cannot follow the dot well?",
-"a": "Then it is harder for people and for programs. In the public benchmark the best program reached a median F1 of about 0.78 on scans with thin 0.8 millimetre slices, and 0.52 to 0.67 on the two groups with 3 millimetre slices. The groups differed in other ways too, such as the scanner."
+"a": "Then it is harder for people and for programs. In the public benchmark the best program reached a median F1 of about 0.78 on scans with thin slices (1.6 millimetres, interpolated to 0.8), and 0.52 to 0.67 on the two groups with 3 millimetre slices. The groups differed in other ways too, such as the scanner."
 },
 {
 "q": "Where in the brain should I be especially careful?",
@@ -1631,7 +1631,7 @@ window.QA = {
 },
 {
 "q": "How was 'found' decided for the detector?",
-"a": "With the rule of the microbleed exercise: the centre of a detection must lie at most 2 mm, within the slice, from a voxel of the microbleed, and at most 2 mm worth of slices above or below, at least one slice. Each microbleed counts once. Each scan was judged by a model that had not been trained on it."
+"a": "With the rule of the microbleed exercise: a detection counts if its centre lies at most 2 mm from a voxel of the microbleed within the slice, and at most N slices above or below, where N is 2 mm divided by the slice thickness, rounded down, but at least 1: one slice for 3 to 4 mm slices, two slices for 0.8 mm slices. Each microbleed counts once. Each scan was judged by a model that had not been trained on it."
 },
 {
 "q": "What do I do if my scans differ from the training data?",
@@ -1710,8 +1710,8 @@ window.QA = {
 "a": "ChatNT joins a DNA transformer (the Nucleotide Transformer) to a frozen language model. You give it a sequence and an English question and it answers in English. But it only answers the kinds of questions of its 27 trained tasks, such as splice sites, and its makers say it is not a clinical tool."
 },
 {
-"q": "Why is there no MRI model like CT-CHAT yet?",
-"a": "Such a model needs a large public set of scans with their reports. For CT this came first (CT-RATE). For MRI the first large public set, MR-RATE with 98,334 brain and spine studies, was released in March 2026; its model is announced but not yet out. Models trained on private hospital MRI with reports exist."
+"q": "Why did MRI + English come later than CT?",
+"a": "A model like CT-CHAT that anyone can train needs a large public set of scans with their reports. For CT this came first (CT-RATE). For MRI the first large public set, MR-RATE with 98,334 brain and spine studies, was released in March 2026; its model is announced but not yet out. Models trained on private hospital MRI with reports exist."
 },
 {
 "q": "Is MRI harder than CT for such a model?",
@@ -1725,7 +1725,7 @@ window.QA = {
 "exam": [
 {
 "q": "Which tool was trained on which data?",
-"a": "FreeSurfer's atlas: about 40 hand-labelled brains. SynthSeg: label maps of about 1,000 brains, young and old, with simulated white-matter-like lesions. CAT12: an average of healthy adults (IXI). BIANCA: your own marked patients. The WMH challenge U-Nets: 60 patients from 3 scanners. VALDO microbleed models: 72 older people."
+"a": "FreeSurfer's atlas: about 40 hand-labelled brains. SynthSeg: label maps of about 1,000 brains, young and old, with simulated white-matter-like lesions. CAT12: an average of healthy adults (IXI). BIANCA: your own marked patients. The WMH challenge U-Nets: 60 patients from 3 scanners. VALDO microbleed models: 72 scans of middle-aged and older adults from 3 scanners."
 },
 {
 "q": "Why fill or mask a stroke lesion?",
@@ -1757,7 +1757,7 @@ window.QA = {
 },
 {
 "q": "Which numbers are worth remembering?",
-"a": "A SynthSeg QC score below 0.65 means failed. Single experts reach a Dice of about 0.77 to 0.79 for white matter lesions, the best program 0.80. The best microbleed program reached a median F1 of 0.68 per scan. More than 4 microbleeds is the limit in the drug recommendations, and in the EU a contraindication."
+"a": "A SynthSeg QC score below 0.65 for any structure flags the segmentation as likely failed: look at it. Single experts reach a Dice of about 0.77 to 0.79 for white matter lesions, the best program 0.80. The best microbleed program reached a median F1 of 0.68 per scan. More than 4 microbleeds is the limit in the drug recommendations, and in the EU a contraindication."
 },
 {
 "q": "What is the one rule behind all five points?",
