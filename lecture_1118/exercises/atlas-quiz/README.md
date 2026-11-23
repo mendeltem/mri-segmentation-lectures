@@ -80,8 +80,8 @@ Rebuild the data after a trainer update: `node build/01_extract_from_trainer.js 
 
 ## External resources
 
-One only: the Google Fonts stylesheet (and the font files it names), copied from the trainer.
-Without network the page falls back to system fonts and works unchanged (the tests run that way).
+None. The three fonts of the trainer (Bricolage Grotesque, JetBrains Mono, Newsreader) are stored
+in `fonts/` next to the page, so opening it sends no request to Google or any other server.
 
 ## Tests
 
@@ -120,7 +120,8 @@ Carried over from the trainer's `LICENSE` and `THIRD-PARTY.md`.
   non-commercial); citation Fonov et al., NeuroImage 54(1):313-327, 2011. Which one the slices come
   from was not re-checked here.
 - **Image data** taken from the NiiVue demo data (BSD-2-Clause), pre-rendered to slices.
-- **Fonts**: Google Fonts, SIL Open Font License 1.1, loaded at runtime.
+- **Fonts**: Bricolage Grotesque, JetBrains Mono and Newsreader, SIL Open Font License 1.1,
+  stored in `fonts/` (from Fontsource 5.3.0) with their licence texts as `OFL-*.txt`.
 
 Because of the atlas licences the work as a whole may only be used free of charge and
 non-commercially (teaching). Keep the source line in the page footer.
